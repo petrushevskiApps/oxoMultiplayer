@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace com.petrushevskiapps.Oxo
 {
-    public class PlayerNickname : MonoBehaviour
+    public class UIPlayerNickname : MonoBehaviour
     {
         // Store the PlayerPref Key to avoid typos
         const string playerNamePrefKey = "PlayerName";

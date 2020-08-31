@@ -39,8 +39,8 @@ namespace com.petrushevskiapps.Oxo
 
         private void Start()
         {
-            progressLabel.SetActive(false);
-            controlPanel.SetActive(true);
+//            progressLabel.SetActive(false);
+//            controlPanel.SetActive(true);
         }
 
         /// <summary>
@@ -50,8 +50,8 @@ namespace com.petrushevskiapps.Oxo
         /// </summary>
         public void Connect()
         {
-            progressLabel.SetActive(true);
-            controlPanel.SetActive(false);
+//            progressLabel.SetActive(true);
+//            controlPanel.SetActive(false);
             
             // we check if we are connected or not, we join if we are , else we initiate the connection to the server.
             if (PhotonNetwork.IsConnected)

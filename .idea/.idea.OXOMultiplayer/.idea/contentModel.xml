@@ -6,6 +6,26 @@
     <e p="D:\14 - BlastGames\OXOMultiplayer" t="IncludeRecursive">
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="20 Logos PSD" t="Include">
+          <e p="Fonts" t="Include">
+            <e p="chunkfiveex" t="Include">
+              <e p="SIL Open Font License 1.1.txt" t="Include" />
+            </e>
+            <e p="firasansheavy" t="Include">
+              <e p="SIL Open Font License.txt" t="Include" />
+            </e>
+            <e p="kaushanscript" t="Include">
+              <e p="SIL Open Font License.txt" t="Include" />
+            </e>
+            <e p="molot" t="Include">
+              <e p="molot-eula.txt" t="Include" />
+            </e>
+            <e p="peacesans" t="Include">
+              <e p="FREE FONT LICENSE.txt" t="Include" />
+            </e>
+            <e p="Read Me.txt" t="Include" />
+          </e>
+        </e>
         <e p="Photon" t="Include">
           <e p="PhotonChat" t="Include">
             <e p="Code" t="Include">
@@ -367,18 +387,23 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="AIPlayer.cs" t="Include" />
+          <e p="Data" t="Include">
+            <e p="StateImages.cs" t="Include" />
+          </e>
           <e p="GameManager.cs" t="Include" />
           <e p="Launcher.cs" t="Include" />
           <e p="MatchController.cs" t="Include" />
           <e p="NetworkManager.cs" t="Include" />
           <e p="Player.cs" t="Include" />
-          <e p="PlayerNickname.cs" t="Include" />
-          <e p="StateImages.cs" t="Include" />
           <e p="TileState.cs" t="Include" />
           <e p="TurnController.cs" t="Include" />
-          <e p="UIEndScreen.cs" t="Include" />
+          <e p="UI" t="Include">
+            <e p="UIEndScreen.cs" t="Include" />
+            <e p="UIPlayerNickname.cs" t="Include" />
+          </e>
           <e p="WinCondition.cs" t="Include" />
         </e>
+        <e p="UIMenuController.cs" t="Include" />
       </e>
       <e p="obj" t="ExcludeRecursive" />
       <e p="OXOMultiplayer.sln" t="IncludeFlat" />
