@@ -25,10 +25,7 @@ namespace com.petrushevskiapps.Oxo
         [SerializeField] private GameObject progressLabel;
 
         private bool isConnecting = false;
-        
-        /// <summary>
-        /// MonoBehaviour method called on GameObject by Unity during early initialization phase.
-        /// </summary>
+   
         void Awake()
         {
             // #Critical
@@ -37,11 +34,6 @@ namespace com.petrushevskiapps.Oxo
             PhotonNetwork.AutomaticallySyncScene = true;
         }
 
-        private void Start()
-        {
-//            progressLabel.SetActive(false);
-//            controlPanel.SetActive(true);
-        }
 
         /// <summary>
         /// Start the connection process.
@@ -50,9 +42,6 @@ namespace com.petrushevskiapps.Oxo
         /// </summary>
         public void Connect()
         {
-//            progressLabel.SetActive(true);
-//            controlPanel.SetActive(false);
-            
             // we check if we are connected or not, we join if we are , else we initiate the connection to the server.
             if (PhotonNetwork.IsConnected)
             {
@@ -106,11 +95,9 @@ namespace com.petrushevskiapps.Oxo
             if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
             {
                 Debug.Log("We load the 'Room for 1' ");
-
-
                 // #Critical
                 // Load the Room Level.
-                PhotonNetwork.LoadLevel(1);
+                PhotonNetwork.LoadLevel("Lobby");
             }
         }
     }
