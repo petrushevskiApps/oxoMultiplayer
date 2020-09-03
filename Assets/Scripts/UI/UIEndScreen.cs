@@ -12,7 +12,7 @@ public class UIEndScreen : MonoBehaviour
     
     private void Awake()
     {
-        MatchController.OnMatchEnded.AddListener(MatchEnded);
+        BoardController.OnMatchEnded.AddListener(MatchEnded);
         background.SetActive(false);
         wonText.SetActive(false);
         lostText.SetActive(false);
@@ -20,7 +20,7 @@ public class UIEndScreen : MonoBehaviour
 
     private void OnDestroy()
     {
-        MatchController.OnMatchEnded.RemoveListener(MatchEnded);
+        BoardController.OnMatchEnded.RemoveListener(MatchEnded);
     }
 
     private void MatchEnded(int winnerId)

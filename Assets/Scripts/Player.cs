@@ -29,7 +29,7 @@ public class Player : MonoBehaviourPunCallbacks, IComparable
     public override void OnEnable()
     {
         base.OnEnable();
-        MatchController.LocalInstance.turnController.AddPlayer(this);
+        BoardController.LocalInstance.turnController.AddPlayer(this);
     }
 
     public int GetPlayerId()

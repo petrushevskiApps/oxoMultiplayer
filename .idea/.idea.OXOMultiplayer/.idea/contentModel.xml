@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
     <e p="C:\Users\petru\.Rider2019.2\system\extResources" t="IncludeRecursive" />
@@ -387,6 +387,7 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="AIPlayer.cs" t="Include" />
+          <e p="BoardController.cs" t="Include" />
           <e p="Data" t="Include">
             <e p="StateImages.cs" t="Include" />
           </e>
@@ -399,11 +400,17 @@
           <e p="TurnController.cs" t="Include" />
           <e p="UI" t="Include">
             <e p="UIEndScreen.cs" t="Include" />
-            <e p="UIPlayerNickname.cs" t="Include" />
+            <e p="UIUserScreen.cs" t="Include" />
           </e>
           <e p="WinCondition.cs" t="Include" />
         </e>
+        <e p="UICreateRoom.cs" t="Include" />
+        <e p="UIJoinRoom.cs" t="Include" />
+        <e p="UILobbyScreen.cs" t="Include" />
+        <e p="UILobbyTitle.cs" t="Include" />
+        <e p="UIMainMenu.cs" t="Include" />
         <e p="UIMenuController.cs" t="Include" />
+        <e p="UIPlayersList.cs" t="Include" />
       </e>
       <e p="obj" t="ExcludeRecursive" />
       <e p="OXOMultiplayer.sln" t="IncludeFlat" />

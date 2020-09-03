@@ -29,16 +29,15 @@ public class UIMenuController : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        ShowMainMenu();
-    }
-
     public void ShowMainMenu()
     {
-        logo.SetActive(true);
-        backButton.SetActive(false);
-        Show(mainMenu);
+        if (GameManager.Instance.IsUsernameSet)
+        {
+            logo.SetActive(true);
+            backButton.SetActive(false);
+            Show(mainMenu);
+        }
+        else ShowPlayerMenu();
     }
 
     public void ShowJoinMenu()
@@ -57,7 +56,7 @@ public class UIMenuController : MonoBehaviour
     public void ShowPlayerMenu()
     {
         logo.SetActive(false);
-        backButton.SetActive(true);
+        backButton.SetActive(false);
         Show(nicknameMenu);
     }
 

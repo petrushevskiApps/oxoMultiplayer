@@ -11,12 +11,12 @@ public class TurnController : MonoBehaviour
 
     private void OnEnable()
     {
-        MatchController.OnMatchEnded.AddListener(DeactivateAllPlayers);
+        BoardController.OnMatchEnded.AddListener(DeactivateAllPlayers);
     }
 
     private void OnDisable()
     {
-        MatchController.OnMatchEnded.RemoveListener(DeactivateAllPlayers);
+        BoardController.OnMatchEnded.RemoveListener(DeactivateAllPlayers);
     }
 
     public void IncrementTurn()

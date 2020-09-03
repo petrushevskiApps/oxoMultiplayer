@@ -33,7 +33,7 @@ public class TileState : MonoBehaviour
     {
         if (_tile == TileType.Empty)
         {
-            _tile = MatchController.LocalInstance.turnController.GetActivePlayer().GetPlayerSymbol();
+            _tile = BoardController.LocalInstance.turnController.GetActivePlayer().GetPlayerSymbol();
             tileImage.sprite = stateImages.GetStateImage(_tile);
         }
     }
