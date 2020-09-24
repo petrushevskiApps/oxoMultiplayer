@@ -394,23 +394,48 @@
           <e p="GameManager.cs" t="Include" />
           <e p="Launcher.cs" t="Include" />
           <e p="MatchController.cs" t="Include" />
+          <e p="NetworkChecker.cs" t="Include" />
           <e p="NetworkManager.cs" t="Include" />
           <e p="Player.cs" t="Include" />
           <e p="TileState.cs" t="Include" />
           <e p="TurnController.cs" t="Include" />
           <e p="UI" t="Include">
+            <e p="UICreateGameScreen.cs" t="Include" />
+            <e p="UICreateRoom.cs" t="Include" />
             <e p="UIEndScreen.cs" t="Include" />
+            <e p="UIJoinRoom.cs" t="Include" />
+            <e p="UIJoinScreen.cs" t="Include" />
+            <e p="UILobbyScreen.cs" t="Include" />
+            <e p="UILobbyTitle.cs" t="Include" />
+            <e p="UIMainScreen.cs" t="Include" />
+            <e p="UIMenuController.cs" t="Include" />
+            <e p="UIPlayersList.cs" t="Include" />
+            <e p="UIProgressScreen.cs" t="Include" />
             <e p="UIUserScreen.cs" t="Include" />
           </e>
           <e p="WinCondition.cs" t="Include" />
         </e>
-        <e p="UICreateRoom.cs" t="Include" />
-        <e p="UIJoinRoom.cs" t="Include" />
-        <e p="UILobbyScreen.cs" t="Include" />
-        <e p="UILobbyTitle.cs" t="Include" />
-        <e p="UIMainMenu.cs" t="Include" />
-        <e p="UIMenuController.cs" t="Include" />
-        <e p="UIPlayersList.cs" t="Include" />
+        <e p="UICreateGameButton.cs" t="Include" />
+        <e p="UIHelpButton.cs" t="Include" />
+        <e p="UIJoinGameButton.cs" t="Include" />
+        <e p="UIManager" t="Include">
+          <e p="Scripts" t="Include">
+            <e p="BackButton.cs" t="Include" />
+            <e p="BaseButton" t="Include">
+              <e p="UIAnimatedButton.cs" t="Include" />
+              <e p="UIButton.cs" t="Include" />
+            </e>
+            <e p="Data" t="Include">
+              <e p="ButtonConfig.cs" t="Include" />
+            </e>
+            <e p="UIManager.cs" t="Include" />
+            <e p="UIPopup.cs" t="Include" />
+            <e p="UIScreen.cs" t="Include" />
+            <e p="UIWindow.cs" t="Include" />
+          </e>
+        </e>
+        <e p="UIRandomPlayButton.cs" t="Include" />
+        <e p="UISettingsButton.cs" t="Include" />
       </e>
       <e p="obj" t="ExcludeRecursive" />
       <e p="OXOMultiplayer.sln" t="IncludeFlat" />

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using com.petrushevskiapps.menumanager;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace com.petrushevskiapps.Oxo
 {
-    public class UIUserScreen : MonoBehaviour
+    public class UIUserScreen : UIScreen
     {
         [SerializeField] private Button saveBtn;
 

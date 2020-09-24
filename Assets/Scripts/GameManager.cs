@@ -8,7 +8,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private NetworkManager networkManager;
+    [SerializeField] private NetworkChecker networkChecker;
     public NetworkManager NetworkManager => networkManager;
+    public NetworkChecker NetworkChecker => networkChecker;
     
     public static GameManager Instance;
     public bool IsUsernameSet { get; private set; }
@@ -27,7 +29,6 @@ public class GameManager : MonoBehaviour
         
         NetworkManager.SetupNetwork();
         SetUsername();
-        UIMenuController.Instance.ShowMainMenu();
     }
 
     public void SetUsername(string username = "")

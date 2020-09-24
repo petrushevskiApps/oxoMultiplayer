@@ -1,4 +1,6 @@
-﻿using Photon.Pun;
+﻿using System;
+using System.Collections;
+using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Events;
@@ -77,11 +79,36 @@ namespace com.petrushevskiapps.Oxo
             }
         }
 
-
+        private Coroutine reconnectCoroutine;
+        
         public override void OnDisconnected(DisconnectCause cause)
         {
             isConnecting = false;
+            GameManager.Instance.NetworkChecker.OnOnline.AddListener(StartReconnectingCoroutine);
             Debug.LogWarningFormat("PUN:: OnDisconnected() was called by PUN with reason {0}", cause);
+        }
+
+        private void OnDestroy()
+        {
+            GameManager.Instance.NetworkChecker.OnOnline.RemoveListener(StartReconnectingCoroutine);
+            
+            if (reconnectCoroutine != null)
+            {
+                StopCoroutine(reconnectCoroutine);
+            }
+        }
+
+        private void StartReconnectingCoroutine()
+        {
+            reconnectCoroutine = StartCoroutine(TryToReconnect());
+        }
+        private IEnumerator TryToReconnect()
+        {
+            while (!PhotonNetwork.Reconnect())
+            {
+                yield return new WaitForSeconds(1f);
+            }
+            GameManager.Instance.NetworkChecker.OnOnline.RemoveListener(StartReconnectingCoroutine);
         }
         
         public override void OnJoinRandomFailed(short returnCode, string message)
@@ -154,6 +181,7 @@ namespace com.petrushevskiapps.Oxo
                 Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
             }
         }
+        
     }
 }
 

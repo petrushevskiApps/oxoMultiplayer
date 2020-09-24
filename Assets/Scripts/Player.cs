@@ -26,6 +26,11 @@ public class Player : MonoBehaviourPunCallbacks, IComparable
         
     }
 
+    private void OnDestroy()
+    {
+        PhotonNetwork.Destroy(photonView);
+    }
+
     public override void OnEnable()
     {
         base.OnEnable();
