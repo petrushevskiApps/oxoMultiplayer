@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace com.petrushevskiapps.menumanager
 {
-    public abstract class UIScreen : UIWindow
+    public class UIScreen : UIWindow
     {
         [SerializeField] private List<GameObject> globalUiElements;
         

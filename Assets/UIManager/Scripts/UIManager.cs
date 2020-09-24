@@ -42,7 +42,7 @@ namespace com.petrushevskiapps.menumanager
 
         private void InitializeAllWindows()
         {
-            screens.ForEach(screen => screen.Initialize(()=>OnBack(CloseApplication)));
+            screens.ForEach(screen => screen.Initialize(()=>OnBack(ShowExitPopup)));
             popups.ForEach(screen => screen.Initialize(()=>OnBack()));
         }
         
@@ -100,6 +100,10 @@ namespace com.petrushevskiapps.menumanager
             }
         }
 
+        private void ShowExitPopup()
+        {
+            OpenPopup<UIExitPopup>();
+        }
         private void CloseApplication()
         {
             Application.Quit();
