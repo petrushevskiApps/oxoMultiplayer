@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class PlayerDataController : MonoBehaviour
 {
-    public const string KEY_USERNAME = "username";
-    public const string KEY_PLAYED_GAMES = "playedGames";
-    public const string KEY_WON_GAMES = "gamesWon";
-    public const string KEY_LOST_GAMES = "gamesLost";
-    public const string KEY_BG_MUSIC_STATUS = "backgroundMusic";
-    public const string KEY_SFX_STATUS = "sfxStatus";
-    public const string KEY_VIBRATION_STATUS = "vibrationStatus";
+    private const string KEY_USERNAME = "username";
+    private const string KEY_PLAYED_GAMES = "playedGames";
+    private const string KEY_WON_GAMES = "gamesWon";
+    private const string KEY_LOST_GAMES = "gamesLost";
+    private const string KEY_BG_MUSIC_STATUS = "backgroundMusic";
+    private const string KEY_SFX_STATUS = "sfxStatus";
+    private const string KEY_VIBRATION_STATUS = "vibrationStatus";
 
     public static string Username
     {
