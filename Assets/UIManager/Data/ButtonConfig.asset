@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 229f8e210d13df841ac8cb2c2905921b, type: 3}
   m_Name: ButtonConfig
   m_EditorClassIdentifier: 
-  clickSound: {fileID: 8300000, guid: 70e02441ad3cd8f488092b6a4933e446, type: 3}
+  positiveSound: {fileID: 8300000, guid: 5ed9970e17bfee943a6dff056dc3a9d0, type: 3}
+  negativeSound: {fileID: 8300000, guid: 70e02441ad3cd8f488092b6a4933e446, type: 3}

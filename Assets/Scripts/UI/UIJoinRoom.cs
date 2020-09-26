@@ -14,11 +14,6 @@ public class UIJoinRoom : MonoBehaviour
         createRoomBtn.onClick.AddListener(JoinRoom);
     }
 
-    private void OnDestroy()
-    {
-        createRoomBtn.onClick.RemoveListener(JoinRoom);
-    }
-
     private void JoinRoom()
     {
         GameManager.Instance.NetworkManager.JoinRoom(inputField.text);

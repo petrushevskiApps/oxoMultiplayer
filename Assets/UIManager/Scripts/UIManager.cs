@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-namespace com.petrushevskiapps.menumanager
+namespace PetrushevskiApps.UIManager
 {
     public class UIManager : MonoBehaviour
     {
@@ -46,13 +45,13 @@ namespace com.petrushevskiapps.menumanager
             popups.ForEach(screen => screen.Initialize(()=>OnBack()));
         }
         
-        public void OpenScreen<T>() where T : UIScreen
+        public void OpenScreen<T>()
         {
             UIScreen screen = screens.Find(x => x.GetType() == typeof(T));
             OpenWindow(screen);
         }
         
-        public void OpenPopup<T>() where T : UIPopup
+        public void OpenPopup<T>()
         {
             UIPopup popup = popups.Find(x => x.GetType() == typeof(T));
             OpenWindow(popup);
@@ -78,7 +77,7 @@ namespace com.petrushevskiapps.menumanager
             if(window != null) window.Open();
         }
         
-        private void OnBack(Action onEmptyStack = null)
+        public void OnBack(Action onEmptyStack = null)
         {
             if (backStack.Count > 1)
             {
@@ -104,9 +103,10 @@ namespace com.petrushevskiapps.menumanager
         {
             OpenPopup<UIExitPopup>();
         }
-        private void CloseApplication()
+        public void CloseApplication()
         {
             Application.Quit();
+            Debug.Log("Closing App");
         }
         
         [ContextMenu("Collect Windows In Scene")]

@@ -15,11 +15,6 @@ public class UICreateRoom : MonoBehaviour
         createRoomBtn.onClick.AddListener(CreateRoom);
     }
 
-    private void OnDestroy()
-    {
-        createRoomBtn.onClick.RemoveListener(CreateRoom);
-    }
-
     private void CreateRoom()
     {
         GameManager.Instance.NetworkManager.CreateRoom(inputField.text);

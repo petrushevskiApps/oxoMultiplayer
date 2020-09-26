@@ -90,7 +90,7 @@ namespace com.petrushevskiapps.Oxo
 
         private void OnDestroy()
         {
-            GameManager.Instance.NetworkChecker.OnOnline.RemoveListener(StartReconnectingCoroutine);
+            GameManager.Instance.NetworkChecker.OnOnline?.RemoveListener(StartReconnectingCoroutine);
             
             if (reconnectCoroutine != null)
             {

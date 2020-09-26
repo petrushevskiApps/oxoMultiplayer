@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using com.petrushevskiapps.menumanager;
+using PetrushevskiApps.UIManager;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
@@ -47,7 +48,7 @@ namespace com.petrushevskiapps.Oxo
                 {
                     PlayerPrefs.SetString(playerNamePrefKey, userName);
                     GameManager.Instance.SetUsername(userName);
-                    UIMenuController.Instance.ShowMainMenu();
+                    UIManager.Instance.OpenScreen<UIMainScreen>();
                 }
             }
         }

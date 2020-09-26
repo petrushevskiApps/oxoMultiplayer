@@ -12,10 +12,12 @@ namespace com.petrushevskiapps.Oxo
         [SerializeField] private float pingSeconds = 5f;
         
         public NetworkStatusChange OnNetworkStatusChange = new NetworkStatusChange();
+        
         public UnityEvent OnOnline = new UnityEvent();
         public UnityEvent OnOffline = new UnityEvent();
         
         public bool IsOnline => currNetworkStatus;
+        public bool IsOffline => !currNetworkStatus;
         
         private bool prevNetworkStatus = false;
         private bool currNetworkStatus = false;
@@ -25,6 +27,7 @@ namespace com.petrushevskiapps.Oxo
             StartCoroutine(CheckInternetConnection());
             StartCoroutine(PeriodicCheck());
         }
+       
         private IEnumerator PeriodicCheck()
         {
             while (true)
@@ -49,7 +52,6 @@ namespace com.petrushevskiapps.Oxo
                 
                 yield return new WaitForSecondsRealtime(pingSeconds);
             }
-            
         }
         
         public class NetworkStatusChange : UnityEvent<bool>{}
