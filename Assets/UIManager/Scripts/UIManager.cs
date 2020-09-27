@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+#if UNITY_EDITOR
 using UnityEditor.SceneManagement;
+#endif
 using UnityEngine;
 
 namespace PetrushevskiApps.UIManager
@@ -108,7 +109,7 @@ namespace PetrushevskiApps.UIManager
             Application.Quit();
             Debug.Log("Closing App");
         }
-        
+        #if UNITY_EDITOR
         [ContextMenu("Collect Windows In Scene")]
         public void CollectWindowsInScene()
         {
@@ -120,5 +121,6 @@ namespace PetrushevskiApps.UIManager
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
+        #endif
     }
 }

@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Animations;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "Data/ButtonAnimationConfig", fileName = "ButtonAnimationConfig")]
 public class ButtonAnimationConfig : ScriptableObject
