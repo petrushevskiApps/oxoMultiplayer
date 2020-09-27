@@ -29,6 +29,7 @@
             </e>
           </e>
         </e>
+        <e p="AudioManager.cs" t="Include" />
         <e p="Photon" t="Include">
           <e p="PhotonChat" t="Include">
             <e p="Code" t="Include">
