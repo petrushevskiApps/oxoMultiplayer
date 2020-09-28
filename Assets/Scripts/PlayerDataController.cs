@@ -18,6 +18,8 @@ public class PlayerDataController : MonoBehaviour
     public static UnityBoolEvent sfxStatusChange = new UnityBoolEvent();
     public static UnityBoolEvent vibrationStatusChange = new UnityBoolEvent();
     
+    public static UnityStringEvent usernameChanged = new UnityStringEvent();
+    
     public static UnityIntegerEvent playedGamesChange = new UnityIntegerEvent();
     public static UnityIntegerEvent wonGamesChange = new UnityIntegerEvent();
     public static UnityIntegerEvent lostGamesChange = new UnityIntegerEvent();
@@ -26,8 +28,14 @@ public class PlayerDataController : MonoBehaviour
     public static string Username
     {
         get => PlayerPrefs.GetString(KEY_USERNAME, string.Empty);
-        set => PlayerPrefs.SetString(KEY_USERNAME, value);
+        set
+        {
+            PlayerPrefs.SetString(KEY_USERNAME, value);
+            GameManager.Instance.SetUsername(value);
+            usernameChanged.Invoke(value);
+        }
     }
+
     public static int PlayedGames => PlayerPrefs.GetInt(KEY_PLAYED_GAMES, 0);
 
     public static void IncreasePlayedGames()
@@ -87,6 +95,9 @@ public class PlayerDataController : MonoBehaviour
     {
     }
     public class UnityIntegerEvent : UnityEvent<int>
+    {
+    }
+    public class UnityStringEvent : UnityEvent<string>
     {
     }
 }

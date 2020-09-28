@@ -1,69 +1,48 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using com.petrushevskiapps.menumanager;
-using PetrushevskiApps.UIManager;
-using Photon.Pun;
+﻿using PetrushevskiApps.UIManager;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace com.petrushevskiapps.Oxo
 {
     public class UIUserScreen : UIScreen
     {
-        [SerializeField] private Button saveBtn;
-
-        [SerializeField] private InputField inputField;
-        
-        
-        // Store the PlayerPref Key to avoid typos
-        const string playerNamePrefKey = "PlayerName";
-
+        [SerializeField] private UIButton usernameBtn;
+        [SerializeField] private TextMeshProUGUI usernameText;
+        [SerializeField] private TextMeshProUGUI gamesPlayedStat;
+        [SerializeField] private TextMeshProUGUI gamesWonStat;
+        [SerializeField] private TextMeshProUGUI gamesLostStat;
 
         private void Awake()
         {
-            saveBtn.interactable = false;
-            saveBtn.onClick.AddListener(SaveChanges);
-            inputField.onValueChanged.AddListener(EnableSaveButton);
+            usernameBtn.onClick.AddListener(OnUsernameBtnClicked);
+            PlayerDataController.usernameChanged.AddListener(OnUsernameChanged);
         }
-
         private void OnDestroy()
         {
-            saveBtn.onClick.RemoveListener(SaveChanges);
-            inputField.onValueChanged.RemoveListener(EnableSaveButton);
+            usernameBtn.onClick.RemoveListener(OnUsernameBtnClicked);
+            PlayerDataController.usernameChanged.RemoveListener(OnUsernameChanged);
         }
 
-        private void Start()
+        private void OnEnable()
         {
-            SetDefaultUsername();
-        }
-
-        private void SaveChanges()
-        {
-            if (inputField != null)
-            {
-                string userName = inputField.text;
-                
-                if (!string.IsNullOrEmpty(userName))
-                {
-                    PlayerPrefs.SetString(playerNamePrefKey, userName);
-                    GameManager.Instance.SetUsername(userName);
-                    UIManager.Instance.OpenScreen<UIMainScreen>();
-                }
-            }
-        }
-
-        private void SetDefaultUsername()
-        {
-            if (inputField!=null)
-            {
-                inputField.text = PlayerPrefs.GetString(playerNamePrefKey, string.Empty);
-            }
+            SetStats();
         }
         
-        private void EnableSaveButton(string userName)
+        private void OnUsernameBtnClicked()
         {
-            saveBtn.interactable = true;
+            UIManager.Instance.OpenPopup<UIChangeUsernamePopup>();
+        }
+        private void SetStats()
+        {
+            usernameText.text = PlayerDataController.Username;
+            gamesPlayedStat.text = PlayerDataController.PlayedGames.ToString();
+            gamesWonStat.text = PlayerDataController.WonGames.ToString();
+            gamesLostStat.text = PlayerDataController.LostGames.ToString();
+        }
+
+        private void OnUsernameChanged(string username)
+        {
+            usernameText.text = username;
         }
     }
 }
