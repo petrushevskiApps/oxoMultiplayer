@@ -449,6 +449,7 @@
             </e>
             <e p="UIManager.cs" t="Include" />
             <e p="Windows" t="Include">
+              <e p="UIMessagePopup.cs" t="Include" />
               <e p="UIPopup.cs" t="Include" />
               <e p="UIScreen.cs" t="Include" />
               <e p="UIWindow.cs" t="Include" />

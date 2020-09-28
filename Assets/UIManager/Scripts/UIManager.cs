@@ -52,10 +52,11 @@ namespace PetrushevskiApps.UIManager
             OpenWindow(screen);
         }
         
-        public void OpenPopup<T>()
+        public T OpenPopup<T>() where T : UIPopup
         {
             UIPopup popup = popups.Find(x => x.GetType() == typeof(T));
             OpenWindow(popup);
+            return (T) popup;
         }
         
         private void OpenWindow<T>(T window) where T : UIWindow

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -76,6 +77,7 @@ namespace com.petrushevskiapps.Oxo
             {
                 Debug.Log("PUN:: OnConnectedToMaster() was called by PUN");
                 isConnecting = false;
+                PhotonNetwork.JoinLobby(TypedLobby.Default);
             }
         }
 
@@ -172,16 +174,26 @@ namespace com.petrushevskiapps.Oxo
             }
         }
 
-        public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+        private List<RoomInfo> cachedRoomsList = new List<RoomInfo>();
+        
+        public override void OnRoomListUpdate(List<RoomInfo> roomList)
         {
-            Debug.LogFormat("OnPlayerLeftRoom() {0}", "test"); // seen when other disconnects
-
-            if (PhotonNetwork.IsMasterClient)
+            base.OnRoomListUpdate(roomList);
+            if (cachedRoomsList != null)
             {
-                Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
+                cachedRoomsList.Clear();
+                cachedRoomsList = roomList;
             }
         }
-        
+
+        public bool IsRoomExisting(string roomName)
+        {
+            if (cachedRoomsList != null && cachedRoomsList.Count > 0)
+            {
+                return cachedRoomsList.Exists(room => room.Name.Equals(roomName));
+            }
+            else return false;
+        }
     }
 }
 

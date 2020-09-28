@@ -18,7 +18,7 @@ public class UIMainScreen : UIScreen
         createGameBtn.onClick.AddListener(UIManager.Instance.OpenScreen<UICreateGameScreen>);
         userScreenBtn.onClick.AddListener(UIManager.Instance.OpenScreen<UIUserScreen>);
         helpBtn.onClick.AddListener(UIManager.Instance.OpenScreen<UIHelpScreen>);
-        settingsBtn.onClick.AddListener(UIManager.Instance.OpenPopup<UISettingsPopup>);
+        settingsBtn.onClick.AddListener(()=> UIManager.Instance.OpenPopup<UISettingsPopup>());
     }
 
 }

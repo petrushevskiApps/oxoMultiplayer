@@ -6,16 +6,9 @@ using UnityEngine.UI;
 
 public class UIJoinRoom : MonoBehaviour
 {
-    private Button createRoomBtn;
-    [SerializeField] private InputField inputField;
-    private void Awake()
-    {
-        createRoomBtn = GetComponent<Button>();
-        createRoomBtn.onClick.AddListener(JoinRoom);
-    }
+    
+    
+    
 
-    private void JoinRoom()
-    {
-        GameManager.Instance.NetworkManager.JoinRoom(inputField.text);
-    }
+    
 }
