@@ -2,15 +2,33 @@
 <project version="4">
   <component name="ContentModelStore">
     <e p="C:\Users\petru\.Rider2019.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\petru\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_OXO.-637120479.00" t="ExcludeRecursive" />
-    <e p="D:\14 - BlastGames\OXO" t="IncludeRecursive">
+    <e p="C:\Users\petru\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_OXO.-1230818469.00" t="ExcludeRecursive" />
+    <e p="D:\14 - BlastGames\OXOMultiplayer" t="IncludeRecursive">
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="AIPlayer.cs" t="Include" />
-        <e p="GameManager.cs" t="Include" />
-        <e p="Launcher.cs" t="Include" />
-        <e p="MatchController.cs" t="Include" />
-        <e p="NetworkManager.cs" t="Include" />
+        <e p="Art" t="Include">
+          <e p="20 Logos PSD" t="Include">
+            <e p="Fonts" t="Include">
+              <e p="chunkfiveex" t="Include">
+                <e p="SIL Open Font License 1.1.txt" t="Include" />
+              </e>
+              <e p="firasansheavy" t="Include">
+                <e p="SIL Open Font License.txt" t="Include" />
+              </e>
+              <e p="kaushanscript" t="Include">
+                <e p="SIL Open Font License.txt" t="Include" />
+              </e>
+              <e p="molot" t="Include">
+                <e p="molot-eula.txt" t="Include" />
+              </e>
+              <e p="peacesans" t="Include">
+                <e p="FREE FONT LICENSE.txt" t="Include" />
+              </e>
+              <e p="Read Me.txt" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="AudioManager.cs" t="Include" />
         <e p="Photon" t="Include">
           <e p="PhotonChat" t="Include">
             <e p="Code" t="Include">
@@ -370,13 +388,70 @@
             </e>
           </e>
         </e>
-        <e p="Player.cs" t="Include" />
-        <e p="PlayerNickname.cs" t="Include" />
-        <e p="StateImages.cs" t="Include" />
-        <e p="TileState.cs" t="Include" />
-        <e p="TurnController.cs" t="Include" />
-        <e p="UIEndScreen.cs" t="Include" />
-        <e p="WinCondition.cs" t="Include" />
+        <e p="Scripts" t="Include">
+          <e p="ConnectionController.cs" t="Include" />
+          <e p="Data" t="Include">
+            <e p="StateImages.cs" t="Include" />
+          </e>
+          <e p="Game" t="Include">
+            <e p="BoardController.cs" t="Include" />
+            <e p="MatchController.cs" t="Include" />
+            <e p="Player.cs" t="Include" />
+            <e p="TileState.cs" t="Include" />
+            <e p="TurnController.cs" t="Include" />
+            <e p="WinCondition.cs" t="Include" />
+          </e>
+          <e p="GameManager.cs" t="Include" />
+          <e p="NetworkManager.cs" t="Include" />
+          <e p="PlayerDataController.cs" t="Include" />
+          <e p="UI" t="Include">
+            <e p="UICreateGameScreen.cs" t="Include" />
+            <e p="UICreateRoom.cs" t="Include" />
+            <e p="UIEndScreen.cs" t="Include" />
+            <e p="UIExitPopup.cs" t="Include" />
+            <e p="UIHelpScreen.cs" t="Include" />
+            <e p="UIJoinRoom.cs" t="Include" />
+            <e p="UIJoinScreen.cs" t="Include" />
+            <e p="UILobbyScreen.cs" t="Include" />
+            <e p="UILobbyTitle.cs" t="Include" />
+            <e p="UIMainScreen.cs" t="Include" />
+            <e p="UINetworkPopup.cs" t="Include" />
+            <e p="UIPlayersList.cs" t="Include" />
+            <e p="UIProgressScreen.cs" t="Include" />
+            <e p="UISettingsPopup.cs" t="Include" />
+            <e p="UIToggle.cs" t="Include" />
+            <e p="UIUserScreen.cs" t="Include" />
+          </e>
+          <e p="Utilities" t="Include">
+            <e p="ReflectionHelpers.cs" t="Include" />
+          </e>
+        </e>
+        <e p="UIChangeUsernamePopup.cs" t="Include" />
+        <e p="UIManager" t="Include">
+          <e p="Scripts" t="Include">
+            <e p="Button" t="Include">
+              <e p="BackButton.cs" t="Include" />
+              <e p="Data" t="Include">
+                <e p="ButtonAnimationConfig.cs" t="Include" />
+                <e p="ButtonSoundConfig.cs" t="Include" />
+              </e>
+              <e p="Extensions" t="Include">
+                <e p="ButtonAnimation.cs" t="Include" />
+                <e p="ButtonExtension.cs" t="Include" />
+                <e p="ButtonNetwork.cs" t="Include" />
+                <e p="ButtonSound.cs" t="Include" />
+              </e>
+              <e p="UIButton.cs" t="Include" />
+            </e>
+            <e p="UIManager.cs" t="Include" />
+            <e p="Windows" t="Include">
+              <e p="UIMessagePopup.cs" t="Include" />
+              <e p="UIPopup.cs" t="Include" />
+              <e p="UIScreen.cs" t="Include" />
+              <e p="UIWindow.cs" t="Include" />
+            </e>
+          </e>
+        </e>
       </e>
       <e p="obj" t="ExcludeRecursive" />
       <e p="OXO.sln" t="IncludeFlat" />

@@ -12,11 +12,8 @@ namespace com.petrushevskiapps.Oxo
     public class NetworkManager : MonoBehaviourPunCallbacks
     {
         public static UnityEvent PlayerEnteredRoom = new UnityEvent();
-
-        /// <summary>
-        /// This client's version number. Users are separated from each other by gameVersion (which allows you to make breaking changes).
-        /// </summary>
-        string gameVersion = "1";
+        private List<RoomInfo> cachedRoomsList = new List<RoomInfo>();
+    
         
         /// <summary>
         /// The maximum number of players per room. When a room is full, it can't be joined by new players, and so new room will be created.
@@ -25,31 +22,6 @@ namespace com.petrushevskiapps.Oxo
         [SerializeField]
         private byte maxPlayersPerRoom = 4;
 
-        private bool isConnecting = false;
-        
-        public void SetupNetwork()
-        {
-            // #Critical
-            // this makes sure we can use PhotonNetwork.LoadLevel() on the master client and all clients
-            // in the same room sync their level automatically
-            PhotonNetwork.AutomaticallySyncScene = true;
-            Connect();
-        }
-        
-        /// <summary>
-        /// Start the connection process.
-        /// Connect this application instance to Photon Cloud Network
-        /// </summary>
-        public void Connect()
-        {
-            // Initiate the connection to the server.
-            if (!PhotonNetwork.IsConnected)
-            {
-                // #Critical, we must first and foremost connect to Photon Online Server.
-                isConnecting = PhotonNetwork.ConnectUsingSettings();
-                PhotonNetwork.GameVersion = gameVersion;
-            }
-        }
         public void CreateRoom(string roomName)
         {
             if (PhotonNetwork.IsConnected)
@@ -70,48 +42,7 @@ namespace com.petrushevskiapps.Oxo
             // in OnJoinRandomFailed() and we'll create one.
             PhotonNetwork.JoinRandomRoom();
         }
-        
-        public override void OnConnectedToMaster()
-        {
-            if (isConnecting)
-            {
-                Debug.Log("PUN:: OnConnectedToMaster() was called by PUN");
-                isConnecting = false;
-                PhotonNetwork.JoinLobby(TypedLobby.Default);
-            }
-        }
-
-        private Coroutine reconnectCoroutine;
-        
-        public override void OnDisconnected(DisconnectCause cause)
-        {
-            isConnecting = false;
-            GameManager.Instance.NetworkChecker.OnOnline.AddListener(StartReconnectingCoroutine);
-            Debug.LogWarningFormat("PUN:: OnDisconnected() was called by PUN with reason {0}", cause);
-        }
-
-        private void OnDestroy()
-        {
-            GameManager.Instance.NetworkChecker.OnOnline?.RemoveListener(StartReconnectingCoroutine);
-            
-            if (reconnectCoroutine != null)
-            {
-                StopCoroutine(reconnectCoroutine);
-            }
-        }
-
-        private void StartReconnectingCoroutine()
-        {
-            reconnectCoroutine = StartCoroutine(TryToReconnect());
-        }
-        private IEnumerator TryToReconnect()
-        {
-            while (!PhotonNetwork.Reconnect())
-            {
-                yield return new WaitForSeconds(1f);
-            }
-            GameManager.Instance.NetworkChecker.OnOnline.RemoveListener(StartReconnectingCoroutine);
-        }
+   
         
         public override void OnJoinRandomFailed(short returnCode, string message)
         {
@@ -132,17 +63,17 @@ namespace com.petrushevskiapps.Oxo
                 PhotonNetwork.LoadLevel("Lobby");
             }
         }
-        
+        public override void OnLeftRoom()
+        {
+            SceneManager.LoadScene(0);
+        }
+
         public void SetNetworkUsername(string userName)
         {
             PhotonNetwork.NickName = userName;
         }
         
-        public override void OnLeftRoom()
-        {
-            SceneManager.LoadScene(0);
-        }
-    
+        
         public void LeaveRoom()
         {
             PhotonNetwork.LeaveRoom();
@@ -174,8 +105,6 @@ namespace com.petrushevskiapps.Oxo
             }
         }
 
-        private List<RoomInfo> cachedRoomsList = new List<RoomInfo>();
-        
         public override void OnRoomListUpdate(List<RoomInfo> roomList)
         {
             base.OnRoomListUpdate(roomList);

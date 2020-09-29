@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using PetrushevskiApps.UIManager;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UILobbyScreen : MonoBehaviour
+public class UILobbyScreen : UIScreen
 {
     [SerializeField] private Button startGame;
 

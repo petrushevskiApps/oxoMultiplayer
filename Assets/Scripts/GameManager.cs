@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using com.petrushevskiapps.Oxo;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private NetworkManager networkManager;
-    [SerializeField] private NetworkChecker networkChecker;
+    [SerializeField] private ConnectionController connectionController;
     public NetworkManager NetworkManager => networkManager;
-    public NetworkChecker NetworkChecker => networkChecker;
+    public ConnectionController ConnectionController => connectionController;
     
     public static GameManager Instance;
     public bool IsUsernameSet { get; private set; }
@@ -27,7 +28,6 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
         
-        NetworkManager.SetupNetwork();
         SetUsername();
     }
 
