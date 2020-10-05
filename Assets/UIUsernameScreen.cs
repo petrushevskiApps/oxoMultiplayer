@@ -4,24 +4,21 @@ using PetrushevskiApps.UIManager;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIChangeUsernamePopup : UIPopup
+public class UIUsernameScreen : UIScreen
 {
     [SerializeField] private Button saveBtn;
     [SerializeField] private InputField inputField;
-    [SerializeField] private Button closeBtn;
     
     private void Awake()
     {
         saveBtn.interactable = false;
         saveBtn.onClick.AddListener(SaveChanges);
-        closeBtn.onClick.AddListener(OnBackButtonPressed);
         inputField.onValueChanged.AddListener(EnableSaveButton);
     }
     
     private void OnDestroy()
     {
         saveBtn.onClick.RemoveListener(SaveChanges);
-        closeBtn.onClick.RemoveListener(OnBackButtonPressed);
         inputField.onValueChanged.RemoveListener(EnableSaveButton);
     }
     

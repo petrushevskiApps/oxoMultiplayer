@@ -23,22 +23,23 @@ namespace PetrushevskiApps.UIManager
         }
         public override void Show()
         {
-            gameObject.SetActive(true);
             ActivateGlobalUIElements();
+            gameObject.SetActive(true);
             OnScreenShown.Invoke();
         }
         
         public override void Hide()
         {
-            gameObject.SetActive(false);
             DeactivateGlobalUIElements();
+            gameObject.SetActive(false);
             OnScreenHiden.Invoke();
         }
 
         public override void Open()
         {
-            gameObject.SetActive(true);
             ActivateGlobalUIElements();
+            gameObject.SetActive(true);
+            
             OnScreenOpen.Invoke();
         }
         public override void Close()

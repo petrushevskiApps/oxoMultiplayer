@@ -452,6 +452,7 @@
             </e>
           </e>
         </e>
+        <e p="UIUsernameScreen.cs" t="Include" />
       </e>
       <e p="obj" t="ExcludeRecursive" />
       <e p="OXO.sln" t="IncludeFlat" />

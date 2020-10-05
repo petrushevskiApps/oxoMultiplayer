@@ -1,4 +1,5 @@
-﻿using com.petrushevskiapps.Oxo;
+﻿using System;
+using com.petrushevskiapps.Oxo;
 using PetrushevskiApps.UIManager;
 using UnityEngine;
 
@@ -10,7 +11,15 @@ public class UIMainScreen : UIScreen
     [SerializeField] private UIButton userScreenBtn;
     [SerializeField] private UIButton helpBtn;
     [SerializeField] private UIButton settingsBtn;
-    
+
+    private void OnEnable()
+    {
+        if (string.IsNullOrEmpty(PlayerDataController.Username))
+        {
+            UIManager.Instance.OpenScreen<UIUsernameScreen>();
+        }
+    }
+
     private void Start()
     {
         joinGameBtn.onClick.AddListener(UIManager.Instance.OpenScreen<UIJoinScreen>);

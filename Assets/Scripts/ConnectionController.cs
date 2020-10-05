@@ -63,6 +63,7 @@ namespace com.petrushevskiapps.Oxo
             }
             
             PhotonNetwork.JoinLobby(TypedLobby.Default);
+            Debug.Log("Lobby Joined!");
         }
         
         public override void OnConnected()

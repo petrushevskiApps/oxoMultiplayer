@@ -50,6 +50,7 @@ namespace PetrushevskiApps.UIManager
         {
             OpenWindow(screens[mainScreenIndex]);
         }
+      
         public void OpenScreen<T>()
         {
             UIScreen screen = screens.Find(x => x.GetType() == typeof(T));
@@ -114,6 +115,7 @@ namespace PetrushevskiApps.UIManager
             Application.Quit();
             Debug.Log("Closing App");
         }
+        
         #if UNITY_EDITOR
         [ContextMenu("Collect Windows In Scene")]
         public void CollectWindowsInScene()

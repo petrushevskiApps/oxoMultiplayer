@@ -16,8 +16,8 @@ namespace com.petrushevskiapps.Oxo
         public static PlayerRoomEvent PlayerExitedRoom = new PlayerRoomEvent();
 
         private List<RoomInfo> cachedRoomsList = new List<RoomInfo>();
-    
-        
+        private Dictionary<string, RoomInfo> cachedRoomsDictionary = new Dictionary<string, RoomInfo>();
+
         /// <summary>
         /// The maximum number of players per room. When a room is full, it can't be joined by new players, and so new room will be created.
         /// </summary>
@@ -88,20 +88,36 @@ namespace com.petrushevskiapps.Oxo
         public override void OnRoomListUpdate(List<RoomInfo> roomList)
         {
             base.OnRoomListUpdate(roomList);
-            if (cachedRoomsList != null)
+            Debug.Log("Room List Retrieved!! ");
+            
+            roomList.ForEach(room =>
             {
-                cachedRoomsList.Clear();
-                cachedRoomsList = roomList;
-            }
+                if (room.RemovedFromList)
+                {
+                    if (cachedRoomsDictionary.ContainsKey(room.Name))
+                    {
+                        cachedRoomsDictionary.Remove(room.Name);
+                        Debug.Log("Room: " + room.Name + " removed!!");
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        cachedRoomsDictionary.Add(room.Name, room);
+                        Debug.Log("Room: " + room.Name + " added!!");
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log("Room: " + room.Name + " already exists");
+                    }
+                }
+            });
         }
 
         public bool IsRoomExisting(string roomName)
         {
-            if (cachedRoomsList != null && cachedRoomsList.Count > 0)
-            {
-                return cachedRoomsList.Exists(room => room.Name.Equals(roomName));
-            }
-            else return false;
+            return cachedRoomsDictionary.ContainsKey(roomName);
         }
         
         public void SetNetworkUsername(string userName)
