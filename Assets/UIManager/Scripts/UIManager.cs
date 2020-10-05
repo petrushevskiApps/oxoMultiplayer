@@ -16,7 +16,7 @@ namespace PetrushevskiApps.UIManager
         [SerializeField] private List<UIScreen> screens = new List<UIScreen>();
         [SerializeField] private List<UIPopup> popups = new List<UIPopup>();
 
-        private static Stack<UIWindow> backStack = new Stack<UIWindow>();
+        private Stack<UIWindow> backStack = new Stack<UIWindow>();
 
         
         public static UIManager Instance;
@@ -36,7 +36,7 @@ namespace PetrushevskiApps.UIManager
 
         private void OnEnable()
         {
-            OpenScreen<UIMainScreen>();
+            OpenMainScreen();
             InitializeAllWindows();
         }
 
@@ -45,7 +45,11 @@ namespace PetrushevskiApps.UIManager
             screens.ForEach(screen => screen.Initialize(()=>OnBack(ShowExitPopup)));
             popups.ForEach(screen => screen.Initialize(()=>OnBack()));
         }
-        
+
+        private void OpenMainScreen()
+        {
+            OpenWindow(screens[mainScreenIndex]);
+        }
         public void OpenScreen<T>()
         {
             UIScreen screen = screens.Find(x => x.GetType() == typeof(T));
@@ -114,9 +118,10 @@ namespace PetrushevskiApps.UIManager
         [ContextMenu("Collect Windows In Scene")]
         public void CollectWindowsInScene()
         {
-            screens.Clear();
-            screens = Resources.FindObjectsOfTypeAll<UIScreen>().ToList();
             
+            screens.Clear();
+            screens = transform.GetComponentsInChildren<UIScreen>().ToList();
+
             popups.Clear();
             popups = Resources.FindObjectsOfTypeAll<UIPopup>().ToList();
 

@@ -1,11 +1,17 @@
 ﻿using System;
-using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace PetrushevskiApps.UIManager
 {
     public class ButtonNetwork : ButtonExtension, IPointerUpHandler
     {
+        private UIButton button;
+        
+        private void Awake()
+        {
+            button =  GetComponent<UIButton>();
+        }
+
         private void OnEnable()
         {
             try
@@ -16,18 +22,15 @@ namespace PetrushevskiApps.UIManager
             {
                 ToggleInteractivity(false);
             }
-        }
-
-        private void Start()
-        {
+            
             GameManager.Instance.ConnectionController.OnNetworkStatusChange.AddListener(ToggleInteractivity);
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             GameManager.Instance.ConnectionController.OnNetworkStatusChange.RemoveListener(ToggleInteractivity);
         }
-        
+
         public void OnPointerUp(PointerEventData eventData)
         {
             ShowNoNetworkPopup();
@@ -41,7 +44,7 @@ namespace PetrushevskiApps.UIManager
         }
         private void ToggleInteractivity(bool networkStatus)
         {
-            GetComponent<UIButton>().interactable = networkStatus;
+            button.SetNetworkStatus(networkStatus);
         }
     }
 }

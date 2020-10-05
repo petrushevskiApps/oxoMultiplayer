@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using com.petrushevskiapps.Oxo;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,39 +10,58 @@ using UnityEngine.UI;
 public class UIPlayersList : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameObject playersListParent;
-
     [SerializeField] private GameObject playerUsernamePrefab;
+    
+    private Dictionary<string, GameObject> playersDictionary = new Dictionary<string, GameObject>();
 
-    private List<Photon.Realtime.Player> players;
-
-    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    
+    public override void OnEnable()
     {
-        base.OnPlayerEnteredRoom(newPlayer);
-        players.Add(newPlayer);
-        AddPlayerToUIList(newPlayer);
-    }
-
-    private void Start()
-    {
+        base.OnEnable();
+        NetworkManager.PlayerEnteredRoom.AddListener(AddPlayerToUiList);
+        NetworkManager.PlayerExitedRoom.AddListener(RemovePlayerFromUi);
         SetPlayersList();
+    }
+    
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        NetworkManager.PlayerEnteredRoom.RemoveListener(AddPlayerToUiList);
+        NetworkManager.PlayerExitedRoom.RemoveListener(RemovePlayerFromUi);
+        
+        foreach (KeyValuePair<string, GameObject> keyValuePair in playersDictionary)
+        {
+            Destroy(keyValuePair.Value);
+        }
+        playersDictionary.Clear();
     }
 
     private void SetPlayersList()
     {
-        Dictionary<int, Photon.Realtime.Player> keyValuePairs = PhotonNetwork.CurrentRoom.Players;
-
-        players = new List<Photon.Realtime.Player>();
-        foreach(Photon.Realtime.Player player in keyValuePairs.Values)
+        foreach(Photon.Realtime.Player player in PhotonNetwork.CurrentRoom.Players.Values)
         {
-            players.Add(player);
+            AddPlayerToUiList(player);
         }
-        
-        players.ForEach(action: x => AddPlayerToUIList(x));
     }
 
-    private void AddPlayerToUIList(Photon.Realtime.Player player)
+    private void AddPlayerToUiList(Photon.Realtime.Player player)
     {
-        GameObject playerName = Instantiate(playerUsernamePrefab, playersListParent.transform);
-        playerName.GetComponent<Text>().text = player.NickName;
+        if (playersDictionary.ContainsKey(player.UserId)) return;
+        
+        GameObject playerRow = Instantiate(playerUsernamePrefab, playersListParent.transform);
+        playersDictionary.Add(player.UserId, playerRow);
+        playerRow.GetComponent<Text>().text = player.NickName;
+
     }
+
+    private void RemovePlayerFromUi(Photon.Realtime.Player player)
+    {
+        if (playersDictionary.ContainsKey(player.UserId))
+        {
+            Destroy(playersDictionary[player.UserId]);
+            playersDictionary.Remove(player.UserId);
+        }
+    }
+    
+    
 }

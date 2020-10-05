@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
 
     public void SetUsername(string username = "")
     {
-        string nickname = PlayerPrefs.GetString("PlayerName");
+        string nickname = PlayerDataController.Username;
 
         if (!string.IsNullOrEmpty(nickname))
         {

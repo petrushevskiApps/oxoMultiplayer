@@ -10,6 +10,8 @@ namespace PetrushevskiApps.UIManager
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            if(audioSource == null) return;
+            
             if (GetComponent<UIButton>().interactable)
             {
                 audioSource.clip = soundConfig.positiveSound;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using PetrushevskiApps.UIManager;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -11,7 +12,9 @@ namespace com.petrushevskiapps.Oxo
 {
     public class NetworkManager : MonoBehaviourPunCallbacks
     {
-        public static UnityEvent PlayerEnteredRoom = new UnityEvent();
+        public static PlayerRoomEvent PlayerEnteredRoom = new PlayerRoomEvent();
+        public static PlayerRoomEvent PlayerExitedRoom = new PlayerRoomEvent();
+
         private List<RoomInfo> cachedRoomsList = new List<RoomInfo>();
     
         
@@ -26,7 +29,7 @@ namespace com.petrushevskiapps.Oxo
         {
             if (PhotonNetwork.IsConnected)
             {
-                PhotonNetwork.CreateRoom(roomName);
+                PhotonNetwork.CreateRoom(roomName, new RoomOptions { MaxPlayers = maxPlayersPerRoom, PublishUserId = true});
             }
         }
         public void JoinRoom(string roomName)
@@ -50,61 +53,38 @@ namespace com.petrushevskiapps.Oxo
                       "No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
 
             // #Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
-            PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = maxPlayersPerRoom });
+            PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = maxPlayersPerRoom, PublishUserId = true});
         }
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN:: OnJoinedRoom() called by PUN. Now this client is in a room.");
             
-            if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
-            {
-                // #Critical
-                // Load the Room Level.
-                PhotonNetwork.LoadLevel("Lobby");
-            }
+            UIManager.Instance.OpenScreen<UILobbyScreen>();
         }
         public override void OnLeftRoom()
         {
-            SceneManager.LoadScene(0);
+            UIManager.Instance.OpenScreen<UIMainScreen>();
         }
 
-        public void SetNetworkUsername(string userName)
-        {
-            PhotonNetwork.NickName = userName;
-        }
-        
-        
         public void LeaveRoom()
         {
             PhotonNetwork.LeaveRoom();
         }
-        private void LoadArena()
-        {
-            if (!PhotonNetwork.IsMasterClient)
-            {
-                Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
-            }
-            Debug.LogFormat("PhotonNetwork : Loading Level : {0}", PhotonNetwork.CurrentRoom.PlayerCount);
-            PhotonNetwork.LoadLevel(1);
-        }
-
         public void StartMatch()
         {
             PhotonNetwork.LoadLevel(2);
         }
-        public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+        public override void OnPlayerEnteredRoom(Photon.Realtime.Player player)
         {
-            base.OnPlayerEnteredRoom(newPlayer);
-            
-            Debug.LogFormat("OnPlayerEnteredRoom() {0}", "test"); // not seen if you're the player connecting
-
-            if (PhotonNetwork.IsMasterClient)
-            {
-                Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-                LoadArena();
-            }
+            base.OnPlayerEnteredRoom(player);
+            PlayerEnteredRoom.Invoke(player);
+//            UIManager.Instance.OpenScreen<UILobbyScreen>();
         }
-
+        public override void OnPlayerLeftRoom(Photon.Realtime.Player player)
+        {
+            base.OnPlayerLeftRoom(player);
+            PlayerExitedRoom.Invoke(player);
+        }
         public override void OnRoomListUpdate(List<RoomInfo> roomList)
         {
             base.OnRoomListUpdate(roomList);
@@ -122,6 +102,15 @@ namespace com.petrushevskiapps.Oxo
                 return cachedRoomsList.Exists(room => room.Name.Equals(roomName));
             }
             else return false;
+        }
+        
+        public void SetNetworkUsername(string userName)
+        {
+            PhotonNetwork.NickName = userName;
+        }
+
+        public class PlayerRoomEvent : UnityEvent<Photon.Realtime.Player>
+        {
         }
     }
 }

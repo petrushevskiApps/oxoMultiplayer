@@ -60,8 +60,9 @@ namespace com.petrushevskiapps.Oxo
                 isConnecting = false;
                 masterConnectionEstablished = true;
                 StopCoroutines();
-                PhotonNetwork.JoinLobby(TypedLobby.Default);
             }
+            
+            PhotonNetwork.JoinLobby(TypedLobby.Default);
         }
         
         public override void OnConnected()
