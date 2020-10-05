@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="883d8292-cd2d-43a9-ac4a-37c918421ace" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/NetworkManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/NetworkManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/PlayerName.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/PlayerName.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/RoomScreen.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/RoomScreen.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Launcher.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Launcher.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UIPlayersList.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UIPlayersList.cs" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -62,6 +66,7 @@
     <setting file="file://$PROJECT_DIR$/Assets/Photon/PhotonUnityNetworking/Demos/DemoSlotRacer/Scripts/PlayerControl.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Photon/PhotonUnityNetworking/Code/PhotonNetworkPart.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/UIManager/Scripts/UIManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/PlayerRow.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Photon/PhotonUnityNetworking/UtilityScripts/Room/CountdownTimer.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/UIUsernameScreen.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/437BA245-D840-4784-B9FB-AB9B439AC908/b7/65c0f07e/List`1.cs" root0="SKIP_HIGHLIGHTING" />
@@ -90,7 +95,6 @@
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/UIManagerEditor.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Editor/UIButtonEditor.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UIPlayersList.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Extensions/ButtonExtension.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Extensions/ButtonNetwork.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/UIButton.cs" />
@@ -102,6 +106,8 @@
         <option value="$PROJECT_DIR$/Assets/UIChangeUsernamePopup.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/ConnectionController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/NetworkManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/PlayerRow.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UIPlayersList.cs" />
       </list>
     </option>
   </component>
@@ -167,7 +173,8 @@
       <workItem from="1601769917350" duration="4011000" />
       <workItem from="1601799132166" duration="2531000" />
       <workItem from="1601876972590" duration="4421000" />
-      <workItem from="1601921713980" duration="3621000" />
+      <workItem from="1601921713980" duration="5090000" />
+      <workItem from="1601930252873" duration="941000" />
     </task>
     <servers />
   </component>

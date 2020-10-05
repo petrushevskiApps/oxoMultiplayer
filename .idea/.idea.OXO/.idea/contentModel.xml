@@ -388,6 +388,7 @@
             </e>
           </e>
         </e>
+        <e p="PlayerRow.cs" t="Include" />
         <e p="Scripts" t="Include">
           <e p="ConnectionController.cs" t="Include" />
           <e p="Data" t="Include">

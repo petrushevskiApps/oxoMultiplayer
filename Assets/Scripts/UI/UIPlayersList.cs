@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using com.petrushevskiapps.Oxo;
 using Photon.Pun;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -50,7 +51,7 @@ public class UIPlayersList : MonoBehaviourPunCallbacks
         
         GameObject playerRow = Instantiate(playerUsernamePrefab, playersListParent.transform);
         playersDictionary.Add(player.UserId, playerRow);
-        playerRow.GetComponent<Text>().text = player.NickName;
+        playerRow.GetComponent<PlayerRow>()?.SetPlayerName(player.NickName);
 
     }
 
