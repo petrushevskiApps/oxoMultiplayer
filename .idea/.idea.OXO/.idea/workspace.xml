@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="883d8292-cd2d-43a9-ac4a-37c918421ace" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Launcher.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Launcher.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ConnectionController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ConnectionController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/NetworkManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/NetworkManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UIMainScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UIMainScreen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/UIChangeUsernamePopup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UIChangeUsernamePopup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/UIManager/Scripts/UIManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UIManager/Scripts/UIManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/UIManager/Scripts/Windows/UIScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UIManager/Scripts/Windows/UIScreen.cs" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -174,7 +167,7 @@
       <workItem from="1601769917350" duration="4011000" />
       <workItem from="1601799132166" duration="2531000" />
       <workItem from="1601876972590" duration="4421000" />
-      <workItem from="1601921713980" duration="2926000" />
+      <workItem from="1601921713980" duration="3621000" />
     </task>
     <servers />
   </component>

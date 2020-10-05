@@ -102,14 +102,10 @@ namespace com.petrushevskiapps.Oxo
                 }
                 else
                 {
-                    try
+                    if (!cachedRoomsDictionary.ContainsKey(room.Name))
                     {
                         cachedRoomsDictionary.Add(room.Name, room);
                         Debug.Log("Room: " + room.Name + " added!!");
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.Log("Room: " + room.Name + " already exists");
                     }
                 }
             });
