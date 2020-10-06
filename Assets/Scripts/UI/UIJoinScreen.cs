@@ -10,8 +10,22 @@ public class UIJoinScreen : UIScreen
     private void Awake()
     {
         joinBtn.onClick.AddListener(JoinRoom);
+        inputField.onValueChanged.AddListener(ToggleButtonInteraction);
+    }
+    private void OnDestroy()
+    {
+        inputField.onValueChanged.RemoveListener(ToggleButtonInteraction);
+    }
+
+    private void OnEnable()
+    {
+        ToggleButtonInteraction(inputField.text);
     }
     
+    private void ToggleButtonInteraction(string input)
+    {
+        joinBtn.SetInteractableStatus(!string.IsNullOrEmpty(input));
+    }
     private void JoinRoom()
     {
         string roomName = inputField.text;
@@ -24,15 +38,6 @@ public class UIJoinScreen : UIScreen
 
     private bool ValidateRoomName(string roomName)
     {
-        if (string.IsNullOrEmpty(roomName))
-        {
-            Debug.Log("Empty room name! Please enter room name!");
-            UIManager.Instance.OpenPopup<UIMessagePopup>()
-                .SetTitle("EMPTY ROOM NAME")
-                .SetMessage("Please enter room name and try again...");
-            return false;
-        }
-
         if (!GameManager.Instance.NetworkManager.IsRoomExisting(roomName))
         {
             Debug.Log("Room: " + roomName + " does not exist!");

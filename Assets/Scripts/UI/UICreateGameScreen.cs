@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using com.petrushevskiapps.menumanager;
 using PetrushevskiApps.UIManager;
@@ -13,8 +14,24 @@ public class UICreateGameScreen : UIScreen
     private void Awake()
     {
         createBtn.onClick.AddListener(JoinRoom);
+        inputField.onValueChanged.AddListener(ToggleButtonInteraction);
     }
-    
+
+    private void OnDestroy()
+    {
+        inputField.onValueChanged.RemoveListener(ToggleButtonInteraction);
+    }
+
+    private void OnEnable()
+    {
+        ToggleButtonInteraction(inputField.text);
+    }
+
+    private void ToggleButtonInteraction(string input)
+    {
+        createBtn.SetInteractableStatus(!string.IsNullOrEmpty(input));
+    }
+
     private void JoinRoom()
     {
         string roomName = inputField.text;
@@ -27,15 +44,6 @@ public class UICreateGameScreen : UIScreen
 
     private bool ValidateRoomName(string roomName)
     {
-        if (string.IsNullOrEmpty(roomName))
-        {
-            Debug.Log("Empty room name! Please enter room name!");
-            UIManager.Instance.OpenPopup<UIMessagePopup>()
-                .SetTitle("EMPTY ROOM NAME")
-                .SetMessage("Please enter room name and try again...");
-            return false;
-        }
-
         if (GameManager.Instance.NetworkManager.IsRoomExisting(roomName))
         {
             UIManager.Instance.OpenPopup<UIMessagePopup>()

@@ -7,8 +7,8 @@ namespace PetrushevskiApps.UIManager
 {
     public class UIMessagePopup : UIPopup
     {
-        [SerializeField] private Text title;
-        [SerializeField] private Text message;
+        [SerializeField] private TextMeshProUGUI title;
+        [SerializeField] private TextMeshProUGUI message;
         [SerializeField] private Button closeButton;
     
         private void Awake()

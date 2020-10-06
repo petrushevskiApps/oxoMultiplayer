@@ -51,6 +51,10 @@ public class UIUsernameScreen : UIScreen
         
     private void EnableSaveButton(string userName)
     {
-        saveBtn.interactable = true;
+        if (!string.IsNullOrEmpty(userName))
+        {
+            saveBtn.interactable = true;
+        }
+        else saveBtn.interactable = false;
     }
 }
