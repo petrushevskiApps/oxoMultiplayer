@@ -2,16 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="883d8292-cd2d-43a9-ac4a-37c918421ace" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/contentModel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/indexLayout.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Prefabs/RoomScreen.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/RoomScreen.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Game.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Game.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Launcher.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Launcher.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UICreateGameScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UICreateGameScreen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UIExitPopup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UIExitPopup.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UIJoinScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UIJoinScreen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/UIChangeUsernamePopup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UIChangeUsernamePopup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/UIManager/Scripts/Windows/UIMessagePopup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UIManager/Scripts/Windows/UIMessagePopup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/UIUsernameScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UIUsernameScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UILobbyScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UILobbyScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UIManager/Scripts/Windows/UIScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UIManager/Scripts/Windows/UIScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,6 +34,7 @@
     <setting file="file://$PROJECT_DIR$/Assets/Photon/PhotonUnityNetworking/Demos/DemoAsteroids/Scripts/Game/Asteroid.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/ConnectionController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Extensions/ButtonSound.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/UIManager/Scripts/Utilitis/SafeArea.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Photon/PhotonRealtime/Code/LoadBalancingClient.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Photon/PhotonUnityNetworking/Demos/DemoAsteroids/Scripts/Game/AsteroidsGameManager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/UILobbyScreen.cs" root0="FORCE_HIGHLIGHTING" />
@@ -62,6 +63,7 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/UIEndScreen.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/UIExitPopup.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Photon/PhotonUnityNetworking/Demos/DemoHub/Scripts/DemoHubManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/UIHelpScreen.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Photon/PhotonChat/Code/ChatDisconnectCause.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Photon/PhotonUnityNetworking/Demos/PunCockpit/PunCockpit-Scene.unity" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Editor/UIButtonEditor.cs" root0="SKIP_HIGHLIGHTING" />
@@ -108,10 +110,8 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Extensions/ButtonExtension.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Extensions/ButtonNetwork.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UILobbyScreen.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/UIManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/UIMainScreen.cs" />
-        <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Windows/UIScreen.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/ConnectionController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/NetworkManager.cs" />
         <option value="$PROJECT_DIR$/Assets/PlayerRow.cs" />
@@ -121,8 +121,11 @@
         <option value="$PROJECT_DIR$/Assets/UIChangeUsernamePopup.cs" />
         <option value="$PROJECT_DIR$/Assets/UIUsernameScreen.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/UIButton.cs" />
+        <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Utilitis/SafeArea.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/UIJoinScreen.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/UICreateGameScreen.cs" />
+        <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Windows/UIScreen.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UILobbyScreen.cs" />
       </list>
     </option>
   </component>
@@ -190,7 +193,7 @@
       <workItem from="1601876972590" duration="4421000" />
       <workItem from="1601921713980" duration="5090000" />
       <workItem from="1601930252873" duration="944000" />
-      <workItem from="1601963524210" duration="3912000" />
+      <workItem from="1601963524210" duration="7753000" />
     </task>
     <servers />
   </component>

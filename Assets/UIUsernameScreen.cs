@@ -11,6 +11,7 @@ public class UIUsernameScreen : UIScreen
     
     private void Awake()
     {
+        base.Awake();
         saveBtn.interactable = false;
         saveBtn.onClick.AddListener(SaveChanges);
         inputField.onValueChanged.AddListener(EnableSaveButton);

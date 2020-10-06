@@ -445,6 +445,9 @@
               <e p="UIButton.cs" t="Include" />
             </e>
             <e p="UIManager.cs" t="Include" />
+            <e p="Utilitis" t="Include">
+              <e p="SafeArea.cs" t="Include" />
+            </e>
             <e p="Windows" t="Include">
               <e p="UIMessagePopup.cs" t="Include" />
               <e p="UIPopup.cs" t="Include" />

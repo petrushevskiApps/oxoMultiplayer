@@ -14,6 +14,7 @@ namespace com.petrushevskiapps.Oxo
 
         private void Awake()
         {
+            base.Awake();
             usernameBtn.onClick.AddListener(OnUsernameBtnClicked);
             PlayerDataController.usernameChanged.AddListener(OnUsernameChanged);
         }

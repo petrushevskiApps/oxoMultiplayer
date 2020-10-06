@@ -15,6 +15,7 @@ public class UILobbyScreen : UIScreen
 
     private void Awake()
     {
+        base.Awake();
         startGame.onClick.AddListener(StartGame);
         backButton.onClick.AddListener(ExitRoom);
     }

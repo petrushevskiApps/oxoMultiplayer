@@ -13,6 +13,7 @@ public class UICreateGameScreen : UIScreen
     
     private void Awake()
     {
+        base.Awake();
         createBtn.onClick.AddListener(JoinRoom);
         inputField.onValueChanged.AddListener(ToggleButtonInteraction);
     }

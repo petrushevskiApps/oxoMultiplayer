@@ -9,6 +9,7 @@ public class UIJoinScreen : UIScreen
     
     private void Awake()
     {
+        base.Awake();
         joinBtn.onClick.AddListener(JoinRoom);
         inputField.onValueChanged.AddListener(ToggleButtonInteraction);
     }
