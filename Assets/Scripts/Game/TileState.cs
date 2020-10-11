@@ -28,8 +28,15 @@ public class TileState : MonoBehaviour
     {
         if (Player.LocalInstance.IsActive)
         {
-            ChangeState();
-            OnStateChange.Invoke(tileId);
+            if (_tile == TileType.Empty)
+            {
+                ChangeState();
+                OnStateChange.Invoke(tileId);
+            }
+            else
+            {
+                Debug.Log("Show wrong tile clicked here with effects!");
+            }
         }
     }
     
