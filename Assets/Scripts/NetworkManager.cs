@@ -24,6 +24,8 @@ namespace com.petrushevskiapps.Oxo
         [SerializeField]
         private byte maxPlayersPerRoom = 4;
 
+        public bool IsMasterClient => PhotonNetwork.IsMasterClient;
+        
         public void CreateRoom(string roomName)
         {
             if (PhotonNetwork.IsConnected)

@@ -39,7 +39,7 @@ public class UILobbyScreen : UIScreen
     private void SetStartButton(Photon.Realtime.Player player = null)
     {
         bool isRoomReady = PhotonNetwork.CurrentRoom.MaxPlayers == PhotonNetwork.CurrentRoom.PlayerCount;
-        startGame.SetInteractableStatus(isRoomReady);
+        startGame.SetInteractableStatus(isRoomReady && GameManager.Instance.NetworkManager.IsMasterClient);
         SetRoomLabel(isRoomReady);
     }
 

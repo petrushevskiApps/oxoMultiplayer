@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="883d8292-cd2d-43a9-ac4a-37c918421ace" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/contentModel.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Launcher.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Launcher.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/NetworkManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/NetworkManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UILobbyScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UILobbyScreen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UIProgressScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UILoadingScreen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UIProgressScreen.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UILoadingScreen.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/UIManager/Scripts/UIManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UIManager/Scripts/UIManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/UIManager/Scripts/Windows/UIWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UIManager/Scripts/Windows/UIWindow.cs" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -137,10 +130,10 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/Game/MatchController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Game/BoardController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/UILoadingScreen.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/NetworkManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/UIMainScreen.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Windows/UIWindow.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/UIManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/NetworkManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/UILobbyScreen.cs" />
       </list>
     </option>
@@ -213,7 +206,7 @@
       <workItem from="1602080530572" duration="3850000" />
       <workItem from="1602135632814" duration="3083000" />
       <workItem from="1602362201760" duration="7750000" />
-      <workItem from="1602404420256" duration="3425000" />
+      <workItem from="1602404420256" duration="4133000" />
     </task>
     <servers />
   </component>
