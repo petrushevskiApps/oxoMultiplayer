@@ -413,12 +413,12 @@
             <e p="UIHelpScreen.cs" t="Include" />
             <e p="UIJoinRoom.cs" t="Include" />
             <e p="UIJoinScreen.cs" t="Include" />
+            <e p="UILoadingScreen.cs" t="Include" />
             <e p="UILobbyScreen.cs" t="Include" />
             <e p="UILobbyTitle.cs" t="Include" />
             <e p="UIMainScreen.cs" t="Include" />
             <e p="UINetworkPopup.cs" t="Include" />
             <e p="UIPlayersList.cs" t="Include" />
-            <e p="UIProgressScreen.cs" t="Include" />
             <e p="UISettingsPopup.cs" t="Include" />
             <e p="UIToggle.cs" t="Include" />
             <e p="UIUserScreen.cs" t="Include" />

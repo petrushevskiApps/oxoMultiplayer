@@ -4,7 +4,7 @@ using com.petrushevskiapps.menumanager;
 using PetrushevskiApps.UIManager;
 using UnityEngine;
 
-public class UIProgressScreen : UIScreen
+public class UILoadingScreen : UIScreen
 {
     
 }

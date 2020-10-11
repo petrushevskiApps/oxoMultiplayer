@@ -59,24 +59,29 @@ namespace PetrushevskiApps.UIManager
             return (T) popup;
         }
         
-        private void OpenWindow<T>(T window) where T : UIWindow
+        private void OpenWindow<T>(T newWindow) where T : UIWindow
         {
             // Hide current active window if of same base type
             if (backStack.Count > 0 && backStack.Peek().GetType().BaseType == typeof(T))
             {
-                backStack.Peek().Hide();
+                UIWindow currentWindow = backStack.Peek();
+                if (!currentWindow.IsBackStackable)
+                {
+                    backStack.Pop().Hide();
+                }
+                else currentWindow.Hide();
             }
             
-            if(backStack.Contains(window))
+            if(backStack.Contains(newWindow))
             {
-                ClearStackToScreen(window);
+                ClearStackToScreen(newWindow);
             }
             else
             {
-                backStack.Push(window);
+                backStack.Push(newWindow);
             }
             
-            if(window != null) window.Open();
+            if(newWindow != null) newWindow.Open();
         }
         
         public void OnBack(Action onEmptyStack = null)

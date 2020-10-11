@@ -42,7 +42,12 @@ public class UILobbyScreen : UIScreen
         startGame.SetInteractableStatus(isRoomReady);
         SetRoomLabel(isRoomReady);
     }
-    
+
+    protected override void OnBackButtonPressed()
+    {
+        ExitRoom();
+    }
+
     private void ExitRoom()
     {
         GameManager.Instance.NetworkManager.LeaveRoom();

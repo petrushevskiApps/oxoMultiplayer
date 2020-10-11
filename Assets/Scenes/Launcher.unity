@@ -713,6 +713,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2127955f413e014f8cf1aaa95926463, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backStackable: 1
   globalUiElements:
   - {fileID: 612626862}
   activateSafeArea: 1
@@ -1540,7 +1541,7 @@ GameObject:
   - component: {fileID: 167986271}
   - component: {fileID: 167986272}
   m_Layer: 5
-  m_Name: Progress
+  m_Name: LoadingPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1603,6 +1604,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91b86ef25049f3b4b9c1116b0ef3e00f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backStackable: 0
   globalUiElements: []
   activateSafeArea: 1
 --- !u!1 &185456757
@@ -2842,6 +2844,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c458f7210711d419e5bd867e419de7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backStackable: 1
   globalUiElements:
   - {fileID: 612626862}
   activateSafeArea: 1
@@ -3002,6 +3005,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f03c4bf8066cd5c48b1d8ca9aafd3886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backStackable: 1
   globalUiElements:
   - {fileID: 1286189987}
   activateSafeArea: 1
@@ -3062,6 +3066,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 928ab53a1947fd643a824980449eeabf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backStackable: 1
   musicGameObject: {fileID: 1463335620}
   sfxGameObject: {fileID: 1718182118}
   vibrationGameObject: {fileID: 678257764}
@@ -7301,6 +7306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e34244fe2ab047245a90d1867b49e880, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backStackable: 1
   globalUiElements:
   - {fileID: 612626862}
   activateSafeArea: 1
@@ -8502,6 +8508,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c1ef27f3f21c84cb9be27ffba86139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backStackable: 1
   closeButton: {fileID: 1541475016}
 --- !u!222 &1137641414
 CanvasRenderer:
@@ -9043,6 +9050,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23028179448c26940ab2904dea7e9172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backStackable: 1
   globalUiElements:
   - {fileID: 612626862}
   activateSafeArea: 1
@@ -9319,6 +9327,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c58690b6ef884ff7abbcec268000c5b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backStackable: 1
   title: {fileID: 28850687}
   message: {fileID: 1688117023}
   closeButton: {fileID: 1507651859}
@@ -11144,6 +11153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fac8916e3b5b6c42b8cfa7814c62321, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backStackable: 1
   globalUiElements: []
   activateSafeArea: 1
   saveBtn: {fileID: 1713102226}
@@ -12567,6 +12577,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dfacdc075d48ca4bb9359e005a47502, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backStackable: 1
   saveBtn: {fileID: 2092105099}
   inputField: {fileID: 162815368}
   closeBtn: {fileID: 1205739574}
@@ -12920,6 +12931,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 095af03a23ec26c4e9a7f7283f119b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backStackable: 1
   negativeButton: {fileID: 540372427}
   positiveButton: {fileID: 1004114398}
   closeButton: {fileID: 572071202}

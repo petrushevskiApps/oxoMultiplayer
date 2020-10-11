@@ -28,23 +28,36 @@ namespace com.petrushevskiapps.Oxo
         {
             if (PhotonNetwork.IsConnected)
             {
-                PhotonNetwork.CreateRoom(roomName, new RoomOptions { MaxPlayers = maxPlayersPerRoom, PublishUserId = true});
+                StartCoroutine(DelayJoin(() =>
+                {
+                    PhotonNetwork.CreateRoom(roomName, new RoomOptions { MaxPlayers = maxPlayersPerRoom, PublishUserId = true});
+                }));
             }
         }
         public void JoinRoom(string roomName)
         {
             if (PhotonNetwork.IsConnected)
             {
-                PhotonNetwork.JoinRoom(roomName);
+                StartCoroutine(DelayJoin(() =>
+                {
+                    PhotonNetwork.JoinRoom(roomName);
+                }));
             }
         }
         public void JoinRandomRoom()
         {
             // #Critical we need at this point to attempt joining a Random Room. If it fails, we'll get notified
             // in OnJoinRandomFailed() and we'll create one.
-            PhotonNetwork.JoinRandomRoom();
+            StartCoroutine(DelayJoin(() => { PhotonNetwork.JoinRandomRoom(); }));
+
         }
-   
+
+        IEnumerator DelayJoin(Action joinAction)
+        {
+            UIManager.Instance.OpenScreen<UILoadingScreen>();
+            yield return new WaitForSeconds(1f);
+            joinAction.Invoke();
+        }
         
         public override void OnJoinRandomFailed(short returnCode, string message)
         {
@@ -57,7 +70,6 @@ namespace com.petrushevskiapps.Oxo
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN:: OnJoinedRoom() called by PUN. Now this client is in a room.");
-//            SceneManager.LoadScene(1);
             UIManager.Instance.OpenScreen<UILobbyScreen>();
         }
         public override void OnLeftRoom()
