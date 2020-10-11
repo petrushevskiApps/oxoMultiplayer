@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="883d8292-cd2d-43a9-ac4a-37c918421ace" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/TileState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/TileState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -205,7 +205,7 @@
       <workItem from="1602080530572" duration="3850000" />
       <workItem from="1602135632814" duration="3083000" />
       <workItem from="1602362201760" duration="7750000" />
-      <workItem from="1602404420256" duration="4823000" />
+      <workItem from="1602404420256" duration="5422000" />
     </task>
     <servers />
   </component>
