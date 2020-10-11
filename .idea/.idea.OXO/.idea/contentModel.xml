@@ -428,6 +428,7 @@
           </e>
         </e>
         <e p="UIChangeUsernamePopup.cs" t="Include" />
+        <e p="UIGameScreen.cs" t="Include" />
         <e p="UIManager" t="Include">
           <e p="Scripts" t="Include">
             <e p="Button" t="Include">

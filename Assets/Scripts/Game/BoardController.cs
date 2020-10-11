@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using com.petrushevskiapps.Oxo;
+using PetrushevskiApps.UIManager;
 using Photon;
 using Photon.Pun;
 using UnityEngine;
@@ -11,8 +12,10 @@ using UnityEngine.Events;
 
 public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
 {
-    private WinCondition winCondition;
     private List<TileState> tiles = new List<TileState>();
+    
+    private WinCondition winCondition;
+    
     public TurnController turnController;
     
     public int[,] tilesTable = new int[3, 3];
@@ -28,8 +31,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         LocalInstance = this;
         // #Critical
         // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
-        DontDestroyOnLoad(this.gameObject);
-        
+
         winCondition = GetComponent<WinCondition>();
         turnController = GetComponent<TurnController>();
         
@@ -66,6 +68,10 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         photonView.RPC("TurnEnded", RpcTarget.All, tileId);
     }
 
+    public void Restart()
+    {
+        photonView.RPC("RestartBoard", RpcTarget.All);
+    }
     [PunRPC]
     private void TurnEnded(int tileId)
     {
@@ -91,6 +97,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     }
     private void MatchEnd(bool isTie = false)
     {
+        UIManager.Instance.OpenScreen<UIEndScreen>();
         if (isTie)
         {
             Debug.Log("No Winner match is Tie");
@@ -154,5 +161,18 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     
     public class MatchEndedEvent : UnityEvent<int> {}
 
-    
+
+    [PunRPC]
+    public void RestartBoard()
+    {
+        turnController.Restart();
+        tiles.ForEach(x =>
+        {
+            x.SetTile();
+        });
+//        SetTilesTable();
+        tilesTable = new int[3, 3];
+        UIManager.Instance.OpenScreen<UIGameScreen>();
+        TurnStart();
+    }
 }

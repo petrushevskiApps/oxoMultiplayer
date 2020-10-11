@@ -36,7 +36,7 @@ namespace PetrushevskiApps.UIManager
 
         private void OnEnable()
         {
-            OpenMainScreen();
+            OpenWindow(screens[mainScreenIndex]);
             InitializeAllWindows();
         }
 
@@ -46,11 +46,6 @@ namespace PetrushevskiApps.UIManager
             popups.ForEach(screen => screen.Initialize(()=>OnBack()));
         }
 
-        private void OpenMainScreen()
-        {
-            OpenWindow(screens[mainScreenIndex]);
-        }
-      
         public void OpenScreen<T>()
         {
             UIScreen screen = screens.Find(x => x.GetType() == typeof(T));

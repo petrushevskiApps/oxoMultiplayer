@@ -15,7 +15,6 @@ namespace com.petrushevskiapps.Oxo
         public static PlayerRoomEvent PlayerEnteredRoom = new PlayerRoomEvent();
         public static PlayerRoomEvent PlayerExitedRoom = new PlayerRoomEvent();
 
-        private List<RoomInfo> cachedRoomsList = new List<RoomInfo>();
         private Dictionary<string, RoomInfo> cachedRoomsDictionary = new Dictionary<string, RoomInfo>();
 
         /// <summary>
@@ -58,27 +57,34 @@ namespace com.petrushevskiapps.Oxo
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN:: OnJoinedRoom() called by PUN. Now this client is in a room.");
-            
+//            SceneManager.LoadScene(1);
             UIManager.Instance.OpenScreen<UILobbyScreen>();
         }
         public override void OnLeftRoom()
         {
-            UIManager.Instance.OpenScreen<UIMainScreen>();
+            if (SceneManager.GetActiveScene().buildIndex == 0)
+            {
+                UIManager.Instance.OpenScreen<UIMainScreen>();
+            }
+            else
+            {
+                SceneManager.LoadScene(0);
+            }
+            
         }
-
         public void LeaveRoom()
         {
             PhotonNetwork.LeaveRoom();
         }
+        
         public void StartMatch()
         {
-            PhotonNetwork.LoadLevel(2);
+            PhotonNetwork.LoadLevel(1);
         }
         public override void OnPlayerEnteredRoom(Photon.Realtime.Player player)
         {
             base.OnPlayerEnteredRoom(player);
             PlayerEnteredRoom.Invoke(player);
-//            UIManager.Instance.OpenScreen<UILobbyScreen>();
         }
         public override void OnPlayerLeftRoom(Photon.Realtime.Player player)
         {

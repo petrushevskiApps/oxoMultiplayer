@@ -56,4 +56,10 @@ public class TurnController : MonoBehaviour
     {
         return (turnCounter % PhotonNetwork.CurrentRoom.PlayerCount);
     }
+
+    public void Restart()
+    {
+        turnCounter = 0;
+        SetActivePlayer();
+    }
 }

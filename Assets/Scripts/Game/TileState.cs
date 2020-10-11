@@ -15,11 +15,15 @@ public class TileState : MonoBehaviour
     public TileStateChange OnStateChange = new TileStateChange();
     private void Awake()
     {
-        _tile = TileType.Empty;
         tileImage = GetComponent<SpriteRenderer>();
-        tileImage.sprite = stateImages.GetStateImage(TileType.Empty);
+        SetTile();
     }
 
+    public void SetTile()
+    {
+        _tile = TileType.Empty;
+        tileImage.sprite = stateImages.GetStateImage(TileType.Empty);
+    }
     private void OnMouseDown()
     {
         if (Player.LocalInstance.IsActive)
