@@ -16,7 +16,7 @@ namespace com.petrushevskiapps.Oxo
         public static PlayerRoomEvent PlayerExitedRoom = new PlayerRoomEvent();
 
         private Dictionary<string, RoomInfo> cachedRoomsDictionary = new Dictionary<string, RoomInfo>();
-
+        private bool isApplicationQuiting = false;
         /// <summary>
         /// The maximum number of players per room. When a room is full, it can't be joined by new players, and so new room will be created.
         /// </summary>
@@ -68,7 +68,8 @@ namespace com.petrushevskiapps.Oxo
             }
             else
             {
-                SceneManager.LoadScene(0);
+                // Prevent loading scene when application is quiting
+                if(!isApplicationQuiting) SceneManager.LoadScene(0);
             }
             
         }
@@ -129,6 +130,13 @@ namespace com.petrushevskiapps.Oxo
 
         public class PlayerRoomEvent : UnityEvent<Photon.Realtime.Player>
         {
+        }
+
+        
+
+        private void OnApplicationQuit()
+        {
+            isApplicationQuiting = true;
         }
     }
 }
