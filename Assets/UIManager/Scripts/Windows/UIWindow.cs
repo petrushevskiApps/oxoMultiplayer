@@ -12,7 +12,7 @@ namespace PetrushevskiApps.UIManager
         
         private Action BackButtonAction;
         
-        public void Initialize(Action onBackButtonAction)
+        public virtual void Initialize(Action onBackButtonAction)
         {
             BackButtonAction = onBackButtonAction;
         }

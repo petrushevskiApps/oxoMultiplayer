@@ -43,7 +43,7 @@ namespace PetrushevskiApps.UIManager
         private void InitializeAllWindows()
         {
             screens.ForEach(screen => screen.Initialize(()=>OnBack(ShowExitPopup)));
-            popups.ForEach(screen => screen.Initialize(()=>OnBack()));
+            popups.ForEach(popup => popup.Initialize(()=>OnBack()));
         }
 
         public void OpenScreen<T>()

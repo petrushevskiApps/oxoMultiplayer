@@ -24,11 +24,18 @@ public class UIEndScreen : UIScreen
     private void Awake()
     {
         base.Awake();
+        
+    }
+
+    public override void Initialize(Action onBackButtonAction)
+    {
+        base.Initialize(onBackButtonAction);
+        
         BoardController.OnMatchEnded.AddListener(MatchEnded);
         exitBtn.onClick.AddListener(ExitRoom);
         settingsButton.onClick.AddListener(ShowSettings);
         replayButton.onClick.AddListener(RestartScene);
-        background.SetActive(false);
+
         wonText.SetActive(false);
         lostText.SetActive(false);
     }
@@ -53,10 +60,9 @@ public class UIEndScreen : UIScreen
         BoardController.OnMatchEnded.RemoveListener(MatchEnded);
     }
 
-    private void MatchEnded(int winnerId)
+    private void MatchEnded(bool isWin)
     {
         background.SetActive(true);
-        bool isWin = Player.LocalInstance.GetPlayerId() == winnerId;
         ShowText(isWin);
         SetIcon(isWin);
     }

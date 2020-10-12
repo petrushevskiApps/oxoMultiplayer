@@ -36,7 +36,7 @@ public class TurnController : MonoBehaviour
         
     }
 
-    private void DeactivateAllPlayers(int winnerId)
+    private void DeactivateAllPlayers(bool isWin)
     {
         players.ForEach(x => x.IsActive = false);
     }

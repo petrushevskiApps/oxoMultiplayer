@@ -17,8 +17,11 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     private WinCondition winCondition;
     
     public TurnController turnController;
+
+    private static int maxRow = 3;
+    private static int maxColumn = 3;
     
-    public int[,] tilesTable = new int[3, 3];
+    public int[,] tilesTable = new int[maxRow, maxColumn];
     
     public static UnityEvent OnTurnStarted = new UnityEvent();
     public static UnityEvent OnTurnEnded = new UnityEvent();
@@ -75,16 +78,14 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void TurnEnded(int tileId)
     {
-        
         SetTilesTable(tileId);
        
-        
         bool isWin = winCondition.CheckWinCondition(tilesTable);
         bool isTie = winCondition.CheckTie(tilesTable);
         
         if (isWin || isTie)
         {
-            MatchEnd(isTie);
+            MatchEnd();
         }
         else
         {
@@ -95,21 +96,34 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         turnController.IncrementTurn();
         PrintTable();
     }
-    private void MatchEnd(bool isTie = false)
+    private void MatchEnd()
     {
-        UIManager.Instance.OpenScreen<UIEndScreen>();
-        if (isTie)
+        
+        bool isWin = turnController.GetActivePlayer().GetPlayerId() == Player.LocalInstance.GetPlayerId();
+        
+        List<WinCondition.RowColumIndex> rowColumIndex = winCondition.GetWinIndexes();
+            
+        rowColumIndex.ForEach(index =>
         {
-            Debug.Log("No Winner match is Tie");
-            OnMatchEnded.Invoke(0);
-        }
-        else
+            tiles[GetTileId(index.row, index.column)].EndGameTileEffect(isWin);
+        });
+        
+        Debug.Log("Player " + Player.LocalInstance.GetPlayerId() + " Won ");
+       
+        
+        
+        StartCoroutine(Delay(() =>
         {
-            Debug.Log("Player " + Player.LocalInstance.GetPlayerId() + " Won ");
-            OnMatchEnded.Invoke(turnController.GetActivePlayer().GetPlayerId());
-        }
+            UIManager.Instance.OpenScreen<UIEndScreen>();
+            OnMatchEnded.Invoke(isWin);
+        }));
     }
-    
+
+    private IEnumerator Delay(Action delayedAction)
+    {
+        yield return new WaitForSeconds(0.5f);
+        delayedAction.Invoke();
+    }
    
     private void SetTilesTable(int tileId = -1)
     {
@@ -132,6 +146,10 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    private int GetTileId(int row, int column)
+    {
+        return (row * maxColumn) + column;
+    }
     private void UpdateTile(int id)
     {
         tiles[id].ChangeState();
@@ -159,18 +177,19 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         
     }
     
-    public class MatchEndedEvent : UnityEvent<int> {}
+    public class MatchEndedEvent : UnityEvent<bool> {}
 
 
     [PunRPC]
     public void RestartBoard()
     {
         turnController.Restart();
+        winCondition.Restart();
+        
         tiles.ForEach(x =>
         {
             x.SetTile();
         });
-//        SetTilesTable();
         tilesTable = new int[3, 3];
         UIManager.Instance.OpenScreen<UIGameScreen>();
         TurnStart();

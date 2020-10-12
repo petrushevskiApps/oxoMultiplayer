@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49a8694ea1e27e045bb3a86ee68c372c, type: 3}
   m_Name: TileStates
   m_EditorClassIdentifier: 
-  emptyState: {fileID: 21300000, guid: cbfd497247d9e5e47b5ad7682d181de3, type: 3}
+  emptyBackground: {fileID: 21300000, guid: cbfd497247d9e5e47b5ad7682d181de3, type: 3}
+  winBackground: {fileID: 21300000, guid: d539a34212d3d3a4f9f60fa4f1b86238, type: 3}
+  loseBackground: {fileID: 21300000, guid: 547386f7be1a1e0488d7abb9bed84ba6, type: 3}
   crossState: {fileID: 21300000, guid: 73814c912222f604492c2baa1e244c32, type: 3}
   circleState: {fileID: 21300000, guid: 3ba4ae59f96a8f44abd69fe875485dc5, type: 3}
+  endCrossState: {fileID: 21300000, guid: 07b9afa1cca1bfe4482550eefd5e056f, type: 3}
+  endCircleState: {fileID: 21300000, guid: f00fe993247e59d42a51fec98de51fea, type: 3}
