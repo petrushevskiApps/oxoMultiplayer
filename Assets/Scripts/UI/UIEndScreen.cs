@@ -21,6 +21,11 @@ public class UIEndScreen : UIScreen
     [SerializeField] private List<Sprite> winImages;
     [SerializeField] private List<Sprite> loseImages;
 
+    [SerializeField] private AudioClip winAudio;
+    [SerializeField] private AudioClip loseAudio;
+
+    [SerializeField] private GameObject particles;
+    
     private void Awake()
     {
         base.Awake();
@@ -63,10 +68,16 @@ public class UIEndScreen : UIScreen
     private void MatchEnded(bool isWin)
     {
         background.SetActive(true);
+        particles.SetActive(isWin);
         ShowText(isWin);
         SetIcon(isWin);
+        PlayAudio(isWin);
     }
 
+    private void PlayAudio(bool isWin)
+    {
+        AudioManager.Instance.PlaySoundEffect(isWin ? winAudio : loseAudio);
+    }
     private void SetIcon(bool isWin)
     {
         List<Sprite> sprites = isWin ? winImages : loseImages;

@@ -38,6 +38,14 @@ public class AudioManager : MonoBehaviour
         OnBgMusicStatusChange(PlayerDataController.BackgroundMusicStatus);
     }
 
+    public void PlaySoundEffect(AudioClip audioClip)
+    {
+        if (PlayerDataController.SfxStatus)
+        {
+            sfxMusicSource.clip = audioClip;
+            sfxMusicSource.Play(); 
+        }
+    }
     private void OnSfxStatusChange(bool status)
     {
         sfxMusicSource.enabled = status;

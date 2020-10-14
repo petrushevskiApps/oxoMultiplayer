@@ -29,6 +29,15 @@
           </e>
         </e>
         <e p="AudioManager.cs" t="Include" />
+        <e p="Coffee" t="Include">
+          <e p="UIExtensions" t="Include">
+            <e p="UIParticle" t="Include">
+              <e p="Shaders" t="Include">
+                <e p="UIAdditive.shader" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
         <e p="Photon" t="Include">
           <e p="PhotonChat" t="Include">
             <e p="Code" t="Include">
