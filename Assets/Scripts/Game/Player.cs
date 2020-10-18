@@ -21,15 +21,8 @@ public class Player : MonoBehaviourPunCallbacks, IComparable
         
         tileType = (TileType) playerId;
         
-        DontDestroyOnLoad(this.gameObject);
-        
-        
     }
 
-    private void OnDestroy()
-    {
-        PhotonNetwork.Destroy(photonView);
-    }
 
     public override void OnEnable()
     {

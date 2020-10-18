@@ -23,7 +23,7 @@ public class UIMainScreen : UIScreen
     private void Start()
     {
         joinGameBtn.onClick.AddListener(UIManager.Instance.OpenScreen<UIJoinScreen>);
-        playRandomBtn.onClick.AddListener(GameManager.Instance.NetworkManager.JoinRandomRoom);
+        playRandomBtn.onClick.AddListener(NetworkManager.Instance.JoinRandomRoom);
         createGameBtn.onClick.AddListener(UIManager.Instance.OpenScreen<UICreateGameScreen>);
         userScreenBtn.onClick.AddListener(UIManager.Instance.OpenScreen<UIUserScreen>);
         helpBtn.onClick.AddListener(UIManager.Instance.OpenScreen<UIHelpScreen>);

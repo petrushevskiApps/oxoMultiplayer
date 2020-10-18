@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using com.petrushevskiapps.menumanager;
+using com.petrushevskiapps.Oxo;
 using PetrushevskiApps.UIManager;
 using UnityEngine;
 using UnityEngine.UI;
@@ -39,13 +40,13 @@ public class UICreateGameScreen : UIScreen
         
         if (ValidateRoomName(roomName))
         {
-            GameManager.Instance.NetworkManager.CreateRoom(roomName);
+            NetworkManager.Instance.CreateRoom(roomName);
         }
     }
 
     private bool ValidateRoomName(string roomName)
     {
-        if (GameManager.Instance.NetworkManager.IsRoomExisting(roomName))
+        if (NetworkManager.Instance.IsRoomExisting(roomName))
         {
             UIManager.Instance.OpenPopup<UIMessagePopup>()
                 .SetTitle("ROOM EXISTS")

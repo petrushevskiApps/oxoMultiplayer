@@ -1,4 +1,5 @@
-﻿using PetrushevskiApps.UIManager;
+﻿using com.petrushevskiapps.Oxo;
+using PetrushevskiApps.UIManager;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,13 +34,13 @@ public class UIJoinScreen : UIScreen
         
         if (ValidateRoomName(roomName))
         {
-            GameManager.Instance.NetworkManager.JoinRoom(roomName);
+            NetworkManager.Instance.JoinRoom(roomName);
         }
     }
 
     private bool ValidateRoomName(string roomName)
     {
-        if (!GameManager.Instance.NetworkManager.IsRoomExisting(roomName))
+        if (!NetworkManager.Instance.IsRoomExisting(roomName))
         {
             Debug.Log("Room: " + roomName + " does not exist!");
             UIManager.Instance.OpenPopup<UIMessagePopup>()

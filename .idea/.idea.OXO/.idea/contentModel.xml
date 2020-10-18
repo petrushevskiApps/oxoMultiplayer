@@ -398,6 +398,7 @@
           </e>
         </e>
         <e p="PlayerRow.cs" t="Include" />
+        <e p="RoomController.cs" t="Include" />
         <e p="Scripts" t="Include">
           <e p="ConnectionController.cs" t="Include" />
           <e p="Data" t="Include">
@@ -413,6 +414,7 @@
           </e>
           <e p="GameManager.cs" t="Include" />
           <e p="NetworkManager.cs" t="Include" />
+          <e p="NetworkPlayer.cs" t="Include" />
           <e p="PlayerDataController.cs" t="Include" />
           <e p="UI" t="Include">
             <e p="UICreateGameScreen.cs" t="Include" />
@@ -433,6 +435,7 @@
             <e p="UIUserScreen.cs" t="Include" />
           </e>
           <e p="Utilities" t="Include">
+            <e p="Constants.cs" t="Include" />
             <e p="ReflectionHelpers.cs" t="Include" />
           </e>
         </e>

@@ -191,7 +191,6 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
             x.SetTile();
         });
         tilesTable = new int[3, 3];
-        UIManager.Instance.OpenScreen<UIGameScreen>();
         TurnStart();
     }
 }

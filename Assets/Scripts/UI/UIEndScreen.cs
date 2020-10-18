@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using com.petrushevskiapps.Oxo;
 using PetrushevskiApps.UIManager;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -25,13 +27,7 @@ public class UIEndScreen : UIScreen
     [SerializeField] private AudioClip loseAudio;
 
     [SerializeField] private GameObject particles;
-    
-    private void Awake()
-    {
-        base.Awake();
-        
-    }
-
+ 
     public override void Initialize(Action onBackButtonAction)
     {
         base.Initialize(onBackButtonAction);
@@ -47,7 +43,8 @@ public class UIEndScreen : UIScreen
 
     private void RestartScene()
     {
-        matchController.RestartScene();
+//        matchController.RestartScene();
+        PhotonNetwork.LoadLevel(0);
     }
 
     private void ShowSettings()
@@ -57,7 +54,7 @@ public class UIEndScreen : UIScreen
 
     private void ExitRoom()
     {
-        GameManager.Instance.NetworkManager.LeaveRoom();
+        NetworkManager.Instance.LeaveRoom();
     }
 
     private void OnDestroy()

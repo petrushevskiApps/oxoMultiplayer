@@ -1,4 +1,5 @@
 ﻿using System;
+using com.petrushevskiapps.Oxo;
 using UnityEngine.EventSystems;
 
 namespace PetrushevskiApps.UIManager
@@ -16,19 +17,19 @@ namespace PetrushevskiApps.UIManager
         {
             try
             {
-                ToggleInteractivity(GameManager.Instance.ConnectionController.IsOnline);
+                ToggleInteractivity(NetworkManager.Instance.ConnectionController.IsOnline);
             }
             catch (NullReferenceException e)
             {
                 ToggleInteractivity(false);
             }
             
-            GameManager.Instance.ConnectionController.OnNetworkStatusChange.AddListener(ToggleInteractivity);
+            NetworkManager.Instance.ConnectionController.OnNetworkStatusChange.AddListener(ToggleInteractivity);
         }
 
         private void OnDisable()
         {
-            GameManager.Instance.ConnectionController.OnNetworkStatusChange.RemoveListener(ToggleInteractivity);
+            NetworkManager.Instance.ConnectionController.OnNetworkStatusChange.RemoveListener(ToggleInteractivity);
         }
 
         public void OnPointerUp(PointerEventData eventData)
@@ -37,7 +38,7 @@ namespace PetrushevskiApps.UIManager
         }
         private void ShowNoNetworkPopup()
         {
-            if (GameManager.Instance.ConnectionController.IsOffline)
+            if (NetworkManager.Instance.ConnectionController.IsOffline)
             {
                 UIManager.Instance.OpenPopup<UINetworkPopup>();
             }

@@ -19,47 +19,55 @@ public class UIPlayersList : MonoBehaviourPunCallbacks
     public override void OnEnable()
     {
         base.OnEnable();
-        NetworkManager.PlayerEnteredRoom.AddListener(AddPlayerToUiList);
-        NetworkManager.PlayerExitedRoom.AddListener(RemovePlayerFromUi);
+        RoomController.PlayerEnteredRoom.AddListener(AddPlayerToUiList);
+        RoomController.PlayerExitedRoom.AddListener(RemovePlayerFromUi);
+        
         SetPlayersList();
     }
     
     public override void OnDisable()
     {
         base.OnDisable();
-        NetworkManager.PlayerEnteredRoom.RemoveListener(AddPlayerToUiList);
-        NetworkManager.PlayerExitedRoom.RemoveListener(RemovePlayerFromUi);
+        
+        RoomController.PlayerEnteredRoom.RemoveListener(AddPlayerToUiList);
+        RoomController.PlayerExitedRoom.RemoveListener(RemovePlayerFromUi);
         
         foreach (KeyValuePair<string, GameObject> keyValuePair in playersDictionary)
         {
             Destroy(keyValuePair.Value);
         }
+        
         playersDictionary.Clear();
     }
 
     private void SetPlayersList()
     {
-        foreach(Photon.Realtime.Player player in PhotonNetwork.CurrentRoom.Players.Values)
+        foreach (NetworkPlayer player in NetworkManager.Instance.RoomController.GetPlayersInRoom)
         {
             AddPlayerToUiList(player);
         }
     }
 
-    private void AddPlayerToUiList(Photon.Realtime.Player player)
+    private void AddPlayerToUiList(NetworkPlayer player)
     {
         if (playersDictionary.ContainsKey(player.UserId)) return;
         
         GameObject playerRow = Instantiate(playerUsernamePrefab, playersListParent.transform);
         playersDictionary.Add(player.UserId, playerRow);
-        playerRow.GetComponent<PlayerRow>()?.SetPlayerName(player.NickName);
-
+        
+        PlayerRow row = playerRow.GetComponent<PlayerRow>();
+        row.SetPlayerName(player.Nickname);
+        row.SetToggle(player.IsReady);
+        row.RegisterToggleEvent(player.PlayerStatusChange);
     }
 
-    private void RemovePlayerFromUi(Photon.Realtime.Player player)
+    private void RemovePlayerFromUi(NetworkPlayer player)
     {
         if (playersDictionary.ContainsKey(player.UserId))
         {
-            Destroy(playersDictionary[player.UserId]);
+            GameObject playerRow = playersDictionary[player.UserId];
+            playerRow.GetComponent<PlayerRow>().UnregisterEvent(player.PlayerStatusChange);
+            Destroy(playerRow);
             playersDictionary.Remove(player.UserId);
         }
     }

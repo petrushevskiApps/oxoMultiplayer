@@ -2,12 +2,31 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="883d8292-cd2d-43a9-ac4a-37c918421ace" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utilities/Constants.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utilities/Constants.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/AudioManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/AudioManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/PlayerRow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/PlayerRow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Player.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Player.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/RoomScreen.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/RoomScreen.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/Player.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Player.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Game.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Game.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Launcher.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Launcher.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/BoardController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/BoardController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/MatchController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/MatchController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Player.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/NetworkManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/NetworkManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/NetworkManager.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/NetworkManager.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UICreateGameScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UICreateGameScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UICreateRoom.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UICreateRoom.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UIEndScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UIEndScreen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Extensions/ButtonSound.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Extensions/ButtonSound.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UIJoinScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UIJoinScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UILobbyScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UILobbyScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UIMainScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UIMainScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UIPlayersList.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UIPlayersList.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Extensions/ButtonNetwork.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Extensions/ButtonNetwork.cs" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,6 +58,7 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/UILobbyScreen.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Photon/PhotonUnityNetworking/Demos/DemoAsteroids/Scripts/Lobby/RoomListEntry.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Photon/PhotonUnityNetworking/UtilityScripts/PhotonPlayer/PlayerNumbering.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/UICreateRoom.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Photon/PhotonUnityNetworking/Demos/DemoAsteroids/Scripts/Lobby/LobbyTopPanel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/UIGameScreen.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Photon/PhotonUnityNetworking/Demos/DemoAsteroids/Scripts/Lobby/PlayerListEntry.cs" root0="FORCE_HIGHLIGHTING" />
@@ -82,24 +102,22 @@
     <setting file="file://$PROJECT_DIR$/Assets/Photon/PhotonUnityNetworking/Code/PhotonHandler.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Game/TurnController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/UIManager/Scripts/UIManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/NetworkPlayer.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Game/TileState.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Game/Player.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/PlayerRow.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Photon/PhotonUnityNetworking/UtilityScripts/Room/CountdownTimer.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/UIUsernameScreen.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Utilities/Constants.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Game/MatchController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/437BA245-D840-4784-B9FB-AB9B439AC908/b7/65c0f07e/List`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Game/BoardController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Coffee/UIExtensions/UIParticle/Scripts/UIParticle.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Coffee/UIExtensions/UIParticle/Scripts/UIParticle.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/RoomController.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Assets/TileStates.cs" />
-        <option value="$PROJECT_DIR$/Assets/WinCondition.cs" />
-        <option value="$PROJECT_DIR$/Assets/StateImages.cs" />
-        <option value="$PROJECT_DIR$/Assets/PlayerController.cs" />
-        <option value="$PROJECT_DIR$/Assets/AIPlayer.cs" />
-        <option value="$PROJECT_DIR$/Assets/PlayerNickname.cs" />
         <option value="$PROJECT_DIR$/Assets/Launcher.cs" />
         <option value="$PROJECT_DIR$/Assets/TileState.cs" />
         <option value="$PROJECT_DIR$/Assets/Player.cs" />
@@ -113,38 +131,44 @@
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Editor/UIManagerEditor.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/UIManagerEditor.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Editor/UIButtonEditor.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Extensions/ButtonExtension.cs" />
-        <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Extensions/ButtonNetwork.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/ConnectionController.cs" />
-        <option value="$PROJECT_DIR$/Assets/PlayerRow.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UIPlayersList.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Windows/UIMessagePopup.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/UIExitPopup.cs" />
         <option value="$PROJECT_DIR$/Assets/UIChangeUsernamePopup.cs" />
         <option value="$PROJECT_DIR$/Assets/UIUsernameScreen.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/UIButton.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Utilitis/SafeArea.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UIJoinScreen.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UICreateGameScreen.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Windows/UIScreen.cs" />
         <option value="$PROJECT_DIR$/Assets/UIGameScreen.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Game/MatchController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/UILoadingScreen.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UIMainScreen.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/NetworkManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UILobbyScreen.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Data/StateImages.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Game/WinCondition.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Game/TurnController.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/UIManager.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Windows/UIWindow.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Game/BoardController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Game/TileState.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Data/TileImages.cs" />
         <option value="$PROJECT_DIR$/Assets/AudioManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UIEndScreen.cs" />
         <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Extensions/ButtonSound.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Game/MatchController.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UICreateGameScreen.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UICreateRoom.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UIJoinScreen.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UIMainScreen.cs" />
+        <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Extensions/ButtonNetwork.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/PlayerStatus.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/NetworkPlayer.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Utilities/Constants.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UILobbyScreen.cs" />
+        <option value="$PROJECT_DIR$/Assets/RoomController.cs" />
+        <option value="$PROJECT_DIR$/Assets/PlayerRow.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UIPlayersList.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Game/BoardController.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/UIEndScreen.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/NetworkManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Game/Player.cs" />
       </list>
     </option>
   </component>
@@ -219,7 +243,11 @@
       <workItem from="1602404420256" duration="13968000" />
       <workItem from="1602441288651" duration="3010000" />
       <workItem from="1602492654649" duration="2122000" />
-      <workItem from="1602654890494" duration="1935000" />
+      <workItem from="1602654890494" duration="3180000" />
+      <workItem from="1602887125862" duration="1447000" />
+      <workItem from="1602922816349" duration="13886000" />
+      <workItem from="1602946539259" duration="1072000" />
+      <workItem from="1602947630934" duration="19066000" />
     </task>
     <servers />
   </component>
@@ -248,6 +276,19 @@
           <properties exception="System.Threading.ThreadAbortException" displayValue="System.Threading.ThreadAbortException" />
           <option name="timeStamp" value="1" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/Game/Player.cs</url>
+          <line>32</line>
+          <properties documentPath="$PROJECT_DIR$/Assets/Scripts/Game/Player.cs" initialLine="32">
+            <startOffsets>
+              <option value="876" />
+            </startOffsets>
+            <endOffsets>
+              <option value="910" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

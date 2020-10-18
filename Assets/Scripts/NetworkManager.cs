@@ -1,31 +1,65 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using com.petrushevskiapps.Oxo.Utilities;
 using PetrushevskiApps.UIManager;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 namespace com.petrushevskiapps.Oxo
 {
     public class NetworkManager : MonoBehaviourPunCallbacks
     {
-        public static PlayerRoomEvent PlayerEnteredRoom = new PlayerRoomEvent();
-        public static PlayerRoomEvent PlayerExitedRoom = new PlayerRoomEvent();
-
+        [SerializeField] private RoomController roomController;
+        [SerializeField] private ConnectionController connectionController;
+        public ConnectionController ConnectionController => connectionController;
+        public RoomController RoomController => roomController;
+        
+        public static UnityEvent LeavingRoom = new UnityEvent();
+        
         private Dictionary<string, RoomInfo> cachedRoomsDictionary = new Dictionary<string, RoomInfo>();
-        private bool isApplicationQuiting = false;
-        /// <summary>
-        /// The maximum number of players per room. When a room is full, it can't be joined by new players, and so new room will be created.
-        /// </summary>
-        [Tooltip("The maximum number of players per room. When a room is full, it can't be joined by new players, and so new room will be created")]
-        [SerializeField]
-        private byte maxPlayersPerRoom = 4;
+
+        [Tooltip("The maximum number of players per room.")]
+        [SerializeField] private byte maxPlayersPerRoom = 4;
 
         public bool IsMasterClient => PhotonNetwork.IsMasterClient;
         
+        public static NetworkManager Instance;
+
+        private Hashtable playerProperties;
+        private void Awake()
+        {
+            if (Instance != null)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+
+            SetupPlayerProperties();
+            
+        }
+
+        public void SetupPlayerProperties()
+        {
+            playerProperties = new Hashtable();
+            playerProperties.Add(Constants.PLAYER_READY_KEY, false);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
+        }
+
+        public void ChangePlayerProperty(string KEY, bool value)
+        {
+            playerProperties[KEY] = value;
+            PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
+        }
+
         public void CreateRoom(string roomName)
         {
             if (PhotonNetwork.IsConnected)
@@ -72,6 +106,7 @@ namespace com.petrushevskiapps.Oxo
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN:: OnJoinedRoom() called by PUN. Now this client is in a room.");
+            roomController.SetupRoomController();
             UIManager.Instance.OpenScreen<UILobbyScreen>();
         }
         public override void OnLeftRoom()
@@ -83,12 +118,16 @@ namespace com.petrushevskiapps.Oxo
             else
             {
                 // Prevent loading scene when application is quiting
-                if(!isApplicationQuiting) SceneManager.LoadScene(0);
+                if (!GameManager.Instance.IsApplicationQuiting)
+                {
+                    SceneManager.LoadScene(0);
+                }
             }
             
         }
         public void LeaveRoom()
         {
+            roomController.CleanRoomController();
             PhotonNetwork.LeaveRoom();
         }
         
@@ -96,16 +135,7 @@ namespace com.petrushevskiapps.Oxo
         {
             PhotonNetwork.LoadLevel(1);
         }
-        public override void OnPlayerEnteredRoom(Photon.Realtime.Player player)
-        {
-            base.OnPlayerEnteredRoom(player);
-            PlayerEnteredRoom.Invoke(player);
-        }
-        public override void OnPlayerLeftRoom(Photon.Realtime.Player player)
-        {
-            base.OnPlayerLeftRoom(player);
-            PlayerExitedRoom.Invoke(player);
-        }
+    
         public override void OnRoomListUpdate(List<RoomInfo> roomList)
         {
             base.OnRoomListUpdate(roomList);
@@ -142,16 +172,13 @@ namespace com.petrushevskiapps.Oxo
             PhotonNetwork.NickName = userName;
         }
 
-        public class PlayerRoomEvent : UnityEvent<Photon.Realtime.Player>
+        public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)
         {
+            base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
         }
 
         
-
-        private void OnApplicationQuit()
-        {
-            isApplicationQuiting = true;
-        }
+        
     }
 }
 

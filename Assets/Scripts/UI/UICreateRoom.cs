@@ -17,6 +17,6 @@ public class UICreateRoom : MonoBehaviour
 
     private void CreateRoom()
     {
-        GameManager.Instance.NetworkManager.CreateRoom(inputField.text);
+        NetworkManager.Instance.CreateRoom(inputField.text);
     }
 }

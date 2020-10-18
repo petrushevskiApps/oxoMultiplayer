@@ -1,5 +1,7 @@
 ﻿using System;
 using com.petrushevskiapps.Oxo;
+using com.petrushevskiapps.Oxo.Utilities;
+using ExitGames.Client.Photon;
 using PetrushevskiApps.UIManager;
 using Photon.Pun;
 using TMPro;
@@ -10,6 +12,7 @@ public class UILobbyScreen : UIScreen
 {
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private UIButton startGame;
+    [SerializeField] private UIButton playerReady;
     [SerializeField] private Button backButton;
     [SerializeField] private TextMeshProUGUI labelText;
 
@@ -17,50 +20,66 @@ public class UILobbyScreen : UIScreen
     {
         base.Awake();
         startGame.onClick.AddListener(StartGame);
+        playerReady.onClick.AddListener(OnPlayerReadyClicked);
         backButton.onClick.AddListener(ExitRoom);
     }
 
     private void OnEnable()
     {
-        NetworkManager.PlayerEnteredRoom.AddListener(SetStartButton);
-        NetworkManager.PlayerExitedRoom.AddListener(SetStartButton);
+        RoomController.RoomStatusChange.AddListener(SetStartButton);
+        RoomController.RoomStatusChange.AddListener(SetRoomLabel);
         
         SetRoomTitle();
-        SetRoomLabel(false);
-        SetStartButton();
+        SetRoomLabel(NetworkManager.Instance.RoomController.IsRoomReady);
+
+        if (NetworkManager.Instance.IsMasterClient)
+        {
+            startGame.gameObject.SetActive(true);
+            playerReady.gameObject.SetActive(false);
+            SetStartButton(NetworkManager.Instance.RoomController.IsRoomReady);
+        }
+        else
+        {
+            startGame.gameObject.SetActive(false);
+            playerReady.gameObject.SetActive(true);
+        }
     }
 
     public void OnDisable()
     {
-        NetworkManager.PlayerEnteredRoom.RemoveListener(SetStartButton);
-        NetworkManager.PlayerExitedRoom.RemoveListener(SetStartButton);
+        RoomController.RoomStatusChange.RemoveListener(SetStartButton);
+        RoomController.RoomStatusChange.AddListener(SetRoomLabel);
+        
+        startGame.gameObject.SetActive(false);
+        playerReady.gameObject.SetActive(false);
     }
 
-    private void SetStartButton(Photon.Realtime.Player player = null)
+    private void OnPlayerReadyClicked()
     {
-        bool isRoomReady = PhotonNetwork.CurrentRoom.MaxPlayers == PhotonNetwork.CurrentRoom.PlayerCount;
-        startGame.SetInteractableStatus(isRoomReady && GameManager.Instance.NetworkManager.IsMasterClient);
-        SetRoomLabel(isRoomReady);
+        NetworkManager.Instance.ChangePlayerProperty(Constants.PLAYER_READY_KEY, true);
+    }
+    
+    private void SetStartButton(bool isRoomReady)
+    {
+        startGame.SetInteractableStatus(isRoomReady);
     }
 
     protected override void OnBackButtonPressed()
     {
         ExitRoom();
     }
-
-    private void ExitRoom()
-    {
-        GameManager.Instance.NetworkManager.LeaveRoom();
-    }
-
     private void StartGame()
     {
-        GameManager.Instance.NetworkManager.StartMatch();
+        NetworkManager.Instance.StartMatch();
     }
-    
+    private void ExitRoom()
+    {
+        NetworkManager.Instance.LeaveRoom();
+    }
+
     private void SetRoomTitle()
     {
-        titleText.text = PhotonNetwork.CurrentRoom.Name;
+        titleText.text = RoomController.RoomName;
     }
 
     private void SetRoomLabel(bool isReady)
