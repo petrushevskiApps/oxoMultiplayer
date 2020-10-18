@@ -28,7 +28,6 @@
             </e>
           </e>
         </e>
-        <e p="AudioManager.cs" t="Include" />
         <e p="Coffee" t="Include">
           <e p="UIExtensions" t="Include">
             <e p="UIParticle" t="Include">
@@ -397,10 +396,8 @@
             </e>
           </e>
         </e>
-        <e p="PlayerRow.cs" t="Include" />
-        <e p="RoomController.cs" t="Include" />
         <e p="Scripts" t="Include">
-          <e p="ConnectionController.cs" t="Include" />
+          <e p="AudioManager.cs" t="Include" />
           <e p="Data" t="Include">
             <e p="TileImages.cs" t="Include" />
           </e>
@@ -413,34 +410,40 @@
             <e p="WinCondition.cs" t="Include" />
           </e>
           <e p="GameManager.cs" t="Include" />
-          <e p="NetworkManager.cs" t="Include" />
-          <e p="NetworkPlayer.cs" t="Include" />
+          <e p="Networking" t="Include">
+            <e p="ConnectionController.cs" t="Include" />
+            <e p="NetworkManager.cs" t="Include" />
+            <e p="NetworkPlayer.cs" t="Include" />
+            <e p="RoomController.cs" t="Include" />
+          </e>
           <e p="PlayerDataController.cs" t="Include" />
           <e p="UI" t="Include">
-            <e p="UICreateGameScreen.cs" t="Include" />
-            <e p="UICreateRoom.cs" t="Include" />
-            <e p="UIEndScreen.cs" t="Include" />
-            <e p="UIExitPopup.cs" t="Include" />
-            <e p="UIHelpScreen.cs" t="Include" />
-            <e p="UIJoinRoom.cs" t="Include" />
-            <e p="UIJoinScreen.cs" t="Include" />
-            <e p="UILoadingScreen.cs" t="Include" />
-            <e p="UILobbyScreen.cs" t="Include" />
-            <e p="UILobbyTitle.cs" t="Include" />
-            <e p="UIMainScreen.cs" t="Include" />
-            <e p="UINetworkPopup.cs" t="Include" />
+            <e p="PlayerRow.cs" t="Include" />
+            <e p="Popups" t="Include">
+              <e p="UIChangeUsernamePopup.cs" t="Include" />
+              <e p="UIExitPopup.cs" t="Include" />
+              <e p="UINetworkPopup.cs" t="Include" />
+              <e p="UISettingsPopup.cs" t="Include" />
+            </e>
+            <e p="Screens" t="Include">
+              <e p="UICreateGameScreen.cs" t="Include" />
+              <e p="UIEndScreen.cs" t="Include" />
+              <e p="UIGameScreen.cs" t="Include" />
+              <e p="UIHelpScreen.cs" t="Include" />
+              <e p="UIJoinScreen.cs" t="Include" />
+              <e p="UILoadingScreen.cs" t="Include" />
+              <e p="UILobbyScreen.cs" t="Include" />
+              <e p="UIMainScreen.cs" t="Include" />
+              <e p="UIUsernameScreen.cs" t="Include" />
+              <e p="UIUserScreen.cs" t="Include" />
+            </e>
             <e p="UIPlayersList.cs" t="Include" />
-            <e p="UISettingsPopup.cs" t="Include" />
-            <e p="UIToggle.cs" t="Include" />
-            <e p="UIUserScreen.cs" t="Include" />
           </e>
           <e p="Utilities" t="Include">
             <e p="Constants.cs" t="Include" />
             <e p="ReflectionHelpers.cs" t="Include" />
           </e>
         </e>
-        <e p="UIChangeUsernamePopup.cs" t="Include" />
-        <e p="UIGameScreen.cs" t="Include" />
         <e p="UIManager" t="Include">
           <e p="Scripts" t="Include">
             <e p="Button" t="Include">
@@ -460,6 +463,7 @@
             <e p="UIManager.cs" t="Include" />
             <e p="Utilitis" t="Include">
               <e p="SafeArea.cs" t="Include" />
+              <e p="UIToggle.cs" t="Include" />
             </e>
             <e p="Windows" t="Include">
               <e p="UIMessagePopup.cs" t="Include" />
@@ -469,7 +473,6 @@
             </e>
           </e>
         </e>
-        <e p="UIUsernameScreen.cs" t="Include" />
       </e>
       <e p="obj" t="ExcludeRecursive" />
       <e p="OXO.sln" t="IncludeFlat" />
