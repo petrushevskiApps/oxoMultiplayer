@@ -14,23 +14,23 @@ namespace com.petrushevskiapps.Oxo
 {
     public class NetworkManager : MonoBehaviourPunCallbacks
     {
+        [Header("Controllers")]
         [SerializeField] private RoomController roomController;
         [SerializeField] private ConnectionController connectionController;
+
         public ConnectionController ConnectionController => connectionController;
         public RoomController RoomController => roomController;
+        public bool IsMasterClient => PhotonNetwork.IsMasterClient;
         
-        public static UnityEvent LeavingRoom = new UnityEvent();
-        
-        private Dictionary<string, RoomInfo> cachedRoomsDictionary = new Dictionary<string, RoomInfo>();
 
         [Tooltip("The maximum number of players per room.")]
         [SerializeField] private byte maxPlayersPerRoom = 4;
 
-        public bool IsMasterClient => PhotonNetwork.IsMasterClient;
-        
         public static NetworkManager Instance;
 
         private Hashtable playerProperties;
+        private Dictionary<string, RoomInfo> cachedRoomsDictionary = new Dictionary<string, RoomInfo>();
+        
         private void Awake()
         {
             if (Instance != null)
@@ -107,7 +107,7 @@ namespace com.petrushevskiapps.Oxo
         {
             Debug.Log("PUN:: OnJoinedRoom() called by PUN. Now this client is in a room.");
             roomController.SetupRoomController();
-            UIManager.Instance.OpenScreen<UILobbyScreen>();
+            UIManager.Instance.OpenScreen<UIRoomScreen>();
         }
         public override void OnLeftRoom()
         {
@@ -172,13 +172,6 @@ namespace com.petrushevskiapps.Oxo
             PhotonNetwork.NickName = userName;
         }
 
-        public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)
-        {
-            base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
-        }
-
-        
-        
     }
 }
 

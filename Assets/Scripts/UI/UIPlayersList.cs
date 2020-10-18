@@ -53,23 +53,18 @@ public class UIPlayersList : MonoBehaviourPunCallbacks
         if (playersDictionary.ContainsKey(player.UserId)) return;
         
         GameObject playerRow = Instantiate(playerUsernamePrefab, playersListParent.transform);
-        playersDictionary.Add(player.UserId, playerRow);
         
         PlayerRow row = playerRow.GetComponent<PlayerRow>();
-        row.SetPlayerName(player.Nickname);
-        row.SetToggle(player.IsReady);
-        row.RegisterToggleEvent(player.PlayerStatusChange);
+        row.SetupRow(player.IsReady, player.Nickname, player.PlayerStatusChange);
+        
+        playersDictionary.Add(player.UserId, playerRow);
     }
 
     private void RemovePlayerFromUi(NetworkPlayer player)
     {
-        if (playersDictionary.ContainsKey(player.UserId))
-        {
-            GameObject playerRow = playersDictionary[player.UserId];
-            playerRow.GetComponent<PlayerRow>().UnregisterEvent(player.PlayerStatusChange);
-            Destroy(playerRow);
-            playersDictionary.Remove(player.UserId);
-        }
+        if (!playersDictionary.ContainsKey(player.UserId)) return;
+        Destroy(playersDictionary[player.UserId]);
+        playersDictionary.Remove(player.UserId);
     }
     
     

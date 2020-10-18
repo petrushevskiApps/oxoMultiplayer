@@ -13,9 +13,4 @@ public class MatchController : MonoBehaviour
         }
     }
 
-    public void RestartScene()
-    {
-        board.GetComponent<BoardController>().Restart();
-    }
-    
 }

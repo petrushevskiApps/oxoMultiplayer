@@ -1,20 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class WinCondition : MonoBehaviour
 {
     private List<RowColumIndex> winIndexes = new List<RowColumIndex>();
 
-    public List<RowColumIndex> GetWinIndexes()
-    {
-        return winIndexes;
-    }
-    public void Restart()
-    {
-        winIndexes.Clear();
-    }
-    
+    public List<RowColumIndex> GetWinIndexes() => winIndexes;
+
     public bool CheckWinCondition(int[,] tilesTable)
     {
         return CheckRows(tilesTable) 
@@ -24,12 +18,7 @@ public class WinCondition : MonoBehaviour
     }
     public bool CheckTie(int[,] tilesTable)
     {
-        int count = 0;
-        foreach (int t in tilesTable)
-        {
-            if (t != 0) count++;
-        }
-        
+        int count = tilesTable.Cast<int>().Count(t => t != 0);
         return count == tilesTable.Length;
     }
     private bool CheckRows(int[,] tilesTable)

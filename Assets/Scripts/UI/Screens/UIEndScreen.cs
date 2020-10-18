@@ -10,29 +10,32 @@ using Random = UnityEngine.Random;
 
 public class UIEndScreen : UIScreen
 {
-    [SerializeField] private MatchController matchController;
+    [Header("Buttons")]
+    [SerializeField] private UIButton exitBtn;
+    [SerializeField] private UIButton settingsButton;
+    [SerializeField] private UIButton replayButton;
     
-    [SerializeField] private Button exitBtn;
-    [SerializeField] private Button settingsButton;
-    [SerializeField] private Button replayButton;
-    
+    [Header("Texts")]
     [SerializeField] private GameObject wonText;
     [SerializeField] private GameObject lostText;
-    [SerializeField] private GameObject background;
+    
+    [Header("Images")]
     [SerializeField] private Image image;
     [SerializeField] private List<Sprite> winImages;
     [SerializeField] private List<Sprite> loseImages;
 
+    [Header("Audio")]
     [SerializeField] private AudioClip winAudio;
     [SerializeField] private AudioClip loseAudio;
 
+    [Header("VFX")]
     [SerializeField] private GameObject particles;
  
     public override void Initialize(Action onBackButtonAction)
     {
         base.Initialize(onBackButtonAction);
         
-        BoardController.OnMatchEnded.AddListener(MatchEnded);
+        BoardController.MatchEnded.AddListener(MatchEnded);
         exitBtn.onClick.AddListener(ExitRoom);
         settingsButton.onClick.AddListener(ShowSettings);
         replayButton.onClick.AddListener(RestartScene);
@@ -40,31 +43,19 @@ public class UIEndScreen : UIScreen
         wonText.SetActive(false);
         lostText.SetActive(false);
     }
-
-    private void RestartScene()
-    {
-//        matchController.RestartScene();
-        PhotonNetwork.LoadLevel(0);
-    }
-
-    private void ShowSettings()
-    {
-        UIManager.Instance.OpenPopup<UISettingsPopup>();
-    }
-
-    private void ExitRoom()
-    {
-        NetworkManager.Instance.LeaveRoom();
-    }
-
     private void OnDestroy()
     {
-        BoardController.OnMatchEnded.RemoveListener(MatchEnded);
+        BoardController.MatchEnded.RemoveListener(MatchEnded);
     }
+    
+    private void RestartScene() => PhotonNetwork.LoadLevel(0);
+
+    private void ShowSettings() => UIManager.Instance.OpenPopup<UISettingsPopup>();
+
+    private void ExitRoom() => NetworkManager.Instance.LeaveRoom();
 
     private void MatchEnded(bool isWin)
     {
-        background.SetActive(true);
         particles.SetActive(isWin);
         ShowText(isWin);
         SetIcon(isWin);
@@ -81,6 +72,7 @@ public class UIEndScreen : UIScreen
         int randIndex = Random.Range(0, sprites.Count - 1);
         image.sprite = sprites[randIndex];
     }
+    
     private void ShowText(bool isWin)
     {
         wonText.SetActive(isWin);

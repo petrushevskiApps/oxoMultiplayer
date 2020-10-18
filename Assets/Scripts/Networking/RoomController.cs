@@ -21,8 +21,22 @@ public class RoomController : MonoBehaviourPunCallbacks
     private Dictionary<string, NetworkPlayer> players = new Dictionary<string, NetworkPlayer>();
 
     public List<NetworkPlayer> GetPlayersInRoom => players.Values.ToList();
-    public bool IsRoomReady { get; private set; }
-    
+    public bool IsRoomReady => RoomCurrentStatus == RoomStatus.Ready;
+
+    private RoomStatus roomCurrentStatus = RoomStatus.Waiting;
+    public RoomStatus RoomCurrentStatus
+    {
+        get => roomCurrentStatus;
+        private set
+        {
+            if (roomCurrentStatus != value)
+            {
+                roomCurrentStatus = value;
+                RoomStatusChange.Invoke(roomCurrentStatus);
+            }
+        }
+    }
+
     // Called when Player enters room
     public void SetupRoomController()
     {
@@ -38,9 +52,9 @@ public class RoomController : MonoBehaviourPunCallbacks
     {
         NetworkManager.Instance.SetupPlayerProperties();
         players.Clear();
-        IsRoomReady = false;
-
+        RoomCurrentStatus = RoomStatus.Waiting;
     }
+    
     private void SetRoomStatus(bool check = false)
     {
         bool roomReady = true;
@@ -57,10 +71,13 @@ public class RoomController : MonoBehaviourPunCallbacks
             }
         }
         
-        if (IsRoomReady != roomReady)
+        if (roomReady)
         {
-            IsRoomReady = roomReady;
-            RoomStatusChange.Invoke(IsRoomReady);
+            RoomCurrentStatus = RoomStatus.Ready;
+        }
+        else
+        {
+            RoomCurrentStatus = IsRoomFull ? RoomStatus.Full : RoomStatus.Waiting;
         }
     }
     
@@ -95,6 +112,12 @@ public class RoomController : MonoBehaviourPunCallbacks
     }
     
     public class PlayerRoomEvent : UnityEvent<NetworkPlayer>{}
-    public class RoomStatusChangeEvent: UnityEvent<bool>{}
+    public class RoomStatusChangeEvent: UnityEvent<RoomStatus>{}
 
+    public enum RoomStatus
+    {
+        Waiting,
+        Full,
+        Ready,
+    }
 }

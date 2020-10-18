@@ -10,7 +10,7 @@ public class UISettingsPopup : UIPopup
     [SerializeField] private GameObject musicGameObject;
     [SerializeField] private GameObject sfxGameObject;
     [SerializeField] private GameObject vibrationGameObject;
-    [SerializeField] private Button closeButton;
+    [SerializeField] private UIButton closeButton;
     
     private UIToggle musicToggle;
     private UIToggle sfxToggle;

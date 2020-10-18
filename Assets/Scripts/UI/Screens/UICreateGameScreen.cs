@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using com.petrushevskiapps.menumanager;
 using com.petrushevskiapps.Oxo;
+using com.petrushevskiapps.Oxo.Utilities;
 using PetrushevskiApps.UIManager;
 using UnityEngine;
 using UnityEngine.UI;
@@ -49,11 +47,10 @@ public class UICreateGameScreen : UIScreen
         if (NetworkManager.Instance.IsRoomExisting(roomName))
         {
             UIManager.Instance.OpenPopup<UIMessagePopup>()
-                .SetTitle("ROOM EXISTS")
-                .SetMessage("Room with name: <b>" + roomName + "</b> already exists! Please enter another room name and try again.");
+                .SetTitle(Constants.ROOM_EXIST_TITLE_TXT)
+                .SetMessage(string.Format(Constants.ROOM_EXIST_MESSAGE_TXT, roomName));
             return false;
         }
-
         return true;
     }
 }

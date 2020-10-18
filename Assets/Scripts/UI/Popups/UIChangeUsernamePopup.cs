@@ -6,9 +6,13 @@ using UnityEngine.UI;
 
 public class UIChangeUsernamePopup : UIPopup
 {
-    [SerializeField] private Button saveBtn;
+    [Header("Buttons")]
+    [SerializeField] private UIButton saveBtn;
+    [SerializeField] private UIButton closeBtn;
+    
+    [Header("Inputs")]
     [SerializeField] private InputField inputField;
-    [SerializeField] private Button closeBtn;
+    
     
     private void Awake()
     {

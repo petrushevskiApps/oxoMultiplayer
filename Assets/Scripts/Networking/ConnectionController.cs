@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using com.petrushevskiapps.Oxo.Utilities;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -10,7 +11,7 @@ namespace com.petrushevskiapps.Oxo
 {
     public class ConnectionController : MonoBehaviourPunCallbacks
     {
-        public NetworkStatusChange OnNetworkStatusChange = new NetworkStatusChange();
+        public UnityBoolEvent OnNetworkStatusChange = new UnityBoolEvent();
         public UnityEvent OnOnline = new UnityEvent();
         public UnityEvent OnOffline = new UnityEvent();
         
@@ -122,6 +123,5 @@ namespace com.petrushevskiapps.Oxo
                 StopCoroutine(connectingCoroutine);
             }
         }
-        public class NetworkStatusChange : UnityEvent<bool>{}
     }
 }

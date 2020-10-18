@@ -6,17 +6,17 @@ using UnityEngine;
 
 public class TurnController : MonoBehaviour
 {
+    private int turnCounter = 0;
     private List<Player> players = new List<Player>();
-    public int turnCounter = 0;
-
+    
     private void OnEnable()
     {
-        BoardController.OnMatchEnded.AddListener(DeactivateAllPlayers);
+        BoardController.MatchEnded.AddListener(DeactivateAllPlayers);
     }
 
     private void OnDisable()
     {
-        BoardController.OnMatchEnded.RemoveListener(DeactivateAllPlayers);
+        BoardController.MatchEnded.RemoveListener(DeactivateAllPlayers);
     }
 
     public void IncrementTurn()
@@ -29,9 +29,9 @@ public class TurnController : MonoBehaviour
     {
         players.ForEach(x =>
         {
-            int currentID = x.GetPlayerId();
-            int activeID = GetPlayerTurnID() + 1;
-            x.IsActive = currentID == activeID;
+            int currentId = x.PlayerID;
+            int activeId = GetPlayerTurnId() + 1;
+            x.IsActive = currentId == activeId;
         });
         
     }
@@ -50,16 +50,8 @@ public class TurnController : MonoBehaviour
     
     public Player GetActivePlayer()
     {
-        return players.Count > 0 ? players[GetPlayerTurnID()] : null;
+        return players.Count > 0 ? players[GetPlayerTurnId()] : null;
     }
-    public int GetPlayerTurnID()
-    {
-        return (turnCounter % PhotonNetwork.CurrentRoom.PlayerCount);
-    }
-
-    public void Restart()
-    {
-        turnCounter = 0;
-        SetActivePlayer();
-    }
+    
+    private int GetPlayerTurnId() => turnCounter % PhotonNetwork.CurrentRoom.PlayerCount;
 }

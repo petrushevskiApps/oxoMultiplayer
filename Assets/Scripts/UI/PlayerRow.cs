@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -10,23 +11,33 @@ public class PlayerRow : MonoBehaviour
     [SerializeField] private TextMeshProUGUI playerName;
     [SerializeField] private Toggle toggle;
 
-    public void SetToggle(bool isReady)
+    private UnityEvent<bool> playerEvent;
+    
+    private void OnDestroy()
+    {
+        UnregisterEvent();
+    }
+
+    public void SetupRow(bool isReady, string playerName, UnityEvent<bool> playerEvent)
+    {
+        this.playerEvent = playerEvent;
+        this.playerName.text = playerName;
+        SetToggle(isReady);
+        RegisterToggleEvent();
+    }
+    
+    private void SetToggle(bool isReady)
     {
         toggle.isOn = isReady;
     }
-    
-    public void SetPlayerName(string name)
-    {
-        playerName.text = name;
-    }
 
-    public void RegisterToggleEvent(UnityEvent<bool> playerEvent)
+    private void RegisterToggleEvent()
     {
         playerEvent.AddListener(SetToggle);
     }
 
-    public void UnregisterEvent(UnityEvent<bool> playerEvent)
+    private void UnregisterEvent()
     {
-        playerEvent.RemoveListener(SetToggle);
+        playerEvent?.RemoveListener(SetToggle);
     }
 }

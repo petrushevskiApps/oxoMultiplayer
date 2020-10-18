@@ -1,4 +1,5 @@
 ﻿using System;
+using com.petrushevskiapps.Oxo.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
@@ -7,17 +8,17 @@ using UnityEngine.UI;
 public class TileState : MonoBehaviour
 {
     [SerializeField] private TileImages images;
-    
     [SerializeField] private SpriteRenderer tileStateImage;
     
+    [HideInInspector] 
+    public UnityIntegerEvent TileStateChange = new UnityIntegerEvent();
+    
+    public int tileId = 0;
+
     private Animator animator;
     private SpriteRenderer tileBackgroundImage;
     private TileType _tile;
     private Button tileButton;
-    public int tileId = 0;
-
-    [HideInInspector] 
-    public TileStateChange OnStateChange = new TileStateChange();
     
     private void Awake()
     {
@@ -43,7 +44,7 @@ public class TileState : MonoBehaviour
             {
                 Debug.Log("TileID: " + tileId);
                 ChangeState();
-                OnStateChange.Invoke(tileId);
+                TileStateChange.Invoke(tileId);
             }
             else
             {
@@ -56,7 +57,7 @@ public class TileState : MonoBehaviour
     {
         if (_tile == TileType.Empty)
         {
-            _tile = BoardController.LocalInstance.turnController.GetActivePlayer().GetPlayerSymbol();
+            _tile = BoardController.LocalInstance.turnController.GetActivePlayer().GetPlayerSymbol;
             tileStateImage.sprite = images.GetTileState(_tile);
         }
     }
@@ -68,7 +69,6 @@ public class TileState : MonoBehaviour
         tileStateImage.sprite = images.GetEndTileState(_tile);
     }
     
-    public class TileStateChange : UnityEvent<int>{}
 
 }
 

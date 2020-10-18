@@ -1079,7 +1079,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 232.18198, y: -100}
+  m_AnchoredPosition: {x: 232.23822, y: -100}
   m_SizeDelta: {x: 180, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &466303588
@@ -2200,7 +2200,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 446.54593, y: -100}
+  m_AnchoredPosition: {x: 446.71466, y: -100}
   m_SizeDelta: {x: 180, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1276839977
@@ -2435,7 +2435,6 @@ MonoBehaviour:
   backStackable: 1
   globalUiElements: []
   activateSafeArea: 1
-  matchController: {fileID: 1745474937}
   exitBtn: {fileID: 466303592}
   settingsButton: {fileID: 1276839981}
   replayButton: {fileID: 124693120}

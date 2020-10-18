@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class UINetworkPopup : UIPopup
 {
-    [SerializeField] private Button closeButton;
+    [SerializeField] private UIButton closeButton;
     
     private void Awake()
     {

@@ -6,7 +6,10 @@ namespace com.petrushevskiapps.Oxo
 {
     public class UIUserScreen : UIScreen
     {
+        [Header("Buttons")]
         [SerializeField] private UIButton usernameBtn;
+        
+        [Header("Texts")]
         [SerializeField] private TextMeshProUGUI usernameText;
         [SerializeField] private TextMeshProUGUI gamesPlayedStat;
         [SerializeField] private TextMeshProUGUI gamesWonStat;
@@ -28,11 +31,6 @@ namespace com.petrushevskiapps.Oxo
         {
             SetStats();
         }
-        
-        private void OnUsernameBtnClicked()
-        {
-            UIManager.Instance.OpenPopup<UIChangeUsernamePopup>();
-        }
         private void SetStats()
         {
             usernameText.text = PlayerDataController.Username;
@@ -40,7 +38,12 @@ namespace com.petrushevskiapps.Oxo
             gamesWonStat.text = PlayerDataController.WonGames.ToString();
             gamesLostStat.text = PlayerDataController.LostGames.ToString();
         }
-
+        
+        private void OnUsernameBtnClicked()
+        {
+            UIManager.Instance.OpenPopup<UIChangeUsernamePopup>();
+        }
+        
         private void OnUsernameChanged(string username)
         {
             usernameText.text = username;

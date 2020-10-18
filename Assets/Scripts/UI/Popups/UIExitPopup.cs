@@ -7,9 +7,9 @@ using UnityEngine.UI;
 
 public class UIExitPopup : UIPopup
 {
-   [SerializeField] private Button negativeButton;
-   [SerializeField] private Button positiveButton;
-   [SerializeField] private Button closeButton;
+   [SerializeField] private UIButton negativeButton;
+   [SerializeField] private UIButton positiveButton;
+   [SerializeField] private UIButton closeButton;
    
    private void Awake()
    {

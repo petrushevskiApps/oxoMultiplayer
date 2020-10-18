@@ -1,6 +1,7 @@
 ﻿
 using System;
 using com.petrushevskiapps.Oxo;
+using com.petrushevskiapps.Oxo.Utilities;
 using ExitGames.Client.Photon;
 using UnityEngine.Events;
 
@@ -12,7 +13,7 @@ public class NetworkPlayer
     public string UserId => player.UserId;
     public bool IsReady { get; private set; } = false;
     
-    public PlayerStatusChangeEvent PlayerStatusChange = new PlayerStatusChangeEvent();
+    public UnityBoolEvent PlayerStatusChange = new UnityBoolEvent();
     
     public NetworkPlayer(Photon.Realtime.Player player)
     {
@@ -39,5 +40,4 @@ public class NetworkPlayer
         PlayerStatusChange.Invoke(IsReady);
     }
 
-    public class PlayerStatusChangeEvent : UnityEvent<bool>{}
 }

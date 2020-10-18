@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using com.petrushevskiapps.Oxo;
+using com.petrushevskiapps.Oxo.Utilities;
 using PetrushevskiApps.UIManager;
 using Photon;
 using Photon.Pun;
@@ -12,28 +13,24 @@ using UnityEngine.Events;
 
 public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
 {
-    private List<TileState> tiles = new List<TileState>();
-    
-    private WinCondition winCondition;
+    //Events
+    public static UnityEvent TurnStarted = new UnityEvent();
+    public static UnityEvent TurnEnded = new UnityEvent();
+    public static UnityBoolEvent MatchEnded = new UnityBoolEvent();
     
     public TurnController turnController;
+    public int[,] tilesTable = new int[maxRow, maxColumn];
 
+    private List<TileState> tiles = new List<TileState>();
+    private WinCondition winCondition;
     private static int maxRow = 3;
     private static int maxColumn = 3;
     
-    public int[,] tilesTable = new int[maxRow, maxColumn];
-    
-    public static UnityEvent OnTurnStarted = new UnityEvent();
-    public static UnityEvent OnTurnEnded = new UnityEvent();
-    public static MatchEndedEvent OnMatchEnded = new MatchEndedEvent();
-
-    [Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
     public static BoardController LocalInstance;
+    
     private void Awake()
     {
         LocalInstance = this;
-        // #Critical
-        // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
 
         winCondition = GetComponent<WinCondition>();
         turnController = GetComponent<TurnController>();
@@ -42,7 +39,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         
         tiles.ForEach(x =>
         {
-            x.OnStateChange.AddListener(CompleteTurn);
+            x.TileStateChange.AddListener(CompleteTurn);
         });
         
         InstantiatePlayer(); 
@@ -66,17 +63,13 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     {
         
     }
-    public void CompleteTurn(int tileId)
+    private void CompleteTurn(int tileId)
     {
-        photonView.RPC("TurnEnded", RpcTarget.All, tileId);
+        photonView.RPC("TurnEnd", RpcTarget.All, tileId);
     }
 
-    public void Restart()
-    {
-        photonView.RPC("RestartBoard", RpcTarget.All);
-    }
     [PunRPC]
-    private void TurnEnded(int tileId)
+    private void TurnEnd(int tileId)
     {
         SetTilesTable(tileId);
        
@@ -89,7 +82,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         }
         else
         {
-            OnTurnEnded.Invoke();
+            TurnEnded.Invoke();
             TurnStart();
         }
         
@@ -98,8 +91,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     }
     private void MatchEnd()
     {
-        
-        bool isWin = turnController.GetActivePlayer().GetPlayerId() == Player.LocalInstance.GetPlayerId();
+        bool isWin = turnController.GetActivePlayer().PlayerID == Player.LocalInstance.PlayerID;
         
         List<WinCondition.RowColumIndex> rowColumIndex = winCondition.GetWinIndexes();
             
@@ -108,14 +100,12 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
             tiles[GetTileId(index.row, index.column)].EndGameTileEffect(isWin);
         });
         
-        Debug.Log("Player " + Player.LocalInstance.GetPlayerId() + " Won ");
+        Debug.Log("Player " + Player.LocalInstance.PlayerID + " Won ");
        
-        
-        
         StartCoroutine(Delay(() =>
         {
             UIManager.Instance.OpenScreen<UIEndScreen>();
-            OnMatchEnded.Invoke(isWin);
+            MatchEnded.Invoke(isWin);
         }));
     }
 
@@ -142,7 +132,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         else
         {
             UpdateTile(tileId);
-            tilesTable[tileId / (xSize + 1), tileId % (ySize + 1)] = turnController.GetActivePlayer().GetPlayerId();
+            tilesTable[tileId / (xSize + 1), tileId % (ySize + 1)] = turnController.GetActivePlayer().PlayerID;
         }
     }
 
@@ -172,25 +162,10 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         Debug.Log(sb);
     }
 
+    
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         
     }
-    
-    public class MatchEndedEvent : UnityEvent<bool> {}
 
-
-    [PunRPC]
-    public void RestartBoard()
-    {
-        turnController.Restart();
-        winCondition.Restart();
-        
-        tiles.ForEach(x =>
-        {
-            x.SetTile();
-        });
-        tilesTable = new int[3, 3];
-        TurnStart();
-    }
 }

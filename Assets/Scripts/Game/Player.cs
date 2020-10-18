@@ -7,6 +7,9 @@ public class Player : MonoBehaviourPunCallbacks, IComparable
     [SerializeField] private TileType tileType;
     [SerializeField] private int playerId = 0;
 
+    public int PlayerID => playerId;
+    public TileType GetPlayerSymbol => tileType;
+    
     public static Player LocalInstance;
     public bool IsActive { get; set; } = false;
 
@@ -22,25 +25,13 @@ public class Player : MonoBehaviourPunCallbacks, IComparable
         tileType = (TileType) playerId;
         
     }
-
-
+    
     public override void OnEnable()
     {
         base.OnEnable();
         BoardController.LocalInstance.turnController.AddPlayer(this);
     }
-
-    public int GetPlayerId()
-    {
-        return playerId;
-    }
-
-    public TileType GetPlayerSymbol()
-    {
-        return tileType;
-    }
-
-
+    
     public int CompareTo(object obj)
     {
         if (obj.GetType() != typeof(Player)) return -1;

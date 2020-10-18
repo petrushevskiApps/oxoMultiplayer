@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
 
         if (PhotonNetwork.InRoom)
         {
-            UIManager.Instance.OpenScreen<UILobbyScreen>();
+            UIManager.Instance.OpenScreen<UIRoomScreen>();
         }
         else
         {

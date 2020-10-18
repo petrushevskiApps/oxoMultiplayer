@@ -27,7 +27,14 @@ public class UIUsernameScreen : UIScreen
     {
         SetDefaultUsername();
     }
-
+    private void SetDefaultUsername()
+    {
+        if (inputField!=null)
+        {
+            inputField.text = PlayerDataController.Username;
+        }
+    }
+    
     private void SaveChanges()
     {
         if (inputField != null)
@@ -42,13 +49,7 @@ public class UIUsernameScreen : UIScreen
         }
     }
 
-    private void SetDefaultUsername()
-    {
-        if (inputField!=null)
-        {
-            inputField.text = PlayerDataController.Username;
-        }
-    }
+    
         
     private void EnableSaveButton(string userName)
     {

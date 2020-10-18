@@ -1,4 +1,6 @@
-﻿using com.petrushevskiapps.Oxo;
+﻿using System;
+using com.petrushevskiapps.Oxo;
+using com.petrushevskiapps.Oxo.Utilities;
 using PetrushevskiApps.UIManager;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,10 +44,9 @@ public class UIJoinScreen : UIScreen
     {
         if (!NetworkManager.Instance.IsRoomExisting(roomName))
         {
-            Debug.Log("Room: " + roomName + " does not exist!");
             UIManager.Instance.OpenPopup<UIMessagePopup>()
-                .SetTitle("WRONG ROOM NAME")
-                .SetMessage("Room with name: <b>" + roomName + "</b> does not exist! Please enter another room name and try again.");
+                .SetTitle(Constants.ROOM_NOT_EXIST_TITLE_TXT)
+                .SetMessage(string.Format(Constants.ROOM_NOT_EXIST_MESSAGE_TXT, roomName));
             return false;
         }
 
