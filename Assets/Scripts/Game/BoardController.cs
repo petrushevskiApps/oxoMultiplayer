@@ -44,6 +44,15 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         
         InstantiatePlayer(); 
     }
+
+    private void OnDestroy()
+    {
+        if (Player.LocalInstance != null)
+        {
+            PhotonNetwork.Destroy(Player.LocalInstance.gameObject);
+        }
+    }
+
     private void InstantiatePlayer()
     {
         if (Player.LocalInstance == null)
@@ -145,6 +154,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         tiles[id].ChangeState();
     }
 
+    
     private void PrintTable()
     {
         int printIndex = 0;

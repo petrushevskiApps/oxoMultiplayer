@@ -32,8 +32,6 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
     {
-        if (scene.buildIndex != 0) return;
-
         if (PhotonNetwork.InRoom)
         {
             UIManager.Instance.OpenScreen<UIRoomScreen>();

@@ -30,7 +30,7 @@ public class UIEndScreen : UIScreen
 
     [Header("VFX")]
     [SerializeField] private GameObject particles;
- 
+
     public override void Initialize(Action onBackButtonAction)
     {
         base.Initialize(onBackButtonAction);
@@ -38,7 +38,7 @@ public class UIEndScreen : UIScreen
         BoardController.MatchEnded.AddListener(MatchEnded);
         exitBtn.onClick.AddListener(ExitRoom);
         settingsButton.onClick.AddListener(ShowSettings);
-        replayButton.onClick.AddListener(RestartScene);
+        replayButton.onClick.AddListener(Replay);
 
         wonText.SetActive(false);
         lostText.SetActive(false);
@@ -47,8 +47,8 @@ public class UIEndScreen : UIScreen
     {
         BoardController.MatchEnded.RemoveListener(MatchEnded);
     }
-    
-    private void RestartScene() => PhotonNetwork.LoadLevel(0);
+
+    private void Replay() => MatchController.LocalInstance.EndMatch();
 
     private void ShowSettings() => UIManager.Instance.OpenPopup<UISettingsPopup>();
 

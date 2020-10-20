@@ -23,6 +23,8 @@ public class RoomController : MonoBehaviourPunCallbacks
     public List<NetworkPlayer> GetPlayersInRoom => players.Values.ToList();
     public bool IsRoomReady => RoomCurrentStatus == RoomStatus.Ready;
 
+    private MatchController matchController;
+    
     private RoomStatus roomCurrentStatus = RoomStatus.Waiting;
     public RoomStatus RoomCurrentStatus
     {

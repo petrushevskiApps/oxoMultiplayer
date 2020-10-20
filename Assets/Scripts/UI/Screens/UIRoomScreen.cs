@@ -19,6 +19,8 @@ public class UIRoomScreen : UIScreen
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI labelText;
 
+    [SerializeField] private MatchController matchController;
+    
     private void Awake()
     {
         base.Awake();
@@ -93,8 +95,8 @@ public class UIRoomScreen : UIScreen
                 break;
         }
     }
-    
-    private void StartGame() => NetworkManager.Instance.StartMatch();
+
+    private void StartGame() => MatchController.LocalInstance.StartMatch();
 
     private void ExitRoom() => NetworkManager.Instance.LeaveRoom();
 

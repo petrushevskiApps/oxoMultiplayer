@@ -70,6 +70,7 @@ namespace com.petrushevskiapps.Oxo
                 }));
             }
         }
+        
         public void JoinRoom(string roomName)
         {
             if (PhotonNetwork.IsConnected)
@@ -80,6 +81,7 @@ namespace com.petrushevskiapps.Oxo
                 }));
             }
         }
+        
         public void JoinRandomRoom()
         {
             // #Critical we need at this point to attempt joining a Random Room. If it fails, we'll get notified
@@ -107,23 +109,16 @@ namespace com.petrushevskiapps.Oxo
         {
             Debug.Log("PUN:: OnJoinedRoom() called by PUN. Now this client is in a room.");
             roomController.SetupRoomController();
-            UIManager.Instance.OpenScreen<UIRoomScreen>();
+            PhotonNetwork.LoadLevel(1);
         }
         public override void OnLeftRoom()
         {
-            if (SceneManager.GetActiveScene().buildIndex == 0)
+            // Prevent loading scene when application is quiting
+            if (!GameManager.Instance.IsApplicationQuiting)
             {
-                UIManager.Instance.OpenScreen<UIMainScreen>();
+//                SceneManager.LoadScene(0);
+                PhotonNetwork.LoadLevel(0);
             }
-            else
-            {
-                // Prevent loading scene when application is quiting
-                if (!GameManager.Instance.IsApplicationQuiting)
-                {
-                    SceneManager.LoadScene(0);
-                }
-            }
-            
         }
         public void LeaveRoom()
         {
@@ -133,7 +128,7 @@ namespace com.petrushevskiapps.Oxo
         
         public void StartMatch()
         {
-            PhotonNetwork.LoadLevel(1);
+//            PhotonNetwork.LoadLevel(1);
         }
     
         public override void OnRoomListUpdate(List<RoomInfo> roomList)

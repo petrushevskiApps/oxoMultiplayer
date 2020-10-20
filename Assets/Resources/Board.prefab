@@ -1706,7 +1706,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f17c252bd63edb4aafc75ecdfe4fbaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnCounter: 0
 --- !u!114 &550373693024300282
 MonoBehaviour:
   m_ObjectHideFlags: 0
