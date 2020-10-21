@@ -69,7 +69,7 @@ public class UIRoomScreen : UIScreen
 
     private void OnPlayerReadyClicked()
     {
-        NetworkManager.Instance.ChangePlayerProperty(Constants.PLAYER_READY_KEY, true);
+        NetworkManager.Instance.RoomController.LocalPlayer.ChangePlayerProperty(Keys.PLAYER_READY_KEY, true);
     }
    
     private void SetRoomTitle()

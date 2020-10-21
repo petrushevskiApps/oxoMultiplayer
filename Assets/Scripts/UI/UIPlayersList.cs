@@ -42,7 +42,7 @@ public class UIPlayersList : MonoBehaviourPunCallbacks
 
     private void SetPlayersList()
     {
-        foreach (NetworkPlayer player in NetworkManager.Instance.RoomController.GetPlayersInRoom)
+        foreach (NetworkPlayer player in NetworkManager.Instance.RoomController.PlayersInRoom)
         {
             AddPlayerToUiList(player);
         }

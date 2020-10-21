@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using com.petrushevskiapps.Oxo;
+using com.petrushevskiapps.Oxo.Utilities;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -11,21 +12,19 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class RoomController : MonoBehaviourPunCallbacks
 {
+    //Events
     public static PlayerRoomEvent PlayerEnteredRoom = new PlayerRoomEvent();
     public static PlayerRoomEvent PlayerExitedRoom = new PlayerRoomEvent();
     public static RoomStatusChangeEvent RoomStatusChange = new RoomStatusChangeEvent();
     
     public static string RoomName => PhotonNetwork.CurrentRoom.Name;
     public static bool IsRoomFull => PhotonNetwork.CurrentRoom.MaxPlayers == PhotonNetwork.CurrentRoom.PlayerCount;
-    
-    private Dictionary<string, NetworkPlayer> players = new Dictionary<string, NetworkPlayer>();
 
-    public List<NetworkPlayer> GetPlayersInRoom => players.Values.ToList();
-    public bool IsRoomReady => RoomCurrentStatus == RoomStatus.Ready;
-
-    private MatchController matchController;
+    // Players in Room
+    public List<NetworkPlayer> PlayersInRoom => networkPlayers.Values.ToList();
+    public NetworkPlayer LocalPlayer { get; private set; }
+    public NetworkPlayer ActivePlayer => PlayersInRoom.FirstOrDefault(x => x.IsActive());
     
-    private RoomStatus roomCurrentStatus = RoomStatus.Waiting;
     public RoomStatus RoomCurrentStatus
     {
         get => roomCurrentStatus;
@@ -38,22 +37,45 @@ public class RoomController : MonoBehaviourPunCallbacks
             }
         }
     }
-
+    
+    private Hashtable roomProperties;
+    private Dictionary<string, NetworkPlayer> networkPlayers = new Dictionary<string, NetworkPlayer>();
+    private RoomStatus roomCurrentStatus = RoomStatus.Waiting;
+    
+   
     // Called when Player enters room
     public void SetupRoomController()
     {
-        foreach(Photon.Realtime.Player player in PhotonNetwork.CurrentRoom.Players.Values)
+        PhotonNetwork.CurrentRoom.PlayerTtl = 30000; // 30 sec
+        SetupRoomProperties();
+        
+        foreach(Player player in PhotonNetwork.CurrentRoom.Players.Values)
         {
-            NetworkPlayer netPlayer = new NetworkPlayer(player);
-            netPlayer.PlayerStatusChange.AddListener(SetRoomStatus);
-            players.Add(player.UserId, netPlayer);
+            CreateNetworkPlayer(player);
         }
     }
-
+    
+    private void SetupRoomProperties()
+    {
+        roomProperties = new Hashtable();
+        roomProperties.Add(Keys.ROOM_TURN, 0);
+        PhotonNetwork.CurrentRoom.SetCustomProperties(roomProperties);
+    }
+    public void SetRoomProperty(string KEY, object value)
+    {
+        roomProperties[KEY] = value;
+        PhotonNetwork.CurrentRoom.SetCustomProperties(roomProperties);
+    }
+    public int GetRoomProperty(string KEY)
+    {
+        object result = 0;
+        PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(KEY, out result);
+        return (int) result;
+    }
+    
     public void CleanRoomController()
     {
-        NetworkManager.Instance.SetupPlayerProperties();
-        players.Clear();
+        networkPlayers.Clear();
         RoomCurrentStatus = RoomStatus.Waiting;
     }
     
@@ -63,53 +85,51 @@ public class RoomController : MonoBehaviourPunCallbacks
         
         if (!IsRoomFull)
         {
-            roomReady = false;
+            RoomCurrentStatus = RoomStatus.Waiting;
         }
         else
         {
-            foreach (NetworkPlayer player in players.Values)
+            foreach (NetworkPlayer player in networkPlayers.Values)
             {
                 roomReady &= player.IsReady;
             }
-        }
-        
-        if (roomReady)
-        {
-            RoomCurrentStatus = RoomStatus.Ready;
-        }
-        else
-        {
-            RoomCurrentStatus = IsRoomFull ? RoomStatus.Full : RoomStatus.Waiting;
+            
+            RoomCurrentStatus = roomReady ? RoomStatus.Ready : RoomStatus.Full;
         }
     }
-    
-    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    private void CreateNetworkPlayer(Player player)
     {
-        if (players.ContainsKey(newPlayer.UserId)) return;
+        if (networkPlayers.ContainsKey(player.UserId)) return;
         
-        NetworkPlayer netPlayer = new NetworkPlayer(newPlayer);
+        NetworkPlayer netPlayer = new NetworkPlayer(player);
         netPlayer.PlayerStatusChange.AddListener(SetRoomStatus);
-        players.Add(newPlayer.UserId, netPlayer);
+        networkPlayers.Add(player.UserId, netPlayer);
+        
+        if (player.IsLocal) LocalPlayer = netPlayer;
         PlayerEnteredRoom.Invoke(netPlayer);
-        SetRoomStatus();
-        
     }
-
-    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
-    {
-        if (!players.ContainsKey(otherPlayer.UserId)) return;
-        PlayerExitedRoom.Invoke(players[otherPlayer.UserId]);
-        players.Remove(otherPlayer.UserId);
-        SetRoomStatus();
-        
-    }
-
     
-    public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)
+    public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        if (players.ContainsKey(targetPlayer.UserId))
+        CreateNetworkPlayer(newPlayer);
+        SetRoomStatus();
+    }
+    
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (!networkPlayers.ContainsKey(otherPlayer.UserId)) return;
+        
+        PlayerExitedRoom.Invoke(networkPlayers[otherPlayer.UserId]);
+        networkPlayers.Remove(otherPlayer.UserId);
+        SetRoomStatus();
+        
+    }
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    {
+        if (networkPlayers.ContainsKey(targetPlayer.UserId))
         {
-            players[targetPlayer.UserId].UpdatePlayerStatuses(changedProps);
+            networkPlayers[targetPlayer.UserId].UpdatePlayerStatuses(changedProps);
         }
     }
     

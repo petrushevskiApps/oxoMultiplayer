@@ -28,7 +28,7 @@ namespace com.petrushevskiapps.Oxo
 
         public static NetworkManager Instance;
 
-        private Hashtable playerProperties;
+        
         private Dictionary<string, RoomInfo> cachedRoomsDictionary = new Dictionary<string, RoomInfo>();
         
         private void Awake()
@@ -42,23 +42,9 @@ namespace com.petrushevskiapps.Oxo
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
             }
-
-            SetupPlayerProperties();
-            
         }
 
-        public void SetupPlayerProperties()
-        {
-            playerProperties = new Hashtable();
-            playerProperties.Add(Constants.PLAYER_READY_KEY, false);
-            PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
-        }
-
-        public void ChangePlayerProperty(string KEY, bool value)
-        {
-            playerProperties[KEY] = value;
-            PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
-        }
+        
 
         public void CreateRoom(string roomName)
         {
@@ -125,12 +111,7 @@ namespace com.petrushevskiapps.Oxo
             roomController.CleanRoomController();
             PhotonNetwork.LeaveRoom();
         }
-        
-        public void StartMatch()
-        {
-//            PhotonNetwork.LoadLevel(1);
-        }
-    
+
         public override void OnRoomListUpdate(List<RoomInfo> roomList)
         {
             base.OnRoomListUpdate(roomList);

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using com.petrushevskiapps.Oxo;
 using com.petrushevskiapps.Oxo.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
@@ -23,22 +25,22 @@ public class TileState : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        
         tileBackgroundImage = GetComponent<SpriteRenderer>();
        
         SetTile();
     }
 
-    public void SetTile()
+    private void SetTile()
     {
         _tile = TileType.Empty;
         
         tileBackgroundImage.sprite = images.GetTileBackground(TileType.Empty);
         tileStateImage.sprite = images.GetTileState(TileType.Empty);
     }
+    
     private void OnMouseDown()
     {
-        if (Player.LocalInstance.IsActive)
+        if (NetworkManager.Instance.RoomController.LocalPlayer.IsActive())
         {
             if (_tile == TileType.Empty)
             {
@@ -57,7 +59,7 @@ public class TileState : MonoBehaviour
     {
         if (_tile == TileType.Empty)
         {
-            _tile = BoardController.LocalInstance.turnController.GetActivePlayer().GetPlayerSymbol;
+            _tile = NetworkManager.Instance.RoomController.ActivePlayer?.PlayerSymbol ?? TileType.Empty;
             tileStateImage.sprite = images.GetTileState(_tile);
         }
     }

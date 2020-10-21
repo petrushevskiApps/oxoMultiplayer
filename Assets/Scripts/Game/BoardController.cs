@@ -42,25 +42,9 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
             x.TileStateChange.AddListener(CompleteTurn);
         });
         
-        InstantiatePlayer(); 
     }
 
-    private void OnDestroy()
-    {
-        if (Player.LocalInstance != null)
-        {
-            PhotonNetwork.Destroy(Player.LocalInstance.gameObject);
-        }
-    }
 
-    private void InstantiatePlayer()
-    {
-        if (Player.LocalInstance == null)
-        {
-            PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity).GetComponent<Player>();
-        }
-    }
-    
     private void Start()
     {
         SetTilesTable();
@@ -94,13 +78,16 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
             TurnEnded.Invoke();
             TurnStart();
         }
-        
-        turnController.IncrementTurn();
+
+        if (NetworkManager.Instance.RoomController.LocalPlayer.IsActive())
+        {
+            turnController.IncrementTurn();
+        }
         PrintTable();
     }
     private void MatchEnd()
     {
-        bool isWin = turnController.GetActivePlayer().PlayerID == Player.LocalInstance.PlayerID;
+        bool isWin = NetworkManager.Instance.RoomController.LocalPlayer.IsActive();
         
         List<WinCondition.RowColumIndex> rowColumIndex = winCondition.GetWinIndexes();
             
@@ -109,8 +96,6 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
             tiles[GetTileId(index.row, index.column)].EndGameTileEffect(isWin);
         });
         
-        Debug.Log("Player " + Player.LocalInstance.PlayerID + " Won ");
-       
         StartCoroutine(Delay(() =>
         {
             UIManager.Instance.OpenScreen<UIEndScreen>();
@@ -141,7 +126,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         else
         {
             UpdateTile(tileId);
-            tilesTable[tileId / (xSize + 1), tileId % (ySize + 1)] = turnController.GetActivePlayer().PlayerID;
+            tilesTable[tileId / (xSize + 1), tileId % (ySize + 1)] = NetworkManager.Instance.RoomController.ActivePlayer.PlayerId;
         }
     }
 

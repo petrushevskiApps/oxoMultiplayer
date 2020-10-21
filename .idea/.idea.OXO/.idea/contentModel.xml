@@ -365,7 +365,6 @@
           <e p="Game" t="Include">
             <e p="BoardController.cs" t="Include" />
             <e p="MatchController.cs" t="Include" />
-            <e p="Player.cs" t="Include" />
             <e p="TileState.cs" t="Include" />
             <e p="TurnController.cs" t="Include" />
             <e p="WinCondition.cs" t="Include" />

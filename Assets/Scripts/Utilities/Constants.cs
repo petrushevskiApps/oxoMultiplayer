@@ -2,7 +2,7 @@
 {
     public static class Constants
     {
-        public const string PLAYER_READY_KEY = "playerReady";
+        
 
         public const string ROOM_EXIST_TITLE_TXT = "ROOM EXISTS";
         public const string ROOM_EXIST_MESSAGE_TXT = "Room with name: <b>{0}</b> already exists!\n Please enter another room name and try again.";
@@ -17,6 +17,10 @@
 
     public static class Keys
     {
+        public const string PLAYER_READY_KEY = "playerReady";
+        public const string PLAYER_MATCH_ID = "playerMatchId";
+        public const string ROOM_TURN = "roomTurn";
+        
         public const string KEY_USERNAME = "username";
         public const string KEY_PLAYED_GAMES = "playedGames";
         public const string KEY_WON_GAMES = "gamesWon";
