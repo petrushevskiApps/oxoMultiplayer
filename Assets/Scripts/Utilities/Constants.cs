@@ -19,6 +19,7 @@
     {
         public const string PLAYER_READY_KEY = "playerReady";
         public const string PLAYER_MATCH_ID = "playerMatchId";
+        public const string PLAYER_MATCH_SCORE = "playerScore";
         public const string ROOM_TURN = "roomTurn";
         
         public const string KEY_USERNAME = "username";

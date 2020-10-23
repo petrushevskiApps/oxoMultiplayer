@@ -11,13 +11,61 @@ using UnityEngine.Events;
 public class NetworkPlayer
 {
     public UnityBoolEvent PlayerStatusChange = new UnityBoolEvent();
+    public UnityIntegerEvent PlayerScoreUpdated = new UnityIntegerEvent();
     
     public int PlayerId { get; }
     public string Nickname => player.NickName;
     public string UserId => player.UserId;
-    public bool IsReady { get; private set; }
     public TileType PlayerSymbol { get; }
+
+    private bool networkUpdate;
+    private bool isLocalReady;
+    public bool IsReady
+    {
+        get
+        {
+            if (player.IsMasterClient) return true;
+            else
+            {
+                object isReady = GetPlayerProperty(Keys.PLAYER_READY_KEY);
+                if (isReady != null) return (bool) isReady;
+                else return false;
+            }
+        }
+        private set
+        {
+            if (isLocalReady != value)
+            {
+                isLocalReady = value;
+                PlayerStatusChange.Invoke(value);
+                if(player.IsLocal && !networkUpdate) SetPlayerProperty(Keys.PLAYER_READY_KEY, value);
+                
+            }
+            networkUpdate = false;
+        }
+    }
     
+
+    private int localScore;
+    
+    public int Score
+    {
+        get => player.IsLocal ? localScore : (int)GetPlayerProperty(Keys.PLAYER_MATCH_SCORE);
+        set
+        {
+            if (localScore != value)
+            {
+                Debug.Log("T1:: " + Nickname + "Set Score:: " + value + " Is Network Update:: " + networkUpdate);
+                localScore = value;
+                PlayerScoreUpdated.Invoke(localScore);
+                if (player.IsLocal && !networkUpdate)
+                {
+                    SetPlayerProperty(Keys.PLAYER_MATCH_SCORE, value);
+                }
+            }
+            networkUpdate = false;
+        }
+    }
     
     private Player player;
     private int playerTurnId;
@@ -32,38 +80,40 @@ public class NetworkPlayer
     
     public NetworkPlayer(Player player)
     {
-        IsReady = false;
         this.player = player;
+        
+        if (player.IsLocal)
+        {
+            SetupPlayerProperties();
+            MatchController.MatchStarted.AddListener(OnMatchStarted);
+        }
         
         PlayerId = player.ActorNumber;
         PlayerSymbol = (TileType) PlayerId;
         playerTurnId = PlayerId - 1;
         
-        if (player.IsLocal)
-        {
-            SetupPlayerProperties();
-        }
-        
         UpdatePlayerStatuses(player.CustomProperties);
-        
     }
-    
+
+    private void OnMatchStarted()
+    {
+        if(player.IsLocal) Score = 0;
+        IsReady = player.IsMasterClient;
+    }
+
     public void UpdatePlayerStatuses(Hashtable statuses)
     {
-        if (player.IsMasterClient)
+        if (statuses.ContainsKey(Keys.PLAYER_READY_KEY))
         {
-            IsReady = true;
-        }
-        else if (statuses.ContainsKey("playerReady"))
-        {
-            IsReady = (bool)statuses["playerReady"];
-        }
-        else
-        {
-            IsReady = false;
+            networkUpdate = true;
+            IsReady = (bool)statuses[Keys.PLAYER_READY_KEY];
         }
         
-        PlayerStatusChange.Invoke(IsReady);
+        if (statuses.ContainsKey(Keys.PLAYER_MATCH_SCORE))
+        {
+            networkUpdate = true;
+            Score = (int)statuses[Keys.PLAYER_MATCH_SCORE];
+        }
     }
 
     private void SetupPlayerProperties()
@@ -71,23 +121,28 @@ public class NetworkPlayer
         playerProperties = new Hashtable();
         playerProperties.Add(Keys.PLAYER_READY_KEY, false);
         playerProperties.Add(Keys.PLAYER_MATCH_ID, playerTurnId);
+        playerProperties.Add(Keys.PLAYER_MATCH_SCORE, 0);
         player.SetCustomProperties(playerProperties);
     }
-    public void ChangePlayerProperty(string KEY, int value)
+    
+    public void SetPlayerProperty(string KEY, int value)
     {
+        if(!player.IsLocal) return;
+        
         playerProperties[KEY] = value;
         player.SetCustomProperties(playerProperties);
     }
-    public int GetPlayerProperty(string KEY)
+    public object GetPlayerProperty(string KEY)
     {
         object result = 0;
         player.CustomProperties.TryGetValue(KEY, out result);
-        return (int) result;
+        return result;
     }
         
-    public void ChangePlayerProperty(string KEY, bool value)
+    public void SetPlayerProperty(string KEY, bool value)
     {
         playerProperties[KEY] = value;
         player.SetCustomProperties(playerProperties);
     }
+
 }

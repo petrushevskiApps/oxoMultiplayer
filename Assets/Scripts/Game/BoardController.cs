@@ -16,17 +16,21 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     //Events
     public static UnityEvent TurnStarted = new UnityEvent();
     public static UnityEvent TurnEnded = new UnityEvent();
-    public static UnityBoolEvent MatchEnded = new UnityBoolEvent();
+    
     
     public TurnController turnController;
     public int[,] tilesTable = new int[maxRow, maxColumn];
 
     private List<TileState> tiles = new List<TileState>();
     private WinCondition winCondition;
+   
     private static int maxRow = 3;
     private static int maxColumn = 3;
     
-    public static BoardController LocalInstance;
+    private int xSize = 0;
+    private int ySize = 0;
+    
+    public static BoardController LocalInstance { get; private set; }
     
     private void Awake()
     {
@@ -34,16 +38,25 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
 
         winCondition = GetComponent<WinCondition>();
         turnController = GetComponent<TurnController>();
-        
+
+        MatchController.RoundEnded.AddListener(ResetBoard);
+        SetupBoardTiles();
+    }
+
+    private void OnDestroy()
+    {
+        MatchController.RoundEnded.RemoveListener(ResetBoard);
+    }
+
+    private void SetupBoardTiles()
+    {
         tiles = GetComponentsInChildren<TileState>().ToList();
         
         tiles.ForEach(x =>
         {
             x.TileStateChange.AddListener(CompleteTurn);
         });
-        
     }
-
 
     private void Start()
     {
@@ -51,6 +64,19 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         TurnStart();
     }
     
+    private void SetTilesTable()
+    {
+        xSize = tilesTable.GetUpperBound(0);
+        ySize = tilesTable.GetUpperBound(1);
+        
+        for (int i = 0; i <= xSize; i++)
+        {
+            for (int j = 0; j <= ySize; j++)
+            {
+                tilesTable[i,j] = 0;
+            }
+        }
+    }
    
     private void TurnStart()
     {
@@ -64,28 +90,30 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void TurnEnd(int tileId)
     {
-        SetTilesTable(tileId);
+        UpdateTile(tileId);
        
         bool isWin = winCondition.CheckWinCondition(tilesTable);
         bool isTie = winCondition.CheckTie(tilesTable);
         
         if (isWin || isTie)
         {
-            MatchEnd();
+            RoundEnded();
         }
         else
         {
             TurnEnded.Invoke();
             TurnStart();
+            
+            if (NetworkManager.Instance.RoomController.LocalPlayer.IsActive())
+            {
+                turnController.IncrementTurn();
+            }
         }
-
-        if (NetworkManager.Instance.RoomController.LocalPlayer.IsActive())
-        {
-            turnController.IncrementTurn();
-        }
+        
         PrintTable();
     }
-    private void MatchEnd()
+    
+    private void RoundEnded()
     {
         bool isWin = NetworkManager.Instance.RoomController.LocalPlayer.IsActive();
         
@@ -98,8 +126,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         
         StartCoroutine(Delay(() =>
         {
-            UIManager.Instance.OpenScreen<UIEndScreen>();
-            MatchEnded.Invoke(isWin);
+            MatchController.LocalInstance.EndRound();
         }));
     }
 
@@ -109,36 +136,24 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         delayedAction.Invoke();
     }
    
-    private void SetTilesTable(int tileId = -1)
+    
+    
+    private void UpdateTile(int id)
     {
-        int xSize = tilesTable.GetUpperBound(0);
-        int ySize = tilesTable.GetUpperBound(1);
-        if (tileId == -1)
-        {
-            for (int i = 0; i < xSize; i++)
-            {
-                for (int j = 0; j < ySize; j++)
-                {
-                    tilesTable[i,j] = 0;
-                }
-            }
-        }
-        else
-        {
-            UpdateTile(tileId);
-            tilesTable[tileId / (xSize + 1), tileId % (ySize + 1)] = NetworkManager.Instance.RoomController.ActivePlayer.PlayerId;
-        }
+        tiles[id].ChangeState();
+        tilesTable[id / (xSize + 1), id % (ySize + 1)] = NetworkManager.Instance.RoomController.ActivePlayer.PlayerId;
     }
 
     private int GetTileId(int row, int column)
     {
         return (row * maxColumn) + column;
     }
-    private void UpdateTile(int id)
-    {
-        tiles[id].ChangeState();
-    }
 
+    private void ResetBoard()
+    {
+        SetTilesTable();
+        tiles.ForEach(tile => tile.SetTile());
+    }
     
     private void PrintTable()
     {

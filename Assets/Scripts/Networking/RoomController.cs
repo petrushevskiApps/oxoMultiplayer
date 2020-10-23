@@ -65,6 +65,7 @@ public class RoomController : MonoBehaviourPunCallbacks
     {
         roomProperties[KEY] = value;
         PhotonNetwork.CurrentRoom.SetCustomProperties(roomProperties);
+        Debug.Log(KEY + ": Value: " + value);
     }
     public int GetRoomProperty(string KEY)
     {

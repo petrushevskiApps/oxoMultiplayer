@@ -30,7 +30,7 @@ public class TileState : MonoBehaviour
         SetTile();
     }
 
-    private void SetTile()
+    public void SetTile()
     {
         _tile = TileType.Empty;
         
@@ -70,7 +70,6 @@ public class TileState : MonoBehaviour
         tileBackgroundImage.sprite = images.GetTileBackground(isWin ? TileType.Win : TileType.Lose);
         tileStateImage.sprite = images.GetEndTileState(_tile);
     }
-    
 
 }
 

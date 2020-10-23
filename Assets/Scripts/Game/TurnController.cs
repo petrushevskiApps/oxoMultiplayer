@@ -12,27 +12,23 @@ public class TurnController : MonoBehaviour
     
     private void OnEnable()
     {
-        BoardController.MatchEnded.AddListener(DeactivateAllPlayers);
-        
+        MatchController.RoundStarted.AddListener(OnRoundEnded);
     }
-
     private void OnDisable()
     {
-        BoardController.MatchEnded.RemoveListener(DeactivateAllPlayers);
+        MatchController.RoundStarted.RemoveListener(OnRoundEnded);
     }
-
+    
+    private void OnRoundEnded(int round)
+    {
+        NetworkManager.Instance.RoomController.SetRoomProperty(Keys.ROOM_TURN, (round - 1) % 2);
+    }
+    
     public void IncrementTurn()
     {
         int turn = NetworkManager.Instance.RoomController.GetRoomProperty(Keys.ROOM_TURN);
         NetworkManager.Instance.RoomController.SetRoomProperty(Keys.ROOM_TURN, ++turn);
         Debug.Log("TurnController: Count: " + (turn));
-    }
-
-
-    private void DeactivateAllPlayers(bool isWin)
-    {
-        // No players turn
-        NetworkManager.Instance.RoomController.SetRoomProperty(Keys.ROOM_TURN, 1);
     }
 
 }

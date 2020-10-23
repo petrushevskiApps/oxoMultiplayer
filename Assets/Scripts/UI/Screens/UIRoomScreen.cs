@@ -19,8 +19,6 @@ public class UIRoomScreen : UIScreen
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI labelText;
 
-    [SerializeField] private MatchController matchController;
-    
     private void Awake()
     {
         base.Awake();
@@ -69,7 +67,7 @@ public class UIRoomScreen : UIScreen
 
     private void OnPlayerReadyClicked()
     {
-        NetworkManager.Instance.RoomController.LocalPlayer.ChangePlayerProperty(Keys.PLAYER_READY_KEY, true);
+        NetworkManager.Instance.RoomController.LocalPlayer.SetPlayerProperty(Keys.PLAYER_READY_KEY, true);
     }
    
     private void SetRoomTitle()
