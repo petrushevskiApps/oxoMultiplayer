@@ -30,24 +30,24 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void StartMatch()
     {
+        SendRpc("StartMatch");
         CreateBoard();
         UIManager.Instance.OpenScreen<UIGameScreen>();
         MatchStarted.Invoke();
         StartRound();
-        SendRpc("StartMatch");
     }
-
+ 
     public void StartRound()
     {
         Round++;
         RoundStarted.Invoke(Round);
     }
 
-    public void EndRound()
+    public void EndRound(bool isRoundWon)
     {
-        UpdateScore();
-        
-        StartCoroutine(Delay(() => RoundEnded.Invoke()));
+        if(isRoundWon) UpdateScore();
+
+        RoundEnded.Invoke();
 
         StartCoroutine(WaitRoundComplete());
     }
@@ -55,20 +55,27 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     IEnumerator WaitRoundComplete()
     {
         yield return new WaitWhile(() => NetworkManager.Instance.RoomController.PlayersInRoom.Sum(player => player.Score) != Round);
-        if (Round == MatchRounds)
+        Debug.Log("WaitRoundComplete:: END ROUND:: " +  Round + " DELAYED");
+        
+        if (IsMatchCompleted())
         {
             EndMatch();
         }
         else StartRound();
     }
+
+    private bool IsMatchCompleted()
+    {
+        int max = NetworkManager.Instance.RoomController.PlayersInRoom.Max(player => player.Score);
+        int sum = NetworkManager.Instance.RoomController.PlayersInRoom.Sum(player => player.Score);
+        float winningPossibility = sum / (float) MatchRounds; // Winning possibilit > 0.5
+        float scoreDistribution = max / (float)sum; // Distribution > 0.5 
+        
+        return (Round == MatchRounds) || (winningPossibility > 0.5f && scoreDistribution > 0.5f);
+    }
     private void UpdateScore()
     {
-        NetworkPlayer winner = NetworkManager.Instance.RoomController.LocalPlayer;
-        
-        if (winner.IsActive())
-        {
-            winner.Score++;
-        }
+        NetworkManager.Instance.RoomController.LocalPlayer.Score++;
     }
 
     private bool IsLocalMatchWin()
@@ -83,7 +90,6 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
         Round = 0;
         MatchEnded.Invoke(IsLocalMatchWin());
         UIManager.Instance.OpenScreen<UIEndScreen>();
-        DestroyBoard();
     }
     
     private void CreateBoard()
@@ -115,6 +121,7 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
         yield return new WaitForSeconds(0.5f);
         delayedAction.Invoke();
     }
+    
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         

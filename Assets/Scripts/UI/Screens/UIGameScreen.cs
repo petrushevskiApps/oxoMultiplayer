@@ -98,7 +98,7 @@ public class UIGameScreen : UIScreen
 
     private IEnumerator Delay(Action delayedAction)
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.5f);
         delayedAction.Invoke();
     }
 }

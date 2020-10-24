@@ -61,7 +61,6 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     private void Start()
     {
         SetTilesTable();
-        TurnStart();
     }
     
     private void SetTilesTable()
@@ -77,11 +76,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
     }
-   
-    private void TurnStart()
-    {
-        
-    }
+  
     private void CompleteTurn(int tileId)
     {
         photonView.RPC("TurnEnd", RpcTarget.All, tileId);
@@ -102,7 +97,6 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         else
         {
             TurnEnded.Invoke();
-            TurnStart();
             
             if (NetworkManager.Instance.RoomController.LocalPlayer.IsActive())
             {
@@ -115,28 +109,31 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     
     private void RoundEnded()
     {
-        bool isWin = NetworkManager.Instance.RoomController.LocalPlayer.IsActive();
+        bool isRoundWon = NetworkManager.Instance.RoomController.LocalPlayer.IsActive();
         
+        BoardWinEffect(isRoundWon);
+
+        StartCoroutine(Delay(delayedAction: ()=>
+        {
+            MatchController.LocalInstance.EndRound(isRoundWon);
+        }));
+    }
+
+    private void BoardWinEffect(bool isRoundWon)
+    {
         List<WinCondition.RowColumIndex> rowColumIndex = winCondition.GetWinIndexes();
             
         rowColumIndex.ForEach(index =>
         {
-            tiles[GetTileId(index.row, index.column)].EndGameTileEffect(isWin);
+            tiles[GetTileId(index.row, index.column)].EndGameTileEffect(isRoundWon);
         });
-        
-        StartCoroutine(Delay(() =>
-        {
-            MatchController.LocalInstance.EndRound();
-        }));
     }
-
+    
     private IEnumerator Delay(Action delayedAction)
     {
         yield return new WaitForSeconds(0.5f);
         delayedAction.Invoke();
     }
-   
-    
     
     private void UpdateTile(int id)
     {
