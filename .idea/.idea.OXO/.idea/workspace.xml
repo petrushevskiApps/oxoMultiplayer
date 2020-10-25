@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="883d8292-cd2d-43a9-ac4a-37c918421ace" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Screens/UIGameScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Screens/UIGameScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Launcher.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Launcher.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -24,6 +26,7 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Networking/NetworkManager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/Screens/UIUsernameScreen.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/UIManager/Scripts/Button/Extensions/ButtonSound.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/StatisticsManager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/UIManager/Scripts/Utilitis/SafeArea.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/Screens/UICreateGameScreen.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/AudioManager.cs" root0="FORCE_HIGHLIGHTING" />
@@ -69,7 +72,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Assets/UIManager/Scripts/Windows/UIScreen.cs" />
         <option value="$PROJECT_DIR$/Assets/UIGameScreen.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/UILoadingScreen.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Data/StateImages.cs" />
@@ -106,7 +108,6 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/Popups/UIChangeUsernamePopup.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/Screens/UIMainScreen.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/PlayerRow.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Plugins/Photon/PhotonUnityNetworking/UtilityScripts/TurnBased/PunTurnManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Game/Player.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Networking/NetworkManager.cs" />
@@ -120,6 +121,8 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/Networking/NetworkPlayer.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Game/BoardController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/Screens/UIGameScreen.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/StatisticsManager.cs" />
       </list>
     </option>
   </component>
@@ -209,7 +212,8 @@
       <workItem from="1603344155555" duration="20949000" />
       <workItem from="1603454676975" duration="26722000" />
       <workItem from="1603530235587" duration="8523000" />
-      <workItem from="1603577342886" duration="10587000" />
+      <workItem from="1603577342886" duration="11855000" />
+      <workItem from="1603620055670" duration="1113000" />
     </task>
     <servers />
   </component>
