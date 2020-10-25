@@ -39,6 +39,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         winCondition = GetComponent<WinCondition>();
         turnController = GetComponent<TurnController>();
 
+        MatchController.RoundStarted.AddListener(TurnStart);
         MatchController.RoundEnded.AddListener(ResetBoard);
         SetupBoardTiles();
     }
@@ -82,6 +83,11 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         photonView.RPC("TurnEnd", RpcTarget.All, tileId);
     }
 
+    private void TurnStart(int round = 0)
+    {
+        TurnStarted.Invoke();
+    }
+    
     [PunRPC]
     private void TurnEnd(int tileId)
     {
@@ -97,11 +103,12 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         else
         {
             TurnEnded.Invoke();
-            
-            if (NetworkManager.Instance.RoomController.LocalPlayer.IsActive())
+            if (NetworkManager.Instance.RoomController.LocalPlayer.IsActive)
             {
                 turnController.IncrementTurn();
             }
+            
+            TurnStart();
         }
         
         PrintTable();
@@ -109,7 +116,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     
     private void RoundEnded()
     {
-        bool isRoundWon = NetworkManager.Instance.RoomController.LocalPlayer.IsActive();
+        bool isRoundWon = NetworkManager.Instance.RoomController.LocalPlayer.IsActive;
         
         BoardWinEffect(isRoundWon);
 

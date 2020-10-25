@@ -27,7 +27,12 @@ public class UIGameScreen : UIScreen
     [SerializeField] private Image playerOneSymbol;
     [SerializeField] private TextMeshProUGUI playerTwoNickname;
     [SerializeField] private Image playerTwoSymbol;
-    
+
+    [Header("Backgrounds")] 
+    [SerializeField] private Color activePlayerColor;
+    [SerializeField] private Color normalPlayerColor;
+    [SerializeField] private List<BackgroundsList> playerBackgrounds;
+
     [SerializeField] private TileImages symbols;
     private void Awake()
     {
@@ -40,12 +45,13 @@ public class UIGameScreen : UIScreen
         MatchController.MatchEnded.AddListener(OnMatchEnded);
         MatchController.RoundStarted.AddListener(OnRoundStarted);
         MatchController.RoundEnded.AddListener(OnRoundEnded);
+        
     }
-
-
+    
     private void OnMatchStarted()
     {
         RegisterScoreListeners();
+        RegisterActiveListeners();
         
         List<NetworkPlayer> players = NetworkManager.Instance.RoomController.PlayersInRoom;
         
@@ -64,7 +70,7 @@ public class UIGameScreen : UIScreen
         middleContent.SetActive(true);
         StartCoroutine(Delay(() => middleContent.SetActive(false)));
     }
-    
+  
     private void OnRoundEnded()
     {
         
@@ -73,8 +79,9 @@ public class UIGameScreen : UIScreen
     private void OnMatchEnded(bool arg0)
     {
         UnregisterScoreListeners();
+        UnregisterActiveListeners();
     }
-    
+
     private void RegisterScoreListeners()
     {
         for (int i = 0; i < playerScores.Count; i++)
@@ -87,7 +94,6 @@ public class UIGameScreen : UIScreen
             });
         }
     }
-
     private void UnregisterScoreListeners()
     {
         for (int i = 0; i < playerScores.Count; i++)
@@ -95,10 +101,43 @@ public class UIGameScreen : UIScreen
             NetworkManager.Instance.RoomController.PlayersInRoom[i].PlayerScoreUpdated.RemoveAllListeners();
         }
     }
+    private void RegisterActiveListeners()
+    {
+        for (int i = 0; i < playerBackgrounds.Count; i++)
+        {
+            BackgroundsList backgrounds = playerBackgrounds[i];
+            
+            NetworkManager.Instance.RoomController.PlayersInRoom[i].PlayerActiveStatusChange.AddListener((isActive) =>
+            {
+                if (isActive)
+                {
+                    backgrounds.list.ForEach(background => background.color = activePlayerColor);
+                }
+                else
+                {
+                    backgrounds.list.ForEach(background => background.color = normalPlayerColor);
+                }
+            });
+        }
+    }
+
+    private void UnregisterActiveListeners()
+    {
+        for (int i = 0; i < playerBackgrounds.Count; i++)
+        {
+            NetworkManager.Instance.RoomController.PlayersInRoom[i].PlayerActiveStatusChange.RemoveAllListeners();
+        }
+    }
 
     private IEnumerator Delay(Action delayedAction)
     {
         yield return new WaitForSeconds(1.5f);
         delayedAction.Invoke();
+    }
+
+    [Serializable]
+    public class BackgroundsList
+    {
+        public List<Image> list;
     }
 }

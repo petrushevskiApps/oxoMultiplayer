@@ -12,7 +12,7 @@ public class NetworkPlayer
 {
     public UnityBoolEvent PlayerStatusChange = new UnityBoolEvent();
     public UnityIntegerEvent PlayerScoreUpdated = new UnityIntegerEvent();
-    
+    public UnityBoolEvent PlayerActiveStatusChange = new UnityBoolEvent();
     public int PlayerId { get; }
     public string Nickname => player.NickName;
     public string UserId => player.UserId;
@@ -71,12 +71,22 @@ public class NetworkPlayer
     private int playerTurnId;
     private Hashtable playerProperties;
     
-    public bool IsActive()
+    public void SetActiveStatus(int turn)
     {
-        int turn = NetworkManager.Instance.RoomController.GetRoomProperty(Keys.ROOM_TURN);
-        return turn % PhotonNetwork.CurrentRoom.PlayerCount == playerTurnId;
+        IsActive = turn % PhotonNetwork.CurrentRoom.PlayerCount == playerTurnId;
     }
-    
+
+    private bool isActive;
+    public bool IsActive
+    {
+        get => isActive;
+        private set
+        {
+            if (isActive == value) return;
+            isActive = value;
+            PlayerActiveStatusChange.Invoke(isActive);
+        }
+    }
     
     public NetworkPlayer(Player player)
     {
@@ -88,6 +98,8 @@ public class NetworkPlayer
             MatchController.MatchStarted.AddListener(OnMatchStarted);
         }
         
+        RoomController.RoomTurnChange.AddListener(SetActiveStatus);
+
         PlayerId = player.ActorNumber;
         PlayerSymbol = (TileType) PlayerId;
         playerTurnId = PlayerId - 1;

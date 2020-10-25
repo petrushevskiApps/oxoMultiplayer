@@ -8,8 +8,6 @@ using UnityEngine;
 
 public class TurnController : MonoBehaviour
 {
-    private int turnCounter = 0;
-    
     private void OnEnable()
     {
         MatchController.RoundStarted.AddListener(OnRoundStarted);
@@ -21,13 +19,13 @@ public class TurnController : MonoBehaviour
     
     private void OnRoundStarted(int round)
     {
-        NetworkManager.Instance.RoomController.SetRoomProperty(Keys.ROOM_TURN, (round - 1) % 2);
+        RoomController.SetRoomProperty(Keys.ROOM_TURN, (round - 1) % 2);
     }
     
     public void IncrementTurn()
     {
-        int turn = NetworkManager.Instance.RoomController.GetRoomProperty(Keys.ROOM_TURN);
-        NetworkManager.Instance.RoomController.SetRoomProperty(Keys.ROOM_TURN, ++turn);
+        int turn = RoomController.GetRoomProperty(Keys.ROOM_TURN);
+        RoomController.SetRoomProperty(Keys.ROOM_TURN, ++turn);
         Debug.Log("T1:: TurnController: IncrementTurn: " + (turn));
     }
 

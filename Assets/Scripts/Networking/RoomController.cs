@@ -16,6 +16,7 @@ public class RoomController : MonoBehaviourPunCallbacks
     public static PlayerRoomEvent PlayerEnteredRoom = new PlayerRoomEvent();
     public static PlayerRoomEvent PlayerExitedRoom = new PlayerRoomEvent();
     public static RoomStatusChangeEvent RoomStatusChange = new RoomStatusChangeEvent();
+    public static UnityIntegerEvent RoomTurnChange = new UnityIntegerEvent();
     
     public static string RoomName => PhotonNetwork.CurrentRoom.Name;
     public static bool IsRoomFull => PhotonNetwork.CurrentRoom.MaxPlayers == PhotonNetwork.CurrentRoom.PlayerCount;
@@ -23,7 +24,7 @@ public class RoomController : MonoBehaviourPunCallbacks
     // Players in Room
     public List<NetworkPlayer> PlayersInRoom => networkPlayers.Values.ToList();
     public NetworkPlayer LocalPlayer { get; private set; }
-    public NetworkPlayer ActivePlayer => PlayersInRoom.FirstOrDefault(x => x.IsActive());
+    public NetworkPlayer ActivePlayer => PlayersInRoom.FirstOrDefault(x => x.IsActive);
     
     public RoomStatus RoomCurrentStatus
     {
@@ -47,31 +48,29 @@ public class RoomController : MonoBehaviourPunCallbacks
     public void SetupRoomController()
     {
         PhotonNetwork.CurrentRoom.PlayerTtl = 30000; // 30 sec
-        SetupRoomProperties();
+        
         
         foreach(Player player in PhotonNetwork.CurrentRoom.Players.Values)
         {
             CreateNetworkPlayer(player);
         }
+        SetupRoomProperties();
     }
     
     private void SetupRoomProperties()
     {
-        roomProperties = new Hashtable();
-        roomProperties.Add(Keys.ROOM_TURN, 0);
+        roomProperties = new Hashtable {{Keys.ROOM_TURN, 0}};
         PhotonNetwork.CurrentRoom.SetCustomProperties(roomProperties);
     }
-    public void SetRoomProperty(string KEY, object value)
+    public static void SetRoomProperty(string key, object value)
     {
-        roomProperties[KEY] = value;
-        PhotonNetwork.CurrentRoom.SetCustomProperties(roomProperties);
-        Debug.Log(KEY + ": Value: " + value);
+        PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable{{key,value}});
+        Debug.Log(key + ": Value: " + value);
     }
-    public int GetRoomProperty(string KEY)
+    public static int GetRoomProperty(string key)
     {
-        object result = 0;
-        PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(KEY, out result);
-        return (int) result;
+        PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(key, out var result);
+        return (int?) result ?? 0;
     }
     
     public void CleanRoomController()
@@ -115,15 +114,15 @@ public class RoomController : MonoBehaviourPunCallbacks
         CreateNetworkPlayer(newPlayer);
         SetRoomStatus();
     }
-    
-    public override void OnPlayerLeftRoom(Player otherPlayer)
+
+    public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
     {
-        if (!networkPlayers.ContainsKey(otherPlayer.UserId)) return;
+        base.OnRoomPropertiesUpdate(propertiesThatChanged);
         
-        PlayerExitedRoom.Invoke(networkPlayers[otherPlayer.UserId]);
-        networkPlayers.Remove(otherPlayer.UserId);
-        SetRoomStatus();
-        
+        if (propertiesThatChanged.ContainsKey(Keys.ROOM_TURN))
+        {
+            RoomTurnChange.Invoke((int)propertiesThatChanged[Keys.ROOM_TURN]);
+        }
     }
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
