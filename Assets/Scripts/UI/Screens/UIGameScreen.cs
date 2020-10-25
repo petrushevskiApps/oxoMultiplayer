@@ -56,10 +56,10 @@ public class UIGameScreen : UIScreen
         List<NetworkPlayer> players = NetworkManager.Instance.RoomController.PlayersInRoom;
         
         playerOneNickname.text = players[0].Nickname;
-        playerOneSymbol.sprite = symbols.GetTileState(players[0].PlayerSymbol);
+        playerOneSymbol.sprite = symbols.GetEndTileState(players[0].PlayerSymbol);
         
         playerTwoNickname.text = players[1].Nickname;
-        playerTwoSymbol.sprite = symbols.GetTileState(players[1].PlayerSymbol);
+        playerTwoSymbol.sprite = symbols.GetEndTileState(players[1].PlayerSymbol);
     }
 
     private void OnRoundStarted(int round)

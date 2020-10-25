@@ -3,12 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="883d8292-cd2d-43a9-ac4a-37c918421ace" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.OXO/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Game.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Game.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/BoardController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/BoardController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/TileState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/TileState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/TurnController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/TurnController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Networking/NetworkPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Networking/NetworkPlayer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Networking/RoomController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Networking/RoomController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Screens/UIGameScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Screens/UIGameScreen.cs" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -215,7 +209,7 @@
       <workItem from="1603344155555" duration="20949000" />
       <workItem from="1603454676975" duration="26722000" />
       <workItem from="1603530235587" duration="8523000" />
-      <workItem from="1603577342886" duration="9197000" />
+      <workItem from="1603577342886" duration="10587000" />
     </task>
     <servers />
   </component>
