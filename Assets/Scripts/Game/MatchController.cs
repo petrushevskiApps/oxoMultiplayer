@@ -6,6 +6,7 @@ using com.petrushevskiapps.Oxo;
 using com.petrushevskiapps.Oxo.Utilities;
 using PetrushevskiApps.UIManager;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -25,6 +26,18 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     private void Awake()
     {
         LocalInstance = this;
+        
+        RoomController.PlayerExitedRoom.AddListener(OnPlayerExited);
+    }
+
+    private void OnDestroy()
+    {
+        RoomController.PlayerExitedRoom.RemoveListener(OnPlayerExited);
+    }
+
+    private void OnPlayerExited(NetworkPlayer player)
+    {
+        UIManager.Instance.OpenPopup<UITimerPopup>().InitializePopup(player.Nickname);
     }
 
     [PunRPC]
@@ -37,7 +50,7 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
         StartRound();
     }
  
-    public void StartRound()
+    private void StartRound()
     {
         Round++;
         RoundStarted.Invoke(Round);
@@ -54,7 +67,7 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
 
     IEnumerator WaitRoundComplete()
     {
-        yield return new WaitWhile(() => NetworkManager.Instance.RoomController.PlayersInRoom.Sum(player => player.Score) != Round);
+        yield return new WaitWhile(() => RoomController.Instance.PlayersInRoom.Sum(player => player.Score) != Round);
         Debug.Log("WaitRoundComplete:: END ROUND:: " +  Round + " DELAYED");
         
         if (IsMatchCompleted())
@@ -66,8 +79,8 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
 
     private bool IsMatchCompleted()
     {
-        int max = NetworkManager.Instance.RoomController.PlayersInRoom.Max(player => player.Score);
-        int sum = NetworkManager.Instance.RoomController.PlayersInRoom.Sum(player => player.Score);
+        int max = RoomController.Instance.PlayersInRoom.Max(player => player.Score);
+        int sum = RoomController.Instance.PlayersInRoom.Sum(player => player.Score);
         float winningPossibility = sum / (float) MatchRounds; // Winning possibilit > 0.5
         float scoreDistribution = max / (float)sum; // Distribution > 0.5 
         
@@ -75,20 +88,27 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     }
     private void UpdateScore()
     {
-        NetworkManager.Instance.RoomController.LocalPlayer.Score++;
+        RoomController.Instance.LocalPlayer.Score++;
     }
 
     private bool IsLocalMatchWin()
     {
-        NetworkPlayer matchWinner = NetworkManager.Instance.RoomController.PlayersInRoom.OrderByDescending(x => x.Score).FirstOrDefault();
+        NetworkPlayer matchWinner = RoomController.Instance.PlayersInRoom.OrderByDescending(x => x.Score).FirstOrDefault();
         Debug.Log("T1:: Match Winner:: " + matchWinner.Nickname);
-        return matchWinner == NetworkManager.Instance.RoomController.LocalPlayer;
+        return matchWinner == RoomController.Instance.LocalPlayer;
     }
     
     private void EndMatch()
     {
         Round = 0;
         MatchEnded.Invoke(IsLocalMatchWin());
+        UIManager.Instance.OpenScreen<UIEndScreen>();
+    }
+
+    public void EndMatch(bool isLocalWin)
+    {
+        Round = 0;
+        MatchEnded.Invoke(isLocalWin);
         UIManager.Instance.OpenScreen<UIEndScreen>();
     }
     
@@ -112,16 +132,10 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            photonView.RPC(rpcMethodName, RpcTarget.Others);
+            photonView.RPC(rpcMethodName, RpcTarget.OthersBuffered);
         }
     }
-    
-    private IEnumerator Delay(Action delayedAction)
-    {
-        yield return new WaitForSeconds(0.5f);
-        delayedAction.Invoke();
-    }
-    
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         

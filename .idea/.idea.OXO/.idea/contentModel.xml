@@ -405,6 +405,7 @@
           </e>
         </e>
         <e p="StatisticsManager.cs" t="Include" />
+        <e p="UILeavePopup.cs" t="Include" />
         <e p="UIManager" t="Include">
           <e p="Scripts" t="Include">
             <e p="Button" t="Include">

@@ -1,6 +1,7 @@
 ﻿using System;
 using com.petrushevskiapps.Oxo;
 using com.petrushevskiapps.Oxo.Utilities;
+using Data;
 using ExitGames.Client.Photon;
 using PetrushevskiApps.UIManager;
 using Photon.Pun;
@@ -25,21 +26,21 @@ public class UIRoomScreen : UIScreen
         
         startGame.onClick.AddListener(StartGame);
         playerReady.onClick.AddListener(OnPlayerReadyClicked);
-        backButton.onClick.AddListener(ExitRoom);
+        backButton.onClick.AddListener(OnBackButtonPressed);
     }
 
     private void OnEnable()
     {
-        RoomController.RoomStatusChange.AddListener(SetStartButton);
-        RoomController.RoomStatusChange.AddListener(SetRoomLabel);
+        RoomController.StatusChanged.AddListener(SetStartButton);
+        RoomController.StatusChanged.AddListener(SetRoomLabel);
         
         SetRoomTitle();
-        SetRoomLabel(NetworkManager.Instance.RoomController.RoomCurrentStatus);
+        SetRoomLabel(RoomController.Instance.Status);
 
         if (NetworkManager.Instance.IsMasterClient)
         {
             SetButtonsStatus(true, false);
-            SetStartButton(NetworkManager.Instance.RoomController.RoomCurrentStatus);
+            SetStartButton(RoomController.Instance.Status);
         }
         else
         {
@@ -48,8 +49,8 @@ public class UIRoomScreen : UIScreen
     }
     public void OnDisable()
     {
-        RoomController.RoomStatusChange.RemoveListener(SetStartButton);
-        RoomController.RoomStatusChange.AddListener(SetRoomLabel);
+        RoomController.StatusChanged.RemoveListener(SetStartButton);
+        RoomController.StatusChanged.AddListener(SetRoomLabel);
         
         SetButtonsStatus(false, false);
     }
@@ -60,14 +61,14 @@ public class UIRoomScreen : UIScreen
         playerReady.gameObject.SetActive(readyBtnShow);
     }
     
-    private void SetStartButton(RoomController.RoomStatus currentRoomStatus)
+    private void SetStartButton(RoomStatus currentRoomStatus)
     {
-        startGame.SetInteractableStatus(currentRoomStatus == RoomController.RoomStatus.Ready);
+        startGame.SetInteractableStatus(currentRoomStatus == RoomStatus.Ready);
     }
 
     private void OnPlayerReadyClicked()
     {
-        NetworkManager.Instance.RoomController.LocalPlayer.SetPlayerProperty(Keys.PLAYER_READY_KEY, true);
+        RoomController.Instance.LocalPlayer.Properties.Set(Keys.PLAYER_READY_KEY, true).Update();
     }
    
     private void SetRoomTitle()
@@ -75,17 +76,17 @@ public class UIRoomScreen : UIScreen
         titleText.text = RoomController.RoomName;
     }
 
-    private void SetRoomLabel(RoomController.RoomStatus currentRoomStatus)
+    private void SetRoomLabel(RoomStatus currentRoomStatus)
     {
         switch (currentRoomStatus)
         {
-            case RoomController.RoomStatus.Waiting:
+            case RoomStatus.Waiting:
                 labelText.text = Constants.WAITING_PLAYERS_MESSAGE;
                 break;
-            case RoomController.RoomStatus.Full:
+            case RoomStatus.Full:
                 labelText.text = Constants.PLAYERS_NOT_READY_MESSAGE;
                 break;
-            case RoomController.RoomStatus.Ready:
+            case RoomStatus.Ready:
                 labelText.text = Constants.PLAYERS_READY_MESSAGE;
                 break;
             default:
@@ -100,6 +101,8 @@ public class UIRoomScreen : UIScreen
 
     protected override void OnBackButtonPressed()
     {
-        ExitRoom();
+        UIManager.Instance.OpenPopup<UILeavePopup>()
+            .SetTitle(Constants.LEAVE_ROOM_TITLE)
+            .SetMessage(Constants.LEAVE_ROOM_MESSAGE);
     }
 }

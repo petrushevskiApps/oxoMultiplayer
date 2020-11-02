@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using com.petrushevskiapps.Oxo;
+using com.petrushevskiapps.Oxo.Utilities;
 using PetrushevskiApps.UIManager;
 using TMPro;
 using UnityEngine;
@@ -16,24 +17,22 @@ public class UIGameScreen : UIScreen
 
     [Header("Round Table")] 
     [SerializeField] private TextMeshProUGUI roundNumberTextTop;
-    [SerializeField] private List<TextMeshProUGUI> playerScores;
 
     [Header("Middle Content")]
     [SerializeField] private TextMeshProUGUI roundNumberTextMid;
     [SerializeField] private GameObject middleContent;
-    
-    [Header("Players")]
-    [SerializeField] private TextMeshProUGUI playerOneNickname;
-    [SerializeField] private Image playerOneSymbol;
-    [SerializeField] private TextMeshProUGUI playerTwoNickname;
-    [SerializeField] private Image playerTwoSymbol;
+
+    [Header("Players")] 
+    [SerializeField] private List<PlayerUI> playerRefs = new List<PlayerUI>();
 
     [Header("Backgrounds")] 
-    [SerializeField] private Color activePlayerColor;
-    [SerializeField] private Color normalPlayerColor;
-    [SerializeField] private List<BackgroundsList> playerBackgrounds;
-
+    [SerializeField] private Color activeColor;
+    [SerializeField] private Color normalColor;
+    
     [SerializeField] private TileImages symbols;
+
+    private List<NetworkPlayer> players;
+
     private void Awake()
     {
         base.Awake();
@@ -47,19 +46,25 @@ public class UIGameScreen : UIScreen
         MatchController.RoundEnded.AddListener(OnRoundEnded);
         
     }
-    
+
+    private void OnDestroy()
+    {
+        MatchController.MatchStarted.RemoveListener(OnMatchStarted);
+        MatchController.MatchEnded.RemoveListener(OnMatchEnded);
+        MatchController.RoundStarted.RemoveListener(OnRoundStarted);
+        MatchController.RoundEnded.RemoveListener(OnRoundEnded);
+        
+        Timer.Stop(this, "MidContent");
+    }
+
     private void OnMatchStarted()
     {
-        RegisterScoreListeners();
-        RegisterActiveListeners();
-        
-        List<NetworkPlayer> players = NetworkManager.Instance.RoomController.PlayersInRoom;
-        
-        playerOneNickname.text = players[0].Nickname;
-        playerOneSymbol.sprite = symbols.GetEndTileState(players[0].PlayerSymbol);
-        
-        playerTwoNickname.text = players[1].Nickname;
-        playerTwoSymbol.sprite = symbols.GetEndTileState(players[1].PlayerSymbol);
+        players = RoomController.Instance.PlayersInRoom;
+
+        for (int i = 0; i < players.Count; i++)
+        {
+            playerRefs[i].Setup(players[i], symbols, activeColor, normalColor);
+        }
     }
 
     private void OnRoundStarted(int round)
@@ -68,7 +73,7 @@ public class UIGameScreen : UIScreen
         roundNumberTextTop.text = roundText;
         roundNumberTextMid.text = roundText;
         middleContent.SetActive(true);
-        StartCoroutine(Delay(() => middleContent.SetActive(false)));
+        Timer.Start(this, "MidContent", 1.5f, () => middleContent.SetActive(false));
     }
   
     private void OnRoundEnded()
@@ -78,66 +83,63 @@ public class UIGameScreen : UIScreen
 
     private void OnMatchEnded(bool arg0)
     {
-        UnregisterScoreListeners();
-        UnregisterActiveListeners();
-    }
-
-    private void RegisterScoreListeners()
-    {
-        for (int i = 0; i < playerScores.Count; i++)
+        for (int i = 0; i < players.Count; i++)
         {
-            TextMeshProUGUI text = playerScores[i];
-            text.text = "0";
-            NetworkManager.Instance.RoomController.PlayersInRoom[i].PlayerScoreUpdated.AddListener((score) =>
-            {
-                text.text = score.ToString();
-            });
-        }
-    }
-    private void UnregisterScoreListeners()
-    {
-        for (int i = 0; i < playerScores.Count; i++)
-        {
-            NetworkManager.Instance.RoomController.PlayersInRoom[i].PlayerScoreUpdated.RemoveAllListeners();
-        }
-    }
-    private void RegisterActiveListeners()
-    {
-        for (int i = 0; i < playerBackgrounds.Count; i++)
-        {
-            BackgroundsList backgrounds = playerBackgrounds[i];
-            
-            NetworkManager.Instance.RoomController.PlayersInRoom[i].PlayerActiveStatusChange.AddListener((isActive) =>
-            {
-                if (isActive)
-                {
-                    backgrounds.list.ForEach(background => background.color = activePlayerColor);
-                }
-                else
-                {
-                    backgrounds.list.ForEach(background => background.color = normalPlayerColor);
-                }
-            });
+            playerRefs[i].Clear();
         }
     }
 
-    private void UnregisterActiveListeners()
-    {
-        for (int i = 0; i < playerBackgrounds.Count; i++)
-        {
-            NetworkManager.Instance.RoomController.PlayersInRoom[i].PlayerActiveStatusChange.RemoveAllListeners();
-        }
-    }
 
-    private IEnumerator Delay(Action delayedAction)
+    protected override void OnBackButtonPressed()
     {
-        yield return new WaitForSeconds(1.5f);
-        delayedAction.Invoke();
+        UIManager.Instance.OpenPopup<UILeavePopup>()
+            .SetTitle(Constants.LEAVE_MATCH_TITLE)
+            .SetMessage(Constants.LEAVE_MATCH_MESSAGE);
     }
-
+    
     [Serializable]
-    public class BackgroundsList
+    public class PlayerUI
     {
-        public List<Image> list;
+        private NetworkPlayer player;
+        
+        [SerializeField] private TextMeshProUGUI nicknameText;
+        [SerializeField] private Image symbolImage;
+        [SerializeField] private TextMeshProUGUI scoreText;
+        [SerializeField] private List<Image> backgrounds;
+        
+        private Color activeColor;
+        private Color normalColor;
+        
+        public void Setup(NetworkPlayer player, TileImages symbols,Color activeColor,Color normalColor)
+        {
+            this.player = player;
+            this.activeColor = activeColor;
+            this.normalColor = normalColor;
+            
+            nicknameText.text = player.Nickname;
+            symbolImage.sprite = symbols.GetEndTileState(player.PlayerSymbol);
+            
+            UpdateScoreText(player.Score);
+            SetupBackgrounds(player.IsActive);
+            
+            player.ScoreUpdated.AddListener(UpdateScoreText);
+            player.ActiveStatusChanged.AddListener(SetupBackgrounds);
+        }
+
+        public void Clear()
+        {
+            player.ScoreUpdated.RemoveListener(UpdateScoreText);
+            player.ActiveStatusChanged.AddListener(SetupBackgrounds);
+        }
+        
+        private void SetupBackgrounds(bool isActive)
+        {
+            backgrounds.ForEach(background => background.color = isActive ? activeColor : normalColor);
+        }
+        
+        private void UpdateScoreText(int score)
+        {
+            scoreText.text = score.ToString();
+        }
     }
 }

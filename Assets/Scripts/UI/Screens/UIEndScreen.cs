@@ -36,6 +36,7 @@ public class UIEndScreen : UIScreen
         base.Initialize(onBackButtonAction);
         
         MatchController.MatchEnded.AddListener(MatchEnded);
+        RoomController.PlayerExitedRoom.AddListener(OnOtherPlayerExitedRoom);
         exitBtn.onClick.AddListener(ExitRoom);
         settingsButton.onClick.AddListener(ShowSettings);
         replayButton.onClick.AddListener(Replay);
@@ -45,6 +46,7 @@ public class UIEndScreen : UIScreen
     }
     private void OnDestroy()
     {
+        RoomController.PlayerExitedRoom.RemoveListener(OnOtherPlayerExitedRoom);
         MatchController.MatchEnded.RemoveListener(MatchEnded);
     }
 
@@ -61,7 +63,10 @@ public class UIEndScreen : UIScreen
         SetIcon(isWin);
         PlayAudio(isWin);
     }
-
+    private void OnOtherPlayerExitedRoom(NetworkPlayer player)
+    {
+        replayButton.SetInteractableStatus(false);
+    }
     private void PlayAudio(bool isWin)
     {
         AudioManager.Instance.PlaySoundEffect(isWin ? winAudio : loseAudio);

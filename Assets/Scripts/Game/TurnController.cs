@@ -19,14 +19,14 @@ public class TurnController : MonoBehaviour
     
     private void OnRoundStarted(int round)
     {
-        RoomController.SetRoomProperty(Keys.ROOM_TURN, (round - 1) % 2);
+        int turn = (round - 1) % 2;
+        RoomController.Instance.Properties.Set(Keys.ROOM_TURN, turn).Update();
     }
     
     public void IncrementTurn()
     {
-        int turn = RoomController.GetRoomProperty(Keys.ROOM_TURN);
-        RoomController.SetRoomProperty(Keys.ROOM_TURN, ++turn);
-        Debug.Log("T1:: TurnController: IncrementTurn: " + (turn));
+        int turn = RoomController.Instance.Properties.GetProperty<int>(Keys.ROOM_TURN);
+        RoomController.Instance.Properties.Set(Keys.ROOM_TURN, ++turn).Update();
     }
 
 }

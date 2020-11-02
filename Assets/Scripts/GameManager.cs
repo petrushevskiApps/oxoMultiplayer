@@ -1,4 +1,6 @@
 ﻿using com.petrushevskiapps.Oxo;
+using com.petrushevskiapps.Oxo.Utilities;
+using Data;
 using PetrushevskiApps.UIManager;
 using Photon.Pun;
 using UnityEngine;
@@ -30,7 +32,19 @@ public class GameManager : MonoBehaviour
     {
         if (PhotonNetwork.InRoom)
         {
-            UIManager.Instance.OpenScreen<UIRoomScreen>();
+            RoomState state = RoomController.Instance.State;
+
+            Debug.Log($"ROOM STATUS:: {state}");
+
+            switch (state)
+            {
+                case RoomState.InGame:
+                    UIManager.Instance.OpenScreen<UIGameScreen>();
+                    break;
+                default:
+                    UIManager.Instance.OpenScreen<UIRoomScreen>();
+                    break;
+            }
         }
         else
         {

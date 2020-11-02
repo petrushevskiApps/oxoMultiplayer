@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using com.petrushevskiapps.Oxo.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
@@ -85,5 +86,17 @@ public class PlayerDataController : MonoBehaviour
         }
     }
 
+    public static string LastRoom
+    {
+        get => PlayerPrefs.GetString(Keys.KEY_LAST_ROOM, string.Empty);
+        set => PlayerPrefs.SetString(Keys.KEY_LAST_ROOM, value);
+    }
+
+    
+    public static void ClearLastRoom(MonoBehaviour starter)
+    {
+        if (LastRoom == null) return;
+        Timer.Start(starter, "clearLastRoom", 30, () => LastRoom = string.Empty);
+    }
     
 }

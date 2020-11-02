@@ -40,7 +40,7 @@ public class TileState : MonoBehaviour
     
     private void OnMouseDown()
     {
-        if (NetworkManager.Instance.RoomController.LocalPlayer.IsActive)
+        if (RoomController.Instance.LocalPlayer.IsActive)
         {
             if (_tile == TileType.Empty)
             {
@@ -59,7 +59,7 @@ public class TileState : MonoBehaviour
     {
         if (_tile == TileType.Empty)
         {
-            _tile = NetworkManager.Instance.RoomController.ActivePlayer?.PlayerSymbol ?? TileType.Empty;
+            _tile = RoomController.Instance.ActivePlayer?.PlayerSymbol ?? TileType.Empty;
             tileStateImage.sprite = images.GetTileState(_tile);
         }
     }

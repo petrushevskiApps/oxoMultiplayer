@@ -1,82 +1,49 @@
-﻿
-using System;
-using com.petrushevskiapps.Oxo;
+﻿using com.petrushevskiapps.Oxo;
+using com.petrushevskiapps.Oxo.Properties;
 using com.petrushevskiapps.Oxo.Utilities;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class NetworkPlayer
 {
-    public UnityBoolEvent PlayerStatusChange = new UnityBoolEvent();
-    public UnityIntegerEvent PlayerScoreUpdated = new UnityIntegerEvent();
-    public UnityBoolEvent PlayerActiveStatusChange = new UnityBoolEvent();
+    public readonly UnityBoolEvent ReadyStatusChanged = new UnityBoolEvent();
+    public readonly UnityBoolEvent ActiveStatusChanged = new UnityBoolEvent();
+    public readonly UnityIntegerEvent ScoreUpdated = new UnityIntegerEvent();
+    
+    public INetworkProperties Properties { get; }
     public int PlayerId { get; }
     public string Nickname => player.NickName;
     public string UserId => player.UserId;
     public TileType PlayerSymbol { get; }
 
-    private bool networkUpdate;
-    private bool isLocalReady;
     public bool IsReady
     {
-        get
-        {
-            if (player.IsMasterClient) return true;
-            else
-            {
-                object isReady = GetPlayerProperty(Keys.PLAYER_READY_KEY);
-                if (isReady != null) return (bool) isReady;
-                else return false;
-            }
-        }
+        get => player.IsMasterClient || Properties.GetProperty<bool>(Keys.PLAYER_READY_KEY);
         private set
         {
-            if (isLocalReady != value)
-            {
-                isLocalReady = value;
-                PlayerStatusChange.Invoke(value);
-                if(player.IsLocal && !networkUpdate) SetPlayerProperty(Keys.PLAYER_READY_KEY, value);
-                
-            }
-            networkUpdate = false;
+            if (IsReady == value) return;
+            
+            ReadyStatusChanged.Invoke(value);
+            Properties.Set(Keys.PLAYER_READY_KEY, value).Update();
         }
     }
     
 
-    private int localScore;
-    
     public int Score
     {
-        get => player.IsLocal ? localScore : (int)GetPlayerProperty(Keys.PLAYER_MATCH_SCORE);
+        get => Properties.GetProperty<int>(Keys.PLAYER_MATCH_SCORE);
         set
         {
-            if (localScore != value)
-            {
-                Debug.Log("T1:: " + Nickname + "Set Score:: " + value + " Is Network Update:: " + networkUpdate);
-                localScore = value;
-                PlayerScoreUpdated.Invoke(localScore);
-                if (player.IsLocal && !networkUpdate)
-                {
-                    SetPlayerProperty(Keys.PLAYER_MATCH_SCORE, value);
-                }
-            }
-            networkUpdate = false;
+            if (Score == value) return;
+            
+            ScoreUpdated.Invoke(value);
+            Properties.Set(Keys.PLAYER_MATCH_SCORE, value).Update();
+            Debug.Log($"NetworkPlayer:: {Nickname}:: New Score:: {value}");
         }
     }
     
-    private Player player;
-    private int playerTurnId;
-    private Hashtable playerProperties;
-    
-    public void SetActiveStatus(int turn)
-    {
-        IsActive = turn % PhotonNetwork.CurrentRoom.PlayerCount == playerTurnId;
-    }
-
-    private bool isActive;
     public bool IsActive
     {
         get => isActive;
@@ -84,9 +51,14 @@ public class NetworkPlayer
         {
             if (isActive == value) return;
             isActive = value;
-            PlayerActiveStatusChange.Invoke(isActive);
+            ActiveStatusChanged.Invoke(isActive);
         }
     }
+    
+    private Player player;
+    private int playerTurnId;
+    private bool isActive;
+
     
     public NetworkPlayer(Player player)
     {
@@ -94,67 +66,45 @@ public class NetworkPlayer
         
         if (player.IsLocal)
         {
-            SetupPlayerProperties();
             MatchController.MatchStarted.AddListener(OnMatchStarted);
+            MatchController.MatchEnded.AddListener(OnMatchEnded);
         }
         
-        RoomController.RoomTurnChange.AddListener(SetActiveStatus);
+        RoomController.TurnChanged.AddListener(SetActiveStatus);
 
         PlayerId = player.ActorNumber;
         PlayerSymbol = (TileType) PlayerId;
         playerTurnId = PlayerId - 1;
+        Properties = new PlayerProperties(player, playerTurnId);
         
         UpdatePlayerStatuses(player.CustomProperties);
     }
-
+    
     private void OnMatchStarted()
     {
         if(player.IsLocal) Score = 0;
+    }
+    private void OnMatchEnded(bool arg0)
+    {
         IsReady = player.IsMasterClient;
     }
-
+    private void SetActiveStatus(int turn)
+    {
+        IsActive = turn % PhotonNetwork.CurrentRoom.PlayerCount == playerTurnId;
+    }
+    
     public void UpdatePlayerStatuses(Hashtable statuses)
     {
         if (statuses.ContainsKey(Keys.PLAYER_READY_KEY))
         {
-            networkUpdate = true;
-            IsReady = (bool)statuses[Keys.PLAYER_READY_KEY];
+            ReadyStatusChanged.Invoke((bool)statuses[Keys.PLAYER_READY_KEY]);
         }
         
         if (statuses.ContainsKey(Keys.PLAYER_MATCH_SCORE))
         {
-            networkUpdate = true;
-            Score = (int)statuses[Keys.PLAYER_MATCH_SCORE];
+            ScoreUpdated.Invoke((int)statuses[Keys.PLAYER_MATCH_SCORE]);
         }
     }
 
-    private void SetupPlayerProperties()
-    {
-        playerProperties = new Hashtable();
-        playerProperties.Add(Keys.PLAYER_READY_KEY, false);
-        playerProperties.Add(Keys.PLAYER_MATCH_ID, playerTurnId);
-        playerProperties.Add(Keys.PLAYER_MATCH_SCORE, 0);
-        player.SetCustomProperties(playerProperties);
-    }
-    
-    public void SetPlayerProperty(string KEY, int value)
-    {
-        if(!player.IsLocal) return;
-        
-        playerProperties[KEY] = value;
-        player.SetCustomProperties(playerProperties);
-    }
-    public object GetPlayerProperty(string KEY)
-    {
-        object result = 0;
-        player.CustomProperties.TryGetValue(KEY, out result);
-        return result;
-    }
-        
-    public void SetPlayerProperty(string KEY, bool value)
-    {
-        playerProperties[KEY] = value;
-        player.SetCustomProperties(playerProperties);
-    }
 
 }

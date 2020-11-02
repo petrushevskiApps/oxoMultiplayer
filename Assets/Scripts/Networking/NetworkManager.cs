@@ -15,11 +15,9 @@ namespace com.petrushevskiapps.Oxo
     public class NetworkManager : MonoBehaviourPunCallbacks
     {
         [Header("Controllers")]
-        [SerializeField] private RoomController roomController;
         [SerializeField] private ConnectionController connectionController;
 
         public ConnectionController ConnectionController => connectionController;
-        public RoomController RoomController => roomController;
         public bool IsMasterClient => PhotonNetwork.IsMasterClient;
         
 
@@ -43,8 +41,6 @@ namespace com.petrushevskiapps.Oxo
                 DontDestroyOnLoad(gameObject);
             }
         }
-
-        
 
         public void CreateRoom(string roomName)
         {
@@ -91,24 +87,23 @@ namespace com.petrushevskiapps.Oxo
             // #Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
             PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = maxPlayersPerRoom, PublishUserId = true});
         }
+        
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN:: OnJoinedRoom() called by PUN. Now this client is in a room.");
-            roomController.SetupRoomController();
             PhotonNetwork.LoadLevel(1);
         }
+        
         public override void OnLeftRoom()
         {
             // Prevent loading scene when application is quiting
             if (!GameManager.Instance.IsApplicationQuiting)
             {
-//                SceneManager.LoadScene(0);
                 PhotonNetwork.LoadLevel(0);
             }
         }
         public void LeaveRoom()
         {
-            roomController.CleanRoomController();
             PhotonNetwork.LeaveRoom();
         }
 

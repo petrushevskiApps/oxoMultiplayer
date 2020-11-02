@@ -11,7 +11,7 @@ namespace PetrushevskiApps.UIManager
         [SerializeField] private TextMeshProUGUI message;
         [SerializeField] private Button closeButton;
     
-        private void Awake()
+        protected virtual void Awake()
         {
             closeButton.onClick.AddListener(OnBackButtonPressed);
         }

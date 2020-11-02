@@ -42,7 +42,7 @@ public class UIPlayersList : MonoBehaviourPunCallbacks
 
     private void SetPlayersList()
     {
-        foreach (NetworkPlayer player in NetworkManager.Instance.RoomController.PlayersInRoom)
+        foreach (NetworkPlayer player in RoomController.Instance.PlayersInRoom)
         {
             AddPlayerToUiList(player);
         }
@@ -55,7 +55,7 @@ public class UIPlayersList : MonoBehaviourPunCallbacks
         GameObject playerRow = Instantiate(playerUsernamePrefab, playersListParent.transform);
         
         PlayerRow row = playerRow.GetComponent<PlayerRow>();
-        row.SetupRow(player.IsReady, player.Nickname, player.PlayerStatusChange);
+        row.SetupRow(player.IsReady, player.Nickname, player.ReadyStatusChanged);
         
         playersDictionary.Add(player.UserId, playerRow);
     }

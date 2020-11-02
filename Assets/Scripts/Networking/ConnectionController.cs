@@ -47,8 +47,24 @@ namespace com.petrushevskiapps.Oxo
         
         private IEnumerator Reconnect()
         {
-            while (!PhotonNetwork.Reconnect())
+            while (!PhotonNetwork.IsConnectedAndReady)
             {
+                if (PhotonNetwork.NetworkingClient.State == ClientState.Disconnected)
+                {
+                    if (!PhotonNetwork.ReconnectAndRejoin())
+                    {
+                        Debug.LogError("ReconnectAndRejoin failed, trying Reconnect");
+                        if (!PhotonNetwork.Reconnect())
+                        {
+                            Debug.LogError("Reconnect failed, trying ConnectUsingSettings");
+                            if (!PhotonNetwork.ConnectUsingSettings())
+                            {
+                                Debug.LogError("ConnectUsingSettings failed");
+                            }
+                        }
+                    }
+                }
+               
                 yield return new WaitForSeconds(3f);
             }
         }
@@ -78,6 +94,7 @@ namespace com.petrushevskiapps.Oxo
         public override void OnDisconnected(DisconnectCause cause)
         {
             base.OnDisconnected(cause);
+            PlayerDataController.ClearLastRoom(this);
             UpdateNetworkStatus(false);
             OnOffline.Invoke();
 
