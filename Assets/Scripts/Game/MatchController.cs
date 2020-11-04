@@ -45,6 +45,7 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     {
         SendRpc("StartMatch");
         CreateBoard();
+        
         UIManager.Instance.OpenScreen<UIGameScreen>();
         MatchStarted.Invoke();
         StartRound();
@@ -114,7 +115,7 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     
     private void CreateBoard()
     {
-        if (BoardController.LocalInstance == null && PhotonNetwork.IsMasterClient)
+        if (board == null && PhotonNetwork.IsMasterClient)
         {
             board = PhotonNetwork.InstantiateRoomObject("Board", Vector3.zero, Quaternion.identity);
         }
@@ -122,7 +123,7 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void DestroyBoard()
     {
-        if (BoardController.LocalInstance != null && PhotonNetwork.IsMasterClient)
+        if (board != null && PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.Destroy(board);
         }

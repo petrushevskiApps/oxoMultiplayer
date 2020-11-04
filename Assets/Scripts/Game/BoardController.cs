@@ -13,52 +13,52 @@ using UnityEngine.Events;
 
 public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
 {
-    //Events
-    public static UnityEvent TurnStarted = new UnityEvent();
-    public static UnityEvent TurnEnded = new UnityEvent();
     
-    
-    public TurnController turnController;
-    public int[,] tilesTable = new int[maxRow, maxColumn];
+    private int[,] tilesTable = new int[maxRow, maxColumn];
 
-    private List<TileState> tiles = new List<TileState>();
+    private List<Tile> tiles = new List<Tile>();
+    
     private WinCondition winCondition;
-   
+    private TurnController turnController;
+    
     private static int maxRow = 3;
     private static int maxColumn = 3;
     
     private int xSize = 0;
     private int ySize = 0;
     
-    public static BoardController LocalInstance { get; private set; }
     
     private void Awake()
     {
-        LocalInstance = this;
-
         winCondition = GetComponent<WinCondition>();
         turnController = GetComponent<TurnController>();
 
-        MatchController.RoundStarted.AddListener(TurnStart);
         MatchController.RoundEnded.AddListener(ResetBoard);
+        
         SetupBoardTiles();
     }
-
+    
+    private void SetupBoardTiles()
+    {
+        tiles = GetComponentsInChildren<Tile>().ToList();
+        
+        tiles.ForEach(x =>
+        {
+            x.TileStateChange.AddListener(TurnEnded);
+        });
+    }
+    
     private void OnDestroy()
     {
         MatchController.RoundEnded.RemoveListener(ResetBoard);
     }
-
-    private void SetupBoardTiles()
+    
+    private void ResetBoard()
     {
-        tiles = GetComponentsInChildren<TileState>().ToList();
-        
-        tiles.ForEach(x =>
-        {
-            x.TileStateChange.AddListener(CompleteTurn);
-        });
+        SetTilesTable();
+        tiles.ForEach(tile => tile.SetTile());
     }
-
+    
     private void Start()
     {
         SetTilesTable();
@@ -78,14 +78,9 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
   
-    private void CompleteTurn(int tileId)
+    private void TurnEnded(int tileId)
     {
         photonView.RPC("TurnEnd", RpcTarget.AllBuffered, tileId);
-    }
-
-    private void TurnStart(int round = 0)
-    {
-        TurnStarted.Invoke();
     }
     
     [PunRPC]
@@ -102,14 +97,10 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         }
         else
         {
-            TurnEnded.Invoke();
-            
             if (RoomController.Instance.LocalPlayer.IsActive)
             {
                 turnController.IncrementTurn();
             }
-            
-            TurnStart();
         }
         
         PrintTable();
@@ -119,28 +110,12 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     {
         bool isRoundWon = RoomController.Instance.LocalPlayer.IsActive;
         
-        BoardWinEffect(isRoundWon);
+        StrikeEffect(isRoundWon);
 
-        StartCoroutine(Delay(delayedAction: ()=>
+        Timer.Start(this, "RoundEndDelay", 0.5f, ()=>
         {
             MatchController.LocalInstance.EndRound(isRoundWon);
-        }));
-    }
-
-    private void BoardWinEffect(bool isRoundWon)
-    {
-        List<WinCondition.RowColumIndex> rowColumIndex = winCondition.GetWinIndexes();
-            
-        rowColumIndex.ForEach(index =>
-        {
-            tiles[GetTileId(index.row, index.column)].EndGameTileEffect(isRoundWon);
         });
-    }
-    
-    private IEnumerator Delay(Action delayedAction)
-    {
-        yield return new WaitForSeconds(0.5f);
-        delayedAction.Invoke();
     }
     
     private void UpdateTile(int id)
@@ -148,18 +123,18 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         tiles[id].ChangeState();
         tilesTable[id / (xSize + 1), id % (ySize + 1)] = RoomController.Instance.ActivePlayer.PlayerId;
     }
-
-    private int GetTileId(int row, int column)
-    {
-        return (row * maxColumn) + column;
-    }
-
-    private void ResetBoard()
-    {
-        SetTilesTable();
-        tiles.ForEach(tile => tile.SetTile());
-    }
     
+    private void StrikeEffect(bool isRoundWon)
+    {
+        List<WinCondition.RowColumIndex> rowColumnIndex = winCondition.GetWinIndexes();
+            
+        rowColumnIndex.ForEach(index =>
+        {
+            int tileId = (index.row * maxColumn) + index.column;
+            tiles[tileId].StrikeTileEffect(isRoundWon);
+        });
+    }
+
     private void PrintTable()
     {
         int printIndex = 0;

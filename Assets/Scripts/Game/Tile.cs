@@ -7,7 +7,7 @@ using UnityEngine.Events;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class TileState : MonoBehaviour
+public class Tile : MonoBehaviour
 {
     [SerializeField] private TileImages images;
     [SerializeField] private SpriteRenderer tileStateImage;
@@ -20,7 +20,6 @@ public class TileState : MonoBehaviour
     private Animator animator;
     private SpriteRenderer tileBackgroundImage;
     private TileType _tile;
-    private Button tileButton;
     
     private void Awake()
     {
@@ -44,13 +43,12 @@ public class TileState : MonoBehaviour
         {
             if (_tile == TileType.Empty)
             {
-                Debug.Log("TileID: " + tileId);
                 ChangeState();
                 TileStateChange.Invoke(tileId);
             }
             else
             {
-                Debug.Log("Show wrong tile clicked here with effects!");
+                //TODO:: "Show wrong tile clicked here with effects!"
             }
         }
     }
@@ -64,7 +62,7 @@ public class TileState : MonoBehaviour
         }
     }
 
-    public void EndGameTileEffect(bool isWin)
+    public void StrikeTileEffect(bool isWin)
     {
         animator.SetTrigger(Animator.StringToHash("Zoom"));
         tileBackgroundImage.sprite = images.GetTileBackground(isWin ? TileType.Win : TileType.Lose);
