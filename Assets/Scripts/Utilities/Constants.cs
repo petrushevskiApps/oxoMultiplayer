@@ -24,12 +24,15 @@
 
     public static class Keys
     {
-        public const string ROOM_STATE= "roomState";
+        public const string MATCH_ROUND= "matchRound";
+        
         public const string PLAYER_READY_KEY = "playerReady";
         public const string PLAYER_MATCH_ID = "playerMatchId";
         public const string PLAYER_MATCH_SCORE = "playerScore";
+        
         public const string ROOM_TURN = "roomTurn";
         public const string ROOM_STATUS = "roomStatus";
+        public const string ROOM_STATE= "roomState";
         
         public const string KEY_USERNAME = "username";
         public const string KEY_PLAYED_GAMES = "playedGames";

@@ -461,7 +461,7 @@ namespace Photon.Pun
         /// Changing properties must be done by Room.SetCustomProperties, which causes this callback locally, too.
         /// </remarks>
         /// <param name="propertiesThatChanged"></param>
-        public virtual void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+        public virtual void OnRoomPropertiesUpdate(Hashtable changedProperties)
         {
         }
 

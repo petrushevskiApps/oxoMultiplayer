@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using com.petrushevskiapps.Oxo;
 using com.petrushevskiapps.Oxo.Utilities;
 using PetrushevskiApps.UIManager;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -38,7 +39,12 @@ public class UIGameScreen : UIScreen
         base.Awake();
         
         backButton.onClick.AddListener(OnBackButtonPressed);
-        settingsButton.onClick.AddListener(() => UIManager.Instance.OpenPopup<UISettingsPopup>());
+        settingsButton.onClick.AddListener(() =>
+        {
+            PhotonNetwork.Disconnect();
+//            StartCoroutine(NetworkManager.Instance.ConnectionController.Reconnect());
+//            UIManager.Instance.OpenPopup<UISettingsPopup>();
+        });
         
         MatchController.MatchStarted.AddListener(OnMatchStarted);
         MatchController.MatchEnded.AddListener(OnMatchEnded);
@@ -53,7 +59,7 @@ public class UIGameScreen : UIScreen
         MatchController.MatchEnded.RemoveListener(OnMatchEnded);
         MatchController.RoundStarted.RemoveListener(OnRoundStarted);
         MatchController.RoundEnded.RemoveListener(OnRoundEnded);
-        
+        ClearPlayerUIs();
         Timer.Stop(this, "MidContent");
     }
 
@@ -83,12 +89,13 @@ public class UIGameScreen : UIScreen
 
     private void OnMatchEnded(bool arg0)
     {
-        for (int i = 0; i < players.Count; i++)
-        {
-            playerRefs[i].Clear();
-        }
+        ClearPlayerUIs();
     }
 
+    private void ClearPlayerUIs()
+    {
+        playerRefs.ForEach(playerRef => playerRef.Clear());
+    }
 
     protected override void OnBackButtonPressed()
     {
@@ -128,8 +135,9 @@ public class UIGameScreen : UIScreen
 
         public void Clear()
         {
+            if(player == null) return;
             player.ScoreUpdated.RemoveListener(UpdateScoreText);
-            player.ActiveStatusChanged.AddListener(SetupBackgrounds);
+            player.ActiveStatusChanged.RemoveListener(SetupBackgrounds);
         }
         
         private void SetupBackgrounds(bool isActive)

@@ -68,7 +68,7 @@ public class UIRoomScreen : UIScreen
 
     private void OnPlayerReadyClicked()
     {
-        RoomController.Instance.LocalPlayer.Properties.Set(Keys.PLAYER_READY_KEY, true).Update();
+        RoomController.Instance.LocalPlayer.Properties.Set(Keys.PLAYER_READY_KEY, true).Sync();
     }
    
     private void SetRoomTitle()
@@ -95,7 +95,7 @@ public class UIRoomScreen : UIScreen
         }
     }
 
-    private void StartGame() => MatchController.LocalInstance.StartMatch();
+    private void StartGame() => NetworkManager.Instance.SendRpc(PhotonView.Get(MatchController.LocalInstance), "StartMatch");
 
     private void ExitRoom() => NetworkManager.Instance.LeaveRoom();
 

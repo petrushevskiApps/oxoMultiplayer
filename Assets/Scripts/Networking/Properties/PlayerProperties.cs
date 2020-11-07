@@ -9,39 +9,63 @@ namespace com.petrushevskiapps.Oxo.Properties
     {
         private Player player;
         private readonly Hashtable properties = new Hashtable();
+
+        private bool cached = false;
         
-        public PlayerProperties(Player player, int turnId)
+        public PlayerProperties(Player player)
         {
             this.player = player;
 
+            // Set default values
             Set(Keys.PLAYER_READY_KEY, false)
-                .Set(Keys.PLAYER_MATCH_ID, turnId)
+                .Set(Keys.PLAYER_MATCH_ID, -1)
                 .Set(Keys.PLAYER_MATCH_SCORE, 0)
-                .Update();
+                .Sync();
         }
         
         public INetworkProperties Set(string key, object value)
         {
             if(!player.IsLocal) return this;
+
+            if (properties.ContainsKey(key))
+            {
+                properties[key] = value;
+            }
+            else properties.Add(key, value);
             
-            properties.Add(key, value);
             return this;
         }
 
-        public void Update()
+        public void Sync()
         {
-            if (player.IsLocal)
-            {
-                player.SetCustomProperties(properties);
-            }
-            properties.Clear();
+            if (!player.IsLocal) return;
+            
+            cached = true;
+            player.SetCustomProperties(properties);
         }
 
         public T GetProperty<T>(string key)
         {
-            player.CustomProperties.TryGetValue(key, out var result);
+            object result = null;
+            
+            if (cached)
+            {
+                // Use cached value while server is updated
+                properties.TryGetValue(key, out result);
+            }
+            else
+            {
+                player.CustomProperties.TryGetValue(key, out result);
+            }
+            
             if (result == null) return default;
             else return (T) result;
+        }
+
+        public void Updated()
+        {
+            cached = false;
+            properties.Clear();
         }
     }
 }

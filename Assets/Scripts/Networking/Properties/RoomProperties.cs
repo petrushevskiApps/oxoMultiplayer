@@ -7,6 +7,7 @@ namespace com.petrushevskiapps.Oxo.Properties
     public class RoomProperties : INetworkProperties
     {
         private readonly Hashtable properties = new Hashtable();
+        private bool cached = false;
         
         public RoomProperties()
         {
@@ -15,20 +16,41 @@ namespace com.petrushevskiapps.Oxo.Properties
         
         public INetworkProperties Set(string key, object value)
         {
-            properties.Add(key, value);
-            Debug.Log(key + ": Value: " + value);
+            if (properties.ContainsKey(key))
+            {
+                properties[key] = value;
+            }
+            else properties.Add(key, value);
+            
             return this;
         }
         
-        public void Update()
+        public void Sync()
         {
+            cached = true;
             PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
+        }
+
+        public void Updated()
+        {
+            cached = false;
             properties.Clear();
         }
-        
+
         public T GetProperty<T>(string key)
         {
-            PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(key, out var result);
+            object result = null;
+            
+            if (cached)
+            {
+                // Use cached value while server is updated
+                properties.TryGetValue(key, out result);
+            }
+            else
+            {
+                PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(key, out result);
+            }
+            Debug.Log($"RoomProperties:: {key} = {result}");
             if (result == null) return default;
             else return (T) result;
         }

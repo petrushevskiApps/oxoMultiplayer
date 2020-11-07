@@ -477,7 +477,7 @@ namespace Photon.Pun.UtilityScripts
         {
         }
 
-        void IInRoomCallbacks.OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+        void IInRoomCallbacks.OnRoomPropertiesUpdate(Hashtable changedProperties)
         {
         }
 

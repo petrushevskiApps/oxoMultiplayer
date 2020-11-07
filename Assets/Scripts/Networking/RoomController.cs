@@ -19,6 +19,7 @@ public class RoomController : MonoBehaviourPunCallbacks
     public static PlayerRoomEvent PlayerExitedRoom = new PlayerRoomEvent();
     public static RoomStatusChangeEvent StatusChanged = new RoomStatusChangeEvent();
     public static UnityIntegerEvent TurnChanged = new UnityIntegerEvent();
+    public static UnityIntegerEvent RoundChanged = new UnityIntegerEvent();
     
     public static string RoomName => PhotonNetwork.CurrentRoom.Name;
     public static bool IsRoomFull => PhotonNetwork.CurrentRoom.MaxPlayers == PhotonNetwork.CurrentRoom.PlayerCount;
@@ -37,7 +38,7 @@ public class RoomController : MonoBehaviourPunCallbacks
             if (Status == value) return;
             
             StatusChanged.Invoke(value);
-            Properties.Set(Keys.ROOM_STATUS, value).Update();
+            Properties.Set(Keys.ROOM_STATUS, value).Sync();
         }
     }
 
@@ -50,6 +51,7 @@ public class RoomController : MonoBehaviourPunCallbacks
             Properties.Set(Keys.ROOM_STATE, value);
         }
     }
+    
     private Dictionary<string, NetworkPlayer> networkPlayers = new Dictionary<string, NetworkPlayer>();
     
     public INetworkProperties Properties { get; private set; }
@@ -61,7 +63,9 @@ public class RoomController : MonoBehaviourPunCallbacks
         Instance = this;
         MatchController.MatchStarted.AddListener(OnMatchStarted);
         MatchController.MatchEnded.AddListener(OnMatchEnded);
+        Debug.Log("Flow:: RoomController:: Awake");
         Properties = new RoomProperties();
+        PlayersList.ForEach(CreateNetworkPlayer);
     }
 
     private void OnDestroy()
@@ -72,12 +76,12 @@ public class RoomController : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        PlayersList.ForEach(CreateNetworkPlayer);
+        
     }
 
     private void OnMatchStarted()
     {
-        Properties.Set(Keys.ROOM_TURN, 0).Update();
+        Properties.Set(Keys.ROOM_TURN, 0).Sync();
         State = RoomState.InGame;
     }
     
@@ -133,13 +137,20 @@ public class RoomController : MonoBehaviourPunCallbacks
         
     }
     
-    public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+    public override void OnRoomPropertiesUpdate(Hashtable changedProperties)
     {
-        base.OnRoomPropertiesUpdate(propertiesThatChanged);
+        base.OnRoomPropertiesUpdate(changedProperties);
         
-        if (propertiesThatChanged.ContainsKey(Keys.ROOM_TURN))
+        Properties.Updated();
+
+        if (changedProperties.ContainsKey(Keys.MATCH_ROUND))
         {
-            TurnChanged.Invoke((int)propertiesThatChanged[Keys.ROOM_TURN]);
+            RoundChanged.Invoke((int)changedProperties[Keys.MATCH_ROUND]);
+        }
+        
+        if (changedProperties.ContainsKey(Keys.ROOM_TURN))
+        {
+            TurnChanged.Invoke((int)changedProperties[Keys.ROOM_TURN]);
         }
     }
 

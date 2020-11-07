@@ -38,9 +38,9 @@ public class GameManager : MonoBehaviour
 
             switch (state)
             {
-                case RoomState.InGame:
-                    UIManager.Instance.OpenScreen<UIGameScreen>();
-                    break;
+//                case RoomState.InGame:
+//                    UIManager.Instance.OpenScreen<UIGameScreen>();
+//                    break;
                 default:
                     UIManager.Instance.OpenScreen<UIRoomScreen>();
                     break;

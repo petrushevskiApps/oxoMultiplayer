@@ -43,7 +43,7 @@ public class Tile : MonoBehaviour
         {
             if (_tile == TileType.Empty)
             {
-                ChangeState();
+                ChangeState(RoomController.Instance.ActivePlayer?.PlayerId ?? 0);
                 TileStateChange.Invoke(tileId);
             }
             else
@@ -53,11 +53,11 @@ public class Tile : MonoBehaviour
         }
     }
     
-    public void ChangeState()
+    public void ChangeState(int playerId)
     {
         if (_tile == TileType.Empty)
         {
-            _tile = RoomController.Instance.ActivePlayer?.PlayerSymbol ?? TileType.Empty;
+            _tile = (TileType) playerId;
             tileStateImage.sprite = images.GetTileState(_tile);
         }
     }

@@ -19,6 +19,7 @@ namespace com.petrushevskiapps.Oxo.Utilities
 
         public static void Stop(MonoBehaviour stoper, string timerId)
         {
+            if (!activeTimers.ContainsKey(timerId)) return;
             stoper.StopCoroutine(activeTimers[timerId]);
             activeTimers.Remove(timerId);
         }

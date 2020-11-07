@@ -110,9 +110,9 @@ namespace Photon.Pun.UtilityScripts
         }
 
 
-        public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+        public override void OnRoomPropertiesUpdate(Hashtable changedProperties)
         {
-            Debug.Log("CountdownTimer.OnRoomPropertiesUpdate " + propertiesThatChanged.ToStringFull());
+            Debug.Log("CountdownTimer.OnRoomPropertiesUpdate " + changedProperties.ToStringFull());
             Initialize();
         }
 

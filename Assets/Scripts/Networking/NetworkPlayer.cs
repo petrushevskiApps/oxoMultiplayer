@@ -13,10 +13,20 @@ public class NetworkPlayer
     public readonly UnityIntegerEvent ScoreUpdated = new UnityIntegerEvent();
     
     public INetworkProperties Properties { get; }
-    public int PlayerId { get; }
+    
     public string Nickname => player.NickName;
     public string UserId => player.UserId;
     public TileType PlayerSymbol { get; }
+
+    public int PlayerId
+    {
+        get => Properties.GetProperty<int>(Keys.PLAYER_MATCH_ID);
+        private set
+        {
+            if(PlayerId != -1) return;
+            Properties.Set(Keys.PLAYER_MATCH_ID, value).Sync();
+        }
+    }
 
     public bool IsReady
     {
@@ -26,11 +36,10 @@ public class NetworkPlayer
             if (IsReady == value) return;
             
             ReadyStatusChanged.Invoke(value);
-            Properties.Set(Keys.PLAYER_READY_KEY, value).Update();
+            Properties.Set(Keys.PLAYER_READY_KEY, value).Sync();
         }
     }
     
-
     public int Score
     {
         get => Properties.GetProperty<int>(Keys.PLAYER_MATCH_SCORE);
@@ -39,7 +48,7 @@ public class NetworkPlayer
             if (Score == value) return;
             
             ScoreUpdated.Invoke(value);
-            Properties.Set(Keys.PLAYER_MATCH_SCORE, value).Update();
+            Properties.Set(Keys.PLAYER_MATCH_SCORE, value).Sync();
             Debug.Log($"NetworkPlayer:: {Nickname}:: New Score:: {value}");
         }
     }
@@ -56,13 +65,13 @@ public class NetworkPlayer
     }
     
     private Player player;
-    private int playerTurnId;
     private bool isActive;
 
     
     public NetworkPlayer(Player player)
     {
         this.player = player;
+        Properties = new PlayerProperties(player);
         
         if (player.IsLocal)
         {
@@ -73,11 +82,8 @@ public class NetworkPlayer
         RoomController.TurnChanged.AddListener(SetActiveStatus);
 
         PlayerId = player.ActorNumber;
-        PlayerSymbol = (TileType) PlayerId;
-        playerTurnId = PlayerId - 1;
-        Properties = new PlayerProperties(player, playerTurnId);
+        PlayerSymbol = (TileType) player.ActorNumber;
         
-        UpdatePlayerStatuses(player.CustomProperties);
     }
     
     private void OnMatchStarted()
@@ -90,19 +96,22 @@ public class NetworkPlayer
     }
     private void SetActiveStatus(int turn)
     {
-        IsActive = turn % PhotonNetwork.CurrentRoom.PlayerCount == playerTurnId;
+        Debug.Log($"NetworkPlayer:: {player.NickName} | ID: {PlayerId} | Turn: {turn}");
+        IsActive = turn % PhotonNetwork.CurrentRoom.PlayerCount == (PlayerId - 1);
     }
     
-    public void UpdatePlayerStatuses(Hashtable statuses)
+    public void UpdatePlayerStatuses(Hashtable properties)
     {
-        if (statuses.ContainsKey(Keys.PLAYER_READY_KEY))
+        Properties.Updated();
+        
+        if (properties.ContainsKey(Keys.PLAYER_READY_KEY))
         {
-            ReadyStatusChanged.Invoke((bool)statuses[Keys.PLAYER_READY_KEY]);
+            ReadyStatusChanged.Invoke((bool)properties[Keys.PLAYER_READY_KEY]);
         }
         
-        if (statuses.ContainsKey(Keys.PLAYER_MATCH_SCORE))
+        if (properties.ContainsKey(Keys.PLAYER_MATCH_SCORE))
         {
-            ScoreUpdated.Invoke((int)statuses[Keys.PLAYER_MATCH_SCORE]);
+            ScoreUpdated.Invoke((int)properties[Keys.PLAYER_MATCH_SCORE]);
         }
     }
 

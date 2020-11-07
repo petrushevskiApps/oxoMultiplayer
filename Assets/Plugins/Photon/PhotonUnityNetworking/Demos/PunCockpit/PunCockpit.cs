@@ -703,13 +703,13 @@ namespace Photon.Pun.Demo.Cockpit
             RoomListMatchMakingForm.SetActive(!PhotonNetwork.InLobby);
         }
 
-        public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+        public override void OnRoomPropertiesUpdate(Hashtable changedProperties)
         {
-			if (debug) Debug.Log("PunCockpit:OnRoomPropertiesUpdate() " + propertiesThatChanged.ToStringFull());
+			if (debug) Debug.Log("PunCockpit:OnRoomPropertiesUpdate() " + changedProperties.ToStringFull());
 
-            if (propertiesThatChanged.ContainsKey("C0"))
+            if (changedProperties.ContainsKey("C0"))
             {
-                RoomCustomPropertyInputfield.text = propertiesThatChanged["C0"].ToString();
+                RoomCustomPropertyInputfield.text = changedProperties["C0"].ToString();
             }
         }
 

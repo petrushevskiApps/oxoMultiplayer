@@ -3,7 +3,8 @@
     public interface INetworkProperties
     {
         INetworkProperties Set(string key, object value);
-        void Update();
+        void Sync();
+        void Updated();
         T GetProperty<T>(string key);
     }
 }

@@ -142,7 +142,13 @@ namespace com.petrushevskiapps.Oxo
         {
             PhotonNetwork.NickName = userName;
         }
-
+        public void SendRpc(PhotonView pv, string rpcMethodName)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                pv.RPC(rpcMethodName, RpcTarget.AllBufferedViaServer);
+            }
+        }
     }
 }
 

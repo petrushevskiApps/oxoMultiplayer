@@ -216,7 +216,7 @@ namespace Photon.Pun
             PhotonNetwork.SetLevelInPropsIfSynced(SceneManagerHelper.ActiveSceneName);
         }
 
-        public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+        public void OnRoomPropertiesUpdate(Hashtable changedProperties)
         {
             PhotonNetwork.LoadLevelIfSynced();
         }

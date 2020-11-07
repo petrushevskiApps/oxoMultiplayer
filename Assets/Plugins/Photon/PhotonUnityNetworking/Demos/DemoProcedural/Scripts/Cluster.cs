@@ -154,17 +154,17 @@ namespace Photon.Pun.Demo.Procedural
         /// When the changed properties contain the previously set PropertiesKey (basically the Cluster ID),
         /// the Cluster and its Blocks will be updated accordingly.
         /// </summary>
-        public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+        public override void OnRoomPropertiesUpdate(Hashtable changedProperties)
         {
-            if (propertiesThatChanged.ContainsKey(propertiesKey))
+            if (changedProperties.ContainsKey(propertiesKey))
             {
-                if (propertiesThatChanged[propertiesKey] == null)
+                if (changedProperties[propertiesKey] == null)
                 {
                     propertiesValue = new Dictionary<int, float>();
                     return;
                 }
 
-                propertiesValue = (Dictionary<int, float>) propertiesThatChanged[propertiesKey];
+                propertiesValue = (Dictionary<int, float>) changedProperties[propertiesKey];
 
                 foreach (KeyValuePair<int, float> pair in propertiesValue)
                 {

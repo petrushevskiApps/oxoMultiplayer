@@ -342,7 +342,7 @@ namespace Photon.Realtime
 			Debug.Log(this.GetFormattedTimestamp() + " SupportLogger OnPlayerLeftRoom(" + otherPlayer+").");
         }
 
-        public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+        public void OnRoomPropertiesUpdate(Hashtable changedProperties)
         {
 			Debug.Log(this.GetFormattedTimestamp() + " SupportLogger OnRoomPropertiesUpdate(propertiesThatChanged).");
         }

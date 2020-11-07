@@ -67,6 +67,8 @@ namespace com.petrushevskiapps.Oxo
                
                 yield return new WaitForSeconds(3f);
             }
+
+            reconnectCoroutine = null;
         }
         
         public override void OnConnectedToMaster()

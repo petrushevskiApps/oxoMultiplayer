@@ -34,10 +34,16 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         turnController = GetComponent<TurnController>();
 
         MatchController.RoundEnded.AddListener(ResetBoard);
+        Debug.Log("Flow:: BoardController:: Awake");
         
         SetupBoardTiles();
+        SetTilesTable();
     }
-    
+    private void OnDestroy()
+    {
+        MatchController.RoundEnded.RemoveListener(ResetBoard);
+    }
+
     private void SetupBoardTiles()
     {
         tiles = GetComponentsInChildren<Tile>().ToList();
@@ -48,20 +54,10 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         });
     }
     
-    private void OnDestroy()
-    {
-        MatchController.RoundEnded.RemoveListener(ResetBoard);
-    }
-    
     private void ResetBoard()
     {
         SetTilesTable();
         tiles.ForEach(tile => tile.SetTile());
-    }
-    
-    private void Start()
-    {
-        SetTilesTable();
     }
     
     private void SetTilesTable()
@@ -80,20 +76,22 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
   
     private void TurnEnded(int tileId)
     {
-        photonView.RPC("TurnEnd", RpcTarget.AllBuffered, tileId);
+        int playerId = RoomController.Instance.ActivePlayer.PlayerId;
+        photonView.RPC("TurnEnd", RpcTarget.AllBufferedViaServer, tileId, playerId);
     }
     
     [PunRPC]
-    private void TurnEnd(int tileId)
+    private void TurnEnd(int tileId, int playerId)
     {
-        UpdateTile(tileId);
+        Debug.Log("Flow:: BoardController:: TurnEnd");
+        UpdateTile(tileId, playerId);
        
         bool isWin = winCondition.CheckWinCondition(tilesTable);
         bool isTie = winCondition.CheckTie(tilesTable);
         
         if (isWin || isTie)
         {
-            RoundEnded();
+            RoundEnded(playerId);
         }
         else
         {
@@ -106,23 +104,27 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         PrintTable();
     }
     
-    private void RoundEnded()
+    private void UpdateTile(int id, int playerId)
     {
-        bool isRoundWon = RoomController.Instance.LocalPlayer.IsActive;
+        tiles[id].ChangeState(playerId);
+        tilesTable[id / (xSize + 1), id % (ySize + 1)] = playerId;
+    }
+    
+    private void RoundEnded(int playerId)
+    {
+        PhotonNetwork.IsMessageQueueRunning = false;
+        bool isRoundWon = RoomController.Instance.LocalPlayer.PlayerId == playerId;
         
         StrikeEffect(isRoundWon);
 
         Timer.Start(this, "RoundEndDelay", 0.5f, ()=>
         {
+            PhotonNetwork.IsMessageQueueRunning = true;
             MatchController.LocalInstance.EndRound(isRoundWon);
         });
     }
     
-    private void UpdateTile(int id)
-    {
-        tiles[id].ChangeState();
-        tilesTable[id / (xSize + 1), id % (ySize + 1)] = RoomController.Instance.ActivePlayer.PlayerId;
-    }
+    
     
     private void StrikeEffect(bool isRoundWon)
     {

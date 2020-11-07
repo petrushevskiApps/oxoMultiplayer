@@ -3651,8 +3651,8 @@ namespace Photon.Realtime
         /// Since v1.25 this method has one parameter: Hashtable propertiesThatChanged.<br/>
         /// Changing properties must be done by Room.SetCustomProperties, which causes this callback locally, too.
         /// </remarks>
-        /// <param name="propertiesThatChanged"></param>
-        void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged);
+        /// <param name="changedProperties"></param>
+        void OnRoomPropertiesUpdate(Hashtable changedProperties);
 
         /// <summary>
         /// Called when custom player-properties are changed. Player and the changed properties are passed as object[].
@@ -4018,13 +4018,13 @@ namespace Photon.Realtime
             }
         }
 
-        public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+        public void OnRoomPropertiesUpdate(Hashtable changedProperties)
         {
             this.client.UpdateCallbackTargets();
 
             foreach (IInRoomCallbacks target in this)
             {
-                target.OnRoomPropertiesUpdate(propertiesThatChanged);
+                target.OnRoomPropertiesUpdate(changedProperties);
             }
         }
 
