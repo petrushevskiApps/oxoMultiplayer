@@ -95,7 +95,7 @@ public class UIRoomScreen : UIScreen
         }
     }
 
-    private void StartGame() => NetworkManager.Instance.SendRpc(PhotonView.Get(MatchController.LocalInstance), "StartMatch");
+    private void StartGame() => MatchController.LocalInstance.StartMatch();
 
     private void ExitRoom() => NetworkManager.Instance.LeaveRoom();
 

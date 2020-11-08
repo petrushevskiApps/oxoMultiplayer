@@ -33,7 +33,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         winCondition = GetComponent<WinCondition>();
         turnController = GetComponent<TurnController>();
 
-        MatchController.RoundEnded.AddListener(ResetBoard);
+        MatchController.RoundEnd.AddListener(ResetBoard);
         Debug.Log("Flow:: BoardController:: Awake");
         
         SetupBoardTiles();
@@ -41,7 +41,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     }
     private void OnDestroy()
     {
-        MatchController.RoundEnded.RemoveListener(ResetBoard);
+        MatchController.RoundEnd.RemoveListener(ResetBoard);
     }
 
     private void SetupBoardTiles()
@@ -83,31 +83,27 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void TurnEnd(int tileId, int playerId)
     {
-        Debug.Log("Flow:: BoardController:: TurnEnd");
         UpdateTile(tileId, playerId);
        
         bool isWin = winCondition.CheckWinCondition(tilesTable);
         bool isTie = winCondition.CheckTie(tilesTable);
         
+        
         if (isWin || isTie)
         {
             RoundEnded(playerId);
+            return;
         }
-        else
-        {
-            if (RoomController.Instance.LocalPlayer.IsActive)
-            {
-                turnController.IncrementTurn();
-            }
-        }
+
+        MatchController.LocalInstance.IncrementTurn();
         
-        PrintTable();
     }
     
     private void UpdateTile(int id, int playerId)
     {
         tiles[id].ChangeState(playerId);
         tilesTable[id / (xSize + 1), id % (ySize + 1)] = playerId;
+        PrintTable();
     }
     
     private void RoundEnded(int playerId)

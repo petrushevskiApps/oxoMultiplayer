@@ -45,6 +45,8 @@ MonoBehaviour:
   - TurnEnd
   - StartMatch
   - SetupMatch
+  - StartMatchRPC
+  - StartMatchSynced
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

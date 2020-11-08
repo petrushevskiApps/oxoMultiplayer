@@ -24,23 +24,24 @@
 
     public static class Keys
     {
-        public const string MATCH_ROUND= "matchRound";
-        
         public const string PLAYER_READY_KEY = "playerReady";
         public const string PLAYER_MATCH_ID = "playerMatchId";
         public const string PLAYER_MATCH_SCORE = "playerScore";
         
-        public const string ROOM_TURN = "roomTurn";
         public const string ROOM_STATUS = "roomStatus";
-        public const string ROOM_STATE= "roomState";
+        public const string ROOM_STATE  = "roomState";
         
-        public const string KEY_USERNAME = "username";
-        public const string KEY_PLAYED_GAMES = "playedGames";
-        public const string KEY_WON_GAMES = "gamesWon";
-        public const string KEY_LOST_GAMES = "gamesLost";
-        public const string KEY_BG_MUSIC_STATUS = "backgroundMusic";
-        public const string KEY_SFX_STATUS = "sfxStatus";
-        public const string KEY_VIBRATION_STATUS = "vibrationStatus";
-        public const string KEY_LAST_ROOM = "lastRoom";
+        public const string USERNAME = "username";
+        public const string PLAYED_GAMES = "playedGames";
+        public const string WON_GAMES = "gamesWon";
+        public const string LOST_GAMES = "gamesLost";
+        public const string BG_MUSIC_STATUS = "backgroundMusic";
+        public const string SFX_STATUS = "sfxStatus";
+        public const string VIBRATION_STATUS = "vibrationStatus";
+    }
+
+    public static class RPCs
+    {
+        public const string RPC_START_MATCH = "StartMatchSynced";
     }
 }

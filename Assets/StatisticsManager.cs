@@ -7,14 +7,14 @@ public class StatisticsManager : MonoBehaviour
 {
     private void Awake()
     {
-        MatchController.MatchStarted.AddListener(OnMatchStarted);
-        MatchController.MatchEnded.AddListener(OnMatchEnded);
+        MatchController.MatchStart.AddListener(OnMatchStarted);
+        MatchController.MatchEnd.AddListener(OnMatchEnded);
     }
 
     private void OnDestroy()
     {
-        MatchController.MatchStarted.RemoveListener(OnMatchStarted);
-        MatchController.MatchEnded.RemoveListener(OnMatchEnded);
+        MatchController.MatchStart.RemoveListener(OnMatchStarted);
+        MatchController.MatchEnd.RemoveListener(OnMatchEnded);
     }
 
     private void OnMatchStarted()

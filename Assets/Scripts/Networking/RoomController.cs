@@ -18,8 +18,6 @@ public class RoomController : MonoBehaviourPunCallbacks
     public static PlayerRoomEvent PlayerEnteredRoom = new PlayerRoomEvent();
     public static PlayerRoomEvent PlayerExitedRoom = new PlayerRoomEvent();
     public static RoomStatusChangeEvent StatusChanged = new RoomStatusChangeEvent();
-    public static UnityIntegerEvent TurnChanged = new UnityIntegerEvent();
-    public static UnityIntegerEvent RoundChanged = new UnityIntegerEvent();
     
     public static string RoomName => PhotonNetwork.CurrentRoom.Name;
     public static bool IsRoomFull => PhotonNetwork.CurrentRoom.MaxPlayers == PhotonNetwork.CurrentRoom.PlayerCount;
@@ -61,8 +59,8 @@ public class RoomController : MonoBehaviourPunCallbacks
     private void Awake()
     {
         Instance = this;
-        MatchController.MatchStarted.AddListener(OnMatchStarted);
-        MatchController.MatchEnded.AddListener(OnMatchEnded);
+        MatchController.MatchStart.AddListener(OnMatchStarted);
+        MatchController.MatchEnd.AddListener(OnMatchEnded);
         Debug.Log("Flow:: RoomController:: Awake");
         Properties = new RoomProperties();
         PlayersList.ForEach(CreateNetworkPlayer);
@@ -70,18 +68,12 @@ public class RoomController : MonoBehaviourPunCallbacks
 
     private void OnDestroy()
     {
-        MatchController.MatchStarted.RemoveListener(OnMatchStarted);
-        MatchController.MatchEnded.RemoveListener(OnMatchEnded);
-    }
-
-    private void Start()
-    {
-        
+        MatchController.MatchStart.RemoveListener(OnMatchStarted);
+        MatchController.MatchEnd.RemoveListener(OnMatchEnded);
     }
 
     private void OnMatchStarted()
     {
-        Properties.Set(Keys.ROOM_TURN, 0).Sync();
         State = RoomState.InGame;
     }
     
@@ -131,6 +123,7 @@ public class RoomController : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         if (!networkPlayers.ContainsKey(otherPlayer.UserId)) return;
+        
         PlayerExitedRoom.Invoke(networkPlayers[otherPlayer.UserId]);
         networkPlayers.Remove(otherPlayer.UserId);
         SetRoomStatus();
@@ -142,22 +135,13 @@ public class RoomController : MonoBehaviourPunCallbacks
         base.OnRoomPropertiesUpdate(changedProperties);
         
         Properties.Updated();
-
-        if (changedProperties.ContainsKey(Keys.MATCH_ROUND))
-        {
-            RoundChanged.Invoke((int)changedProperties[Keys.MATCH_ROUND]);
-        }
-        
-        if (changedProperties.ContainsKey(Keys.ROOM_TURN))
-        {
-            TurnChanged.Invoke((int)changedProperties[Keys.ROOM_TURN]);
-        }
     }
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
         if (networkPlayers.ContainsKey(targetPlayer.UserId))
         {
+            Debug.Log($"Flow 1:: OnPlayerPropertiesUpdate::");
             networkPlayers[targetPlayer.UserId].UpdatePlayerStatuses(changedProps);
         }
     }

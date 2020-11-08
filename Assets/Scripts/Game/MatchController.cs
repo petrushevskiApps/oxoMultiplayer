@@ -12,17 +12,40 @@ using UnityEngine.Events;
 
 public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
 {
-    public static UnityEvent MatchStarted = new UnityEvent();
-    public static UnityBoolEvent MatchEnded = new UnityBoolEvent();
-    public static UnityIntegerEvent RoundStarted = new UnityIntegerEvent();
-    public static UnityEvent RoundEnded = new UnityEvent();
-
+    public static UnityEvent MatchStart = new UnityEvent();
+    public static UnityEvent MatchStartSynced = new UnityEvent();
+    public static UnityBoolEvent MatchEnd = new UnityBoolEvent();
+    public static UnityIntegerEvent RoundStart = new UnityIntegerEvent();
+    public static UnityEvent RoundEnd = new UnityEvent();
+    public static UnityIntegerEvent TurnChanged = new UnityIntegerEvent();
+    
     private static GameObject board;
     public static MatchController LocalInstance;
 
     private const int MatchRounds = 3;
 
-    public int Round { get; private set; }
+    private int round;
+
+    public int Round
+    {
+        get => round;
+        private set
+        {
+            round = value;
+            Debug.Log($"Round incremented:: {round}");
+        }
+    }
+
+    private int turn;
+    public int Turn
+    {
+        get => turn;
+        private set
+        {
+            turn = value;
+            TurnChanged.Invoke(turn);
+        }
+    }
     
     private void Awake()
     {
@@ -40,43 +63,59 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
         UIManager.Instance.OpenPopup<UITimerPopup>().InitializePopup(player.Nickname);
     }
 
-    [PunRPC]
+    
     public void StartMatch()
     {
         CreateBoard();
-        UIManager.Instance.OpenScreen<UIGameScreen>();
-        MatchStarted.Invoke();
-        StartRound();
+        MatchStart.Invoke();
+        NetworkManager.Instance.SendRpc(photonView, RPCs.RPC_START_MATCH);
     }
-
+    
+    [PunRPC]
+    public void StartMatchSynced()
+    {
+        UIManager.Instance.OpenScreen<UIGameScreen>();
+        StartRound();
+        MatchStartSynced.Invoke();
+    }
+    
     private void StartRound()
     {
         Round++;
-        RoundStarted.Invoke(Round);
+        Turn = (Round - 1) % 2;
+        RoundStart.Invoke(Round);
     }
     
     public void EndRound(bool isRoundWon)
     {
         if(isRoundWon) UpdateScore();
-
-        RoundEnded.Invoke();
+        
+        RoundEnd.Invoke();
 
         StartCoroutine(WaitRoundComplete());
     }
 
     IEnumerator WaitRoundComplete()
-    { 
-        yield return new WaitWhile(() => RoomController.Instance.PlayersInRoom.Sum(player => player.Score) != Round);
-        Debug.Log($"WaitRoundComplete:: END ROUND:: {Round} DELAYED");
+    {
+        Debug.Log($"Round:: Wait Started:: END ROUND:: {Round}");
+        yield return new WaitWhile(() =>
+        {
+            int score = RoomController.Instance.PlayersInRoom.Sum(player => player.Score);
+            Debug.Log($"Round:: Wait :: Score:: {score}");
+            return  score < Round;
+        });
+        Debug.Log($"Round:: Wait Ended :: END ROUND:: {Round}");
+        
         
         if (IsMatchCompleted())
         {
-            EndMatch();
+            EndMatch(IsLocalMatchWin());
         }
         else
         {
             StartRound();
         }
+        
     }
 
     private bool IsMatchCompleted()
@@ -97,21 +136,13 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     private bool IsLocalMatchWin()
     {
         NetworkPlayer matchWinner = RoomController.Instance.PlayersInRoom.OrderByDescending(x => x.Score).FirstOrDefault();
-        Debug.Log("T1:: Match Winner:: " + matchWinner.Nickname);
+        Debug.Log($"Match Winner:: {matchWinner?.Nickname}");
         return matchWinner == RoomController.Instance.LocalPlayer;
     }
     
-    private void EndMatch()
-    {
-        Round = 1;
-        MatchEnded.Invoke(IsLocalMatchWin());
-        UIManager.Instance.OpenScreen<UIEndScreen>();
-    }
-
     public void EndMatch(bool isLocalWin)
     {
-        Round = 1;
-        MatchEnded.Invoke(isLocalWin);
+        MatchEnd.Invoke(isLocalWin);
         UIManager.Instance.OpenScreen<UIEndScreen>();
     }
     
@@ -134,5 +165,10 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         
+    }
+
+    public void IncrementTurn()
+    {
+        Turn++;
     }
 }

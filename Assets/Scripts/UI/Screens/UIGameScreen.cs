@@ -46,33 +46,44 @@ public class UIGameScreen : UIScreen
 //            UIManager.Instance.OpenPopup<UISettingsPopup>();
         });
         
-        MatchController.MatchStarted.AddListener(OnMatchStarted);
-        MatchController.MatchEnded.AddListener(OnMatchEnded);
-        MatchController.RoundStarted.AddListener(OnRoundStarted);
-        MatchController.RoundEnded.AddListener(OnRoundEnded);
-        
+        MatchController.MatchStartSynced.AddListener(OnMatchStarted);
+        MatchController.MatchEnd.AddListener(OnMatchEnded);
+        MatchController.RoundStart.AddListener(OnRoundStarted);
+        MatchController.RoundEnd.AddListener(OnRoundEnded);
+        RoomController.PlayerEnteredRoom.AddListener(OnPlayerEnteredRoom);
     }
+
+    private void OnPlayerEnteredRoom(NetworkPlayer arg0)
+    {
+        SetupPlayerRefs();
+    }
+    
 
     private void OnDestroy()
     {
-        MatchController.MatchStarted.RemoveListener(OnMatchStarted);
-        MatchController.MatchEnded.RemoveListener(OnMatchEnded);
-        MatchController.RoundStarted.RemoveListener(OnRoundStarted);
-        MatchController.RoundEnded.RemoveListener(OnRoundEnded);
+        MatchController.MatchStartSynced.RemoveListener(OnMatchStarted);
+        MatchController.MatchEnd.RemoveListener(OnMatchEnded);
+        MatchController.RoundStart.RemoveListener(OnRoundStarted);
+        MatchController.RoundEnd.RemoveListener(OnRoundEnded);
+        RoomController.PlayerEnteredRoom.RemoveListener(OnPlayerEnteredRoom);
         ClearPlayerUIs();
         Timer.Stop(this, "MidContent");
     }
 
     private void OnMatchStarted()
     {
+        SetupPlayerRefs();
+    }
+    private void SetupPlayerRefs()
+    {
         players = RoomController.Instance.PlayersInRoom;
-
+        
         for (int i = 0; i < players.Count; i++)
         {
+            Debug.Log($"Flow 3:: UIGameScreen:: OnMatchStarted:: Player: {players[i].Nickname}");
             playerRefs[i].Setup(players[i], symbols, activeColor, normalColor);
         }
     }
-
     private void OnRoundStarted(int round)
     {
         string roundText = "Round " + MatchController.LocalInstance.Round;
@@ -127,26 +138,28 @@ public class UIGameScreen : UIScreen
             symbolImage.sprite = symbols.GetEndTileState(player.PlayerSymbol);
             
             UpdateScoreText(player.Score);
-            SetupBackgrounds(player.IsActive);
+            SetupBackgrounds();
             
+            Debug.Log($"Flow 4:: PlayerUI:: Setup");
             player.ScoreUpdated.AddListener(UpdateScoreText);
-            player.ActiveStatusChanged.AddListener(SetupBackgrounds);
+            MatchController.TurnChanged.AddListener(SetupBackgrounds);
         }
 
         public void Clear()
         {
             if(player == null) return;
             player.ScoreUpdated.RemoveListener(UpdateScoreText);
-            player.ActiveStatusChanged.RemoveListener(SetupBackgrounds);
+            MatchController.TurnChanged.RemoveListener(SetupBackgrounds);
         }
-        
-        private void SetupBackgrounds(bool isActive)
+
+        private void SetupBackgrounds(int arg0 = 0)
         {
-            backgrounds.ForEach(background => background.color = isActive ? activeColor : normalColor);
+            backgrounds.ForEach(background => background.color = player.IsActive ? activeColor : normalColor);
         }
         
         private void UpdateScoreText(int score)
         {
+            Debug.Log($"Flow 5:: UpdatePlayerStatuses::");
             scoreText.text = score.ToString();
         }
     }

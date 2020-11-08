@@ -9,7 +9,6 @@ using UnityEngine;
 public class NetworkPlayer
 {
     public readonly UnityBoolEvent ReadyStatusChanged = new UnityBoolEvent();
-    public readonly UnityBoolEvent ActiveStatusChanged = new UnityBoolEvent();
     public readonly UnityIntegerEvent ScoreUpdated = new UnityIntegerEvent();
     
     public INetworkProperties Properties { get; }
@@ -55,15 +54,13 @@ public class NetworkPlayer
     
     public bool IsActive
     {
-        get => isActive;
-        private set
+        get
         {
-            if (isActive == value) return;
-            isActive = value;
-            ActiveStatusChanged.Invoke(isActive);
+            int turn = MatchController.LocalInstance.Turn;
+            return turn % PhotonNetwork.CurrentRoom.PlayerCount == (PlayerId - 1);
         }
     }
-    
+
     private Player player;
     private bool isActive;
 
@@ -75,12 +72,10 @@ public class NetworkPlayer
         
         if (player.IsLocal)
         {
-            MatchController.MatchStarted.AddListener(OnMatchStarted);
-            MatchController.MatchEnded.AddListener(OnMatchEnded);
+            MatchController.MatchStart.AddListener(OnMatchStarted);
+            MatchController.MatchEnd.AddListener(OnMatchEnded);
         }
         
-        RoomController.TurnChanged.AddListener(SetActiveStatus);
-
         PlayerId = player.ActorNumber;
         PlayerSymbol = (TileType) player.ActorNumber;
         
@@ -94,11 +89,6 @@ public class NetworkPlayer
     {
         IsReady = player.IsMasterClient;
     }
-    private void SetActiveStatus(int turn)
-    {
-        Debug.Log($"NetworkPlayer:: {player.NickName} | ID: {PlayerId} | Turn: {turn}");
-        IsActive = turn % PhotonNetwork.CurrentRoom.PlayerCount == (PlayerId - 1);
-    }
     
     public void UpdatePlayerStatuses(Hashtable properties)
     {
@@ -111,6 +101,7 @@ public class NetworkPlayer
         
         if (properties.ContainsKey(Keys.PLAYER_MATCH_SCORE))
         {
+            Debug.Log($"Flow 2:: UpdatePlayerStatuses::");
             ScoreUpdated.Invoke((int)properties[Keys.PLAYER_MATCH_SCORE]);
         }
     }

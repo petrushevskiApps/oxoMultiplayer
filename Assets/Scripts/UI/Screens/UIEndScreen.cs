@@ -35,7 +35,7 @@ public class UIEndScreen : UIScreen
     {
         base.Initialize(onBackButtonAction);
         
-        MatchController.MatchEnded.AddListener(MatchEnded);
+        MatchController.MatchEnd.AddListener(MatchEnded);
         RoomController.PlayerExitedRoom.AddListener(OnOtherPlayerExitedRoom);
         exitBtn.onClick.AddListener(ExitRoom);
         settingsButton.onClick.AddListener(ShowSettings);
@@ -47,7 +47,7 @@ public class UIEndScreen : UIScreen
     private void OnDestroy()
     {
         RoomController.PlayerExitedRoom.RemoveListener(OnOtherPlayerExitedRoom);
-        MatchController.MatchEnded.RemoveListener(MatchEnded);
+        MatchController.MatchEnd.RemoveListener(MatchEnded);
     }
 
     private void Replay() => UIManager.Instance.OpenScreen<UIRoomScreen>();

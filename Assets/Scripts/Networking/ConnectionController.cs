@@ -96,7 +96,6 @@ namespace com.petrushevskiapps.Oxo
         public override void OnDisconnected(DisconnectCause cause)
         {
             base.OnDisconnected(cause);
-            PlayerDataController.ClearLastRoom(this);
             UpdateNetworkStatus(false);
             OnOffline.Invoke();
 
