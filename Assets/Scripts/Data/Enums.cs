@@ -4,6 +4,7 @@
     {
         
     }
+    
     public enum RoomStatus
     {
         Waiting,
@@ -16,5 +17,14 @@
     {
         InRoom,
         InGame
+    }
+    
+    public enum TileType
+    {
+        Empty,
+        Cross,
+        Circle,
+        Win,
+        Lose,
     }
 }

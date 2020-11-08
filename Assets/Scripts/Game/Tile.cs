@@ -2,6 +2,7 @@
 using System.Linq;
 using com.petrushevskiapps.Oxo;
 using com.petrushevskiapps.Oxo.Utilities;
+using Data;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
@@ -71,11 +72,3 @@ public class Tile : MonoBehaviour
 
 }
 
-public enum TileType
-{
-    Empty,
-    Cross,
-    Circle,
-    Win,
-    Lose,
-}

@@ -15,12 +15,6 @@ namespace com.petrushevskiapps.Oxo.Properties
         public PlayerProperties(Player player)
         {
             this.player = player;
-
-            // Set default values
-            Set(Keys.PLAYER_READY_KEY, false)
-                .Set(Keys.PLAYER_MATCH_ID, -1)
-                .Set(Keys.PLAYER_MATCH_SCORE, 0)
-                .Sync();
         }
         
         public INetworkProperties Set(string key, object value)

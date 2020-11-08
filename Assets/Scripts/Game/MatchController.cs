@@ -97,16 +97,8 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
 
     IEnumerator WaitRoundComplete()
     {
-        Debug.Log($"Round:: Wait Started:: END ROUND:: {Round}");
-        yield return new WaitWhile(() =>
-        {
-            int score = RoomController.Instance.PlayersInRoom.Sum(player => player.Score);
-            Debug.Log($"Round:: Wait :: Score:: {score}");
-            return  score < Round;
-        });
-        Debug.Log($"Round:: Wait Ended :: END ROUND:: {Round}");
-        
-        
+        yield return new WaitWhile(() => RoomController.Instance.PlayersInRoom.Sum(player => player.Score) < Round);
+
         if (IsMatchCompleted())
         {
             EndMatch(IsLocalMatchWin());
@@ -136,12 +128,12 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     private bool IsLocalMatchWin()
     {
         NetworkPlayer matchWinner = RoomController.Instance.PlayersInRoom.OrderByDescending(x => x.Score).FirstOrDefault();
-        Debug.Log($"Match Winner:: {matchWinner?.Nickname}");
         return matchWinner == RoomController.Instance.LocalPlayer;
     }
     
     public void EndMatch(bool isLocalWin)
     {
+        Round = 0;
         MatchEnd.Invoke(isLocalWin);
         UIManager.Instance.OpenScreen<UIEndScreen>();
     }
@@ -151,14 +143,6 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
         if (board == null && PhotonNetwork.IsMasterClient)
         {
             board = PhotonNetwork.InstantiateRoomObject("Board", Vector3.zero, Quaternion.identity);
-        }
-    }
-
-    private void DestroyBoard()
-    {
-        if (board != null && PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.Destroy(board);
         }
     }
 

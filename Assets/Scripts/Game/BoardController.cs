@@ -19,7 +19,6 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     private List<Tile> tiles = new List<Tile>();
     
     private WinCondition winCondition;
-    private TurnController turnController;
     
     private static int maxRow = 3;
     private static int maxColumn = 3;
@@ -31,10 +30,8 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     private void Awake()
     {
         winCondition = GetComponent<WinCondition>();
-        turnController = GetComponent<TurnController>();
-
+        
         MatchController.RoundEnd.AddListener(ResetBoard);
-        Debug.Log("Flow:: BoardController:: Awake");
         
         SetupBoardTiles();
         SetTilesTable();

@@ -32,19 +32,7 @@ public class GameManager : MonoBehaviour
     {
         if (PhotonNetwork.InRoom)
         {
-            RoomState state = RoomController.Instance.State;
-
-            Debug.Log($"ROOM STATUS:: {state}");
-
-            switch (state)
-            {
-//                case RoomState.InGame:
-//                    UIManager.Instance.OpenScreen<UIGameScreen>();
-//                    break;
-                default:
-                    UIManager.Instance.OpenScreen<UIRoomScreen>();
-                    break;
-            }
+            UIManager.Instance.OpenScreen<UIRoomScreen>();
         }
         else
         {

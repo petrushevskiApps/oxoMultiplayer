@@ -1,6 +1,7 @@
 ﻿using com.petrushevskiapps.Oxo;
 using com.petrushevskiapps.Oxo.Properties;
 using com.petrushevskiapps.Oxo.Utilities;
+using Data;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -22,7 +23,7 @@ public class NetworkPlayer
         get => Properties.GetProperty<int>(Keys.PLAYER_MATCH_ID);
         private set
         {
-            if(PlayerId != -1) return;
+            if(PlayerId > 0) return;
             Properties.Set(Keys.PLAYER_MATCH_ID, value).Sync();
         }
     }
@@ -69,6 +70,9 @@ public class NetworkPlayer
     {
         this.player = player;
         Properties = new PlayerProperties(player);
+        Properties.Set(Keys.PLAYER_READY_KEY, player.IsMasterClient)
+                    .Set(Keys.PLAYER_MATCH_SCORE, 0)
+                    .Sync();
         
         if (player.IsLocal)
         {
@@ -78,15 +82,15 @@ public class NetworkPlayer
         
         PlayerId = player.ActorNumber;
         PlayerSymbol = (TileType) player.ActorNumber;
-        
     }
     
     private void OnMatchStarted()
     {
-        if(player.IsLocal) Score = 0;
+//        if(player.IsLocal) Score = 0;
     }
     private void OnMatchEnded(bool arg0)
     {
+        Score = 0;
         IsReady = player.IsMasterClient;
     }
     
@@ -101,7 +105,6 @@ public class NetworkPlayer
         
         if (properties.ContainsKey(Keys.PLAYER_MATCH_SCORE))
         {
-            Debug.Log($"Flow 2:: UpdatePlayerStatuses::");
             ScoreUpdated.Invoke((int)properties[Keys.PLAYER_MATCH_SCORE]);
         }
     }

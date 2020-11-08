@@ -39,16 +39,6 @@ public class RoomController : MonoBehaviourPunCallbacks
             Properties.Set(Keys.ROOM_STATUS, value).Sync();
         }
     }
-
-    public RoomState State
-    {
-        get => Properties.GetProperty<RoomState>(Keys.ROOM_STATE);
-        private set
-        {
-            if(State == value) return;
-            Properties.Set(Keys.ROOM_STATE, value);
-        }
-    }
     
     private Dictionary<string, NetworkPlayer> networkPlayers = new Dictionary<string, NetworkPlayer>();
     
@@ -59,28 +49,20 @@ public class RoomController : MonoBehaviourPunCallbacks
     private void Awake()
     {
         Instance = this;
-        MatchController.MatchStart.AddListener(OnMatchStarted);
         MatchController.MatchEnd.AddListener(OnMatchEnded);
-        Debug.Log("Flow:: RoomController:: Awake");
+
         Properties = new RoomProperties();
         PlayersList.ForEach(CreateNetworkPlayer);
     }
 
     private void OnDestroy()
     {
-        MatchController.MatchStart.RemoveListener(OnMatchStarted);
         MatchController.MatchEnd.RemoveListener(OnMatchEnded);
     }
 
-    private void OnMatchStarted()
-    {
-        State = RoomState.InGame;
-    }
-    
     private void OnMatchEnded(bool arg0)
     {
         Status = RoomStatus.Waiting;
-        State = RoomState.InRoom;
     }
     
     private void SetRoomStatus(bool check = false)
@@ -111,6 +93,7 @@ public class RoomController : MonoBehaviourPunCallbacks
         networkPlayers.Add(player.UserId, netPlayer);
         
         if (player.IsLocal) LocalPlayer = netPlayer;
+        
         PlayerEnteredRoom.Invoke(netPlayer);
     }
     
@@ -141,7 +124,6 @@ public class RoomController : MonoBehaviourPunCallbacks
     {
         if (networkPlayers.ContainsKey(targetPlayer.UserId))
         {
-            Debug.Log($"Flow 1:: OnPlayerPropertiesUpdate::");
             networkPlayers[targetPlayer.UserId].UpdatePlayerStatuses(changedProps);
         }
     }

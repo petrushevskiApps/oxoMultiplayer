@@ -20,11 +20,12 @@ namespace com.petrushevskiapps.Oxo.Utilities
         public static void Stop(MonoBehaviour stoper, string timerId)
         {
             if (!activeTimers.ContainsKey(timerId)) return;
+            
             stoper.StopCoroutine(activeTimers[timerId]);
             activeTimers.Remove(timerId);
         }
         
-        static IEnumerator DelayAction(float time,string timerId, Action onTimerComplete)
+        private static IEnumerator DelayAction(float time,string timerId, Action onTimerComplete)
         {
             yield return new WaitForSeconds(time);
             activeTimers.Remove(timerId);

@@ -29,7 +29,6 @@
         public const string PLAYER_MATCH_SCORE = "playerScore";
         
         public const string ROOM_STATUS = "roomStatus";
-        public const string ROOM_STATE  = "roomState";
         
         public const string USERNAME = "username";
         public const string PLAYED_GAMES = "playedGames";

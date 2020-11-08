@@ -448,7 +448,6 @@
             <e p="BoardController.cs" t="Include" />
             <e p="MatchController.cs" t="Include" />
             <e p="Tile.cs" t="Include" />
-            <e p="TurnController.cs" t="Include" />
             <e p="WinCondition.cs" t="Include" />
           </e>
           <e p="GameManager.cs" t="Include" />

@@ -55,6 +55,7 @@ public class UIPlayersList : MonoBehaviourPunCallbacks
         GameObject playerRow = Instantiate(playerUsernamePrefab, playersListParent.transform);
         
         PlayerRow row = playerRow.GetComponent<PlayerRow>();
+       
         row.SetupRow(player.IsReady, player.Nickname, player.ReadyStatusChanged);
         
         playersDictionary.Add(player.UserId, playerRow);
