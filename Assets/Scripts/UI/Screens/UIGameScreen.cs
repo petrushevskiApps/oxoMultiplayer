@@ -39,12 +39,7 @@ public class UIGameScreen : UIScreen
         base.Awake();
         
         backButton.onClick.AddListener(OnBackButtonPressed);
-        settingsButton.onClick.AddListener(() =>
-        {
-            PhotonNetwork.Disconnect();
-//            StartCoroutine(NetworkManager.Instance.ConnectionController.Reconnect());
-//            UIManager.Instance.OpenPopup<UISettingsPopup>();
-        });
+        settingsButton.onClick.AddListener(() => UIManager.Instance.OpenPopup<UISettingsPopup>());
         
         MatchController.MatchStartSynced.AddListener(OnMatchStarted);
         MatchController.MatchEnd.AddListener(OnMatchEnded);
@@ -67,7 +62,6 @@ public class UIGameScreen : UIScreen
         MatchController.RoundEnd.RemoveListener(OnRoundEnded);
         RoomController.PlayerEnteredRoom.RemoveListener(OnPlayerEnteredRoom);
         ClearPlayerUIs();
-        Timer.Stop(this, "MidContent");
     }
 
     private void OnMatchStarted()
@@ -80,7 +74,6 @@ public class UIGameScreen : UIScreen
         
         for (int i = 0; i < players.Count; i++)
         {
-            Debug.Log($"Flow 3:: UIGameScreen:: OnMatchStarted:: Player: {players[i].Nickname}");
             playerRefs[i].Setup(players[i], symbols, activeColor, normalColor);
         }
     }
@@ -140,7 +133,6 @@ public class UIGameScreen : UIScreen
             UpdateScoreText(player.Score);
             SetupBackgrounds();
             
-            Debug.Log($"Flow 4:: PlayerUI:: Setup");
             player.ScoreUpdated.AddListener(UpdateScoreText);
             MatchController.TurnChanged.AddListener(SetupBackgrounds);
         }
@@ -159,7 +151,6 @@ public class UIGameScreen : UIScreen
         
         private void UpdateScoreText(int score)
         {
-            Debug.Log($"Flow 5:: UpdatePlayerStatuses::");
             scoreText.text = score.ToString();
         }
     }

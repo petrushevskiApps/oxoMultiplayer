@@ -441,6 +441,9 @@
             <e p="Enums.cs" t="Include" />
             <e p="TileImages.cs" t="Include" />
           </e>
+          <e p="Editor" t="Include">
+            <e p="PhotonHelper.cs" t="Include" />
+          </e>
           <e p="Game" t="Include">
             <e p="BoardController.cs" t="Include" />
             <e p="MatchController.cs" t="Include" />
