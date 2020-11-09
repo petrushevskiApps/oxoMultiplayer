@@ -32,12 +32,12 @@ public class UIPlayersList : MonoBehaviourPunCallbacks
         RoomController.PlayerEnteredRoom.RemoveListener(AddPlayerToUiList);
         RoomController.PlayerExitedRoom.RemoveListener(RemovePlayerFromUi);
         
-        foreach (KeyValuePair<string, GameObject> keyValuePair in playersDictionary)
-        {
-            Destroy(keyValuePair.Value);
-        }
-        
-        playersDictionary.Clear();
+//        foreach (KeyValuePair<string, GameObject> keyValuePair in playersDictionary)
+//        {
+//            Destroy(keyValuePair.Value);
+//        }
+//        
+//        playersDictionary.Clear();
     }
 
     private void SetPlayersList()
@@ -54,9 +54,9 @@ public class UIPlayersList : MonoBehaviourPunCallbacks
         
         GameObject playerRow = Instantiate(playerUsernamePrefab, playersListParent.transform);
         
-        PlayerRow row = playerRow.GetComponent<PlayerRow>();
+        playerRow.GetComponent<PlayerRow>().SetupRow(player);
        
-        row.SetupRow(player.IsReady, player.Nickname, player.ReadyStatusChanged);
+        playerRow.SetActive(true);
         
         playersDictionary.Add(player.UserId, playerRow);
     }
@@ -64,6 +64,7 @@ public class UIPlayersList : MonoBehaviourPunCallbacks
     private void RemovePlayerFromUi(NetworkPlayer player)
     {
         if (!playersDictionary.ContainsKey(player.UserId)) return;
+        
         Destroy(playersDictionary[player.UserId]);
         playersDictionary.Remove(player.UserId);
     }

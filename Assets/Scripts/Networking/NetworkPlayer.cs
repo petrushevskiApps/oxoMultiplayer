@@ -31,7 +31,7 @@ public class NetworkPlayer
     public bool IsReady
     {
         get => player.IsMasterClient || Properties.GetProperty<bool>(Keys.PLAYER_READY_KEY);
-        private set
+        set
         {
             if (IsReady == value) return;
             
@@ -76,7 +76,7 @@ public class NetworkPlayer
         
         if (player.IsLocal)
         {
-            MatchController.MatchStart.AddListener(OnMatchStarted);
+            MatchController.MatchStartSynced.AddListener(OnMatchStarted);
             MatchController.MatchEnd.AddListener(OnMatchEnded);
         }
         
@@ -86,12 +86,11 @@ public class NetworkPlayer
     
     private void OnMatchStarted()
     {
-//        if(player.IsLocal) Score = 0;
+        IsReady = player.IsMasterClient;
     }
     private void OnMatchEnded(bool arg0)
     {
         Score = 0;
-        IsReady = player.IsMasterClient;
     }
     
     public void UpdatePlayerStatuses(Hashtable properties)

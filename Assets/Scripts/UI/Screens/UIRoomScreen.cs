@@ -68,7 +68,7 @@ public class UIRoomScreen : UIScreen
 
     private void OnPlayerReadyClicked()
     {
-        RoomController.Instance.LocalPlayer.Properties.Set(Keys.PLAYER_READY_KEY, true).Sync();
+        RoomController.Instance.LocalPlayer.IsReady = true;
     }
    
     private void SetRoomTitle()

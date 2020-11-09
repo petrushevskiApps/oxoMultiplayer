@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using com.petrushevskiapps.Oxo;
+using Data;
 using PetrushevskiApps.UIManager;
 using Photon.Pun;
 using UnityEngine;
@@ -36,7 +37,7 @@ public class UIEndScreen : UIScreen
         base.Initialize(onBackButtonAction);
         
         MatchController.MatchEnd.AddListener(MatchEnded);
-        RoomController.PlayerExitedRoom.AddListener(OnOtherPlayerExitedRoom);
+        RoomController.PlayerExitedRoom.AddListener(OnPlayerExitedRoom);
         exitBtn.onClick.AddListener(ExitRoom);
         settingsButton.onClick.AddListener(ShowSettings);
         replayButton.onClick.AddListener(Replay);
@@ -44,9 +45,18 @@ public class UIEndScreen : UIScreen
         wonText.SetActive(false);
         lostText.SetActive(false);
     }
+
+//    private void OnEnable()
+//    {
+//        if (RoomController.Instance.Status == RoomStatus.Waiting)
+//        {
+//            replayButton.SetInteractableStatus(false);
+//        }
+//    }
+
     private void OnDestroy()
     {
-        RoomController.PlayerExitedRoom.RemoveListener(OnOtherPlayerExitedRoom);
+        RoomController.PlayerExitedRoom.RemoveListener(OnPlayerExitedRoom);
         MatchController.MatchEnd.RemoveListener(MatchEnded);
     }
 
@@ -63,8 +73,10 @@ public class UIEndScreen : UIScreen
         SetIcon(isWin);
         PlayAudio(isWin);
     }
-    private void OnOtherPlayerExitedRoom(NetworkPlayer player)
+    
+    private void OnPlayerExitedRoom(NetworkPlayer player)
     {
+        if(!gameObject.activeSelf) return;
         replayButton.SetInteractableStatus(false);
     }
     private void PlayAudio(bool isWin)

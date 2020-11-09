@@ -46,14 +46,9 @@ public class UIGameScreen : UIScreen
         MatchController.RoundStart.AddListener(OnRoundStarted);
         MatchController.RoundEnd.AddListener(OnRoundEnded);
         RoomController.PlayerEnteredRoom.AddListener(OnPlayerEnteredRoom);
-    }
-
-    private void OnPlayerEnteredRoom(NetworkPlayer arg0)
-    {
-        SetupPlayerRefs();
+        RoomController.PlayerExitedRoom.AddListener(OnPlayerExitedRoom);
     }
     
-
     private void OnDestroy()
     {
         MatchController.MatchStartSynced.RemoveListener(OnMatchStarted);
@@ -61,6 +56,8 @@ public class UIGameScreen : UIScreen
         MatchController.RoundStart.RemoveListener(OnRoundStarted);
         MatchController.RoundEnd.RemoveListener(OnRoundEnded);
         RoomController.PlayerEnteredRoom.RemoveListener(OnPlayerEnteredRoom);
+        RoomController.PlayerExitedRoom.RemoveListener(OnPlayerExitedRoom);
+        
         ClearPlayerUIs();
     }
 
@@ -106,6 +103,16 @@ public class UIGameScreen : UIScreen
         UIManager.Instance.OpenPopup<UILeavePopup>()
             .SetTitle(Constants.LEAVE_MATCH_TITLE)
             .SetMessage(Constants.LEAVE_MATCH_MESSAGE);
+    }
+    
+    private void OnPlayerEnteredRoom(NetworkPlayer arg0)
+    {
+        SetupPlayerRefs();
+    }
+    private void OnPlayerExitedRoom(NetworkPlayer player)
+    {
+        if(!gameObject.activeInHierarchy) return;
+        UIManager.Instance.OpenPopup<UITimerPopup>().InitializePopup(player.Nickname);
     }
     
     [Serializable]

@@ -28,6 +28,7 @@ public class UITimerPopup : UIPopup
     private void OnDisable()
     {
         RoomController.PlayerEnteredRoom.RemoveListener(OnPlayerEntered);
+        
         if (timer != null)
         {
             StopCoroutine(timer);

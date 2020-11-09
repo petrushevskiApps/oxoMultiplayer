@@ -12,23 +12,35 @@ public class PlayerRow : MonoBehaviour
     [SerializeField] private Toggle toggle;
 
     private UnityEvent<bool> playerEvent;
+
+    private NetworkPlayer player;
+
+    public void SetupRow(NetworkPlayer player)
+    {
+        this.player = player;
+        
+        playerEvent = player.ReadyStatusChanged;
+        playerName.text = player.Nickname;
+        RegisterToggleEvent();
+    }
     
+    private void OnEnable()
+    {
+        SetToggle(player?.IsReady ?? false);
+    }
+
     private void OnDestroy()
     {
         UnregisterEvent();
     }
 
-    public void SetupRow(bool isReady, string playerName, UnityEvent<bool> playerEvent)
-    {
-        this.playerEvent = playerEvent;
-        this.playerName.text = playerName;
-        SetToggle(isReady);
-        RegisterToggleEvent();
-    }
-    
     private void SetToggle(bool isReady)
     {
-        toggle.isOn = isReady;
+        if (toggle != null)
+        {
+            toggle.isOn = isReady;
+        }
+        
     }
 
     private void RegisterToggleEvent()

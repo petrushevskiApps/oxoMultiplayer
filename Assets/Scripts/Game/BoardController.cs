@@ -32,13 +32,24 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         winCondition = GetComponent<WinCondition>();
         
         MatchController.RoundEnd.AddListener(ResetBoard);
+        MatchController.MatchEnd.AddListener(OnMatchEnded);
         
         SetupBoardTiles();
         SetTilesTable();
     }
+
+    private void OnMatchEnded(bool arg0)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.RemoveRPCs(photonView);
+        }
+    }
+
     private void OnDestroy()
     {
         MatchController.RoundEnd.RemoveListener(ResetBoard);
+        MatchController.MatchEnd.RemoveListener(OnMatchEnded);
     }
 
     private void SetupBoardTiles()

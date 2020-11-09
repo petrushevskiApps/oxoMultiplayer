@@ -50,17 +50,6 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     private void Awake()
     {
         LocalInstance = this;
-        RoomController.PlayerExitedRoom.AddListener(OnPlayerExited);
-    }
-
-    private void OnDestroy()
-    {
-        RoomController.PlayerExitedRoom.RemoveListener(OnPlayerExited);
-    }
-
-    private void OnPlayerExited(NetworkPlayer player)
-    {
-        UIManager.Instance.OpenPopup<UITimerPopup>().InitializePopup(player.Nickname);
     }
 
     
@@ -136,6 +125,11 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
         Round = 0;
         MatchEnd.Invoke(isLocalWin);
         UIManager.Instance.OpenScreen<UIEndScreen>();
+        
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.RemoveRPCs(photonView);
+        }
     }
     
     private void CreateBoard()
