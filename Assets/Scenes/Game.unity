@@ -2613,7 +2613,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f83bb9364ed9834f99243106fa4f4e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backStackable: 1
+  backStackable: 0
   globalUiElements: []
   activateSafeArea: 1
   backButton: {fileID: 1462890334}
