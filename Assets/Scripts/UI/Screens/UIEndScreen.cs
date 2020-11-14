@@ -46,14 +46,6 @@ public class UIEndScreen : UIScreen
         lostText.SetActive(false);
     }
 
-//    private void OnEnable()
-//    {
-//        if (RoomController.Instance.Status == RoomStatus.Waiting)
-//        {
-//            replayButton.SetInteractableStatus(false);
-//        }
-//    }
-
     private void OnDestroy()
     {
         RoomController.PlayerExitedRoom.RemoveListener(OnPlayerExitedRoom);

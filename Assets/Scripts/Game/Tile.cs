@@ -21,15 +21,34 @@ public class Tile : MonoBehaviour
     private Animator animator;
     private SpriteRenderer tileBackgroundImage;
     private TileType _tile;
+    private BoxCollider2D clickColider;
     
     private void Awake()
     {
         animator = GetComponent<Animator>();
         tileBackgroundImage = GetComponent<SpriteRenderer>();
-       
+        clickColider = GetComponent<BoxCollider2D>();
+        
+        MatchController.RoundStarting.AddListener(OnRoundStarting);
+        MatchController.RoundStarted.AddListener(OnRoundStarted);
         SetTile();
     }
 
+    private void OnDestroy()
+    {
+        MatchController.RoundStarting.RemoveListener(OnRoundStarting);
+        MatchController.RoundStarted.RemoveListener(OnRoundStarted);
+    }
+
+    private void OnRoundStarting(int arg0)
+    {
+        clickColider.enabled = false;
+    }
+    private void OnRoundStarted()
+    {
+        clickColider.enabled = true;
+    }
+    
     public void SetTile()
     {
         _tile = TileType.Empty;

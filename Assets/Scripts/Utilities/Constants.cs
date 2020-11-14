@@ -43,4 +43,10 @@
     {
         public const string RPC_START_MATCH = "StartMatchSynced";
     }
+
+    public static class TimerKeys
+    {
+        public const string ROUND_START_DELAY = "roundStartDelay";
+    }
+    
 }

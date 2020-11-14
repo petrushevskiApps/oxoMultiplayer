@@ -15,7 +15,8 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     public static UnityEvent MatchStart = new UnityEvent();
     public static UnityEvent MatchStartSynced = new UnityEvent();
     public static UnityBoolEvent MatchEnd = new UnityBoolEvent();
-    public static UnityIntegerEvent RoundStart = new UnityIntegerEvent();
+    public static UnityIntegerEvent RoundStarting = new UnityIntegerEvent();
+    public static UnityEvent RoundStarted = new UnityEvent();
     public static UnityEvent RoundEnd = new UnityEvent();
     public static UnityIntegerEvent TurnChanged = new UnityIntegerEvent();
     
@@ -72,7 +73,11 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     {
         Round++;
         Turn = (Round - 1) % 2;
-        RoundStart.Invoke(Round);
+        RoundStarting.Invoke(Round);
+        Timer.Start(this, TimerKeys.ROUND_START_DELAY, 1.5f, () =>
+        {
+            RoundStarted.Invoke();
+        });
     }
     
     public void EndRound(bool isRoundWon)

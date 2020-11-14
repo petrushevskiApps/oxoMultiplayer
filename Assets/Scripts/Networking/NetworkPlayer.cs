@@ -62,6 +62,8 @@ public class NetworkPlayer
         }
     }
 
+    public bool IsConnected => !player.IsInactive;
+    
     private Player player;
     private bool isActive;
 

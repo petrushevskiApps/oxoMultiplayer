@@ -43,17 +43,21 @@ public class UIGameScreen : UIScreen
         
         MatchController.MatchStartSynced.AddListener(OnMatchStarted);
         MatchController.MatchEnd.AddListener(OnMatchEnded);
-        MatchController.RoundStart.AddListener(OnRoundStarted);
+        MatchController.RoundStarting.AddListener(OnRoundStarting);
+        MatchController.RoundStarted.AddListener(OnRoundStarted);
         MatchController.RoundEnd.AddListener(OnRoundEnded);
         RoomController.PlayerEnteredRoom.AddListener(OnPlayerEnteredRoom);
         RoomController.PlayerExitedRoom.AddListener(OnPlayerExitedRoom);
     }
+
     
+
     private void OnDestroy()
     {
         MatchController.MatchStartSynced.RemoveListener(OnMatchStarted);
         MatchController.MatchEnd.RemoveListener(OnMatchEnded);
-        MatchController.RoundStart.RemoveListener(OnRoundStarted);
+        MatchController.RoundStarting.RemoveListener(OnRoundStarting);
+        MatchController.RoundStarted.AddListener(OnRoundStarted);
         MatchController.RoundEnd.RemoveListener(OnRoundEnded);
         RoomController.PlayerEnteredRoom.RemoveListener(OnPlayerEnteredRoom);
         RoomController.PlayerExitedRoom.RemoveListener(OnPlayerExitedRoom);
@@ -74,15 +78,18 @@ public class UIGameScreen : UIScreen
             playerRefs[i].Setup(players[i], symbols, activeColor, normalColor);
         }
     }
-    private void OnRoundStarted(int round)
+    private void OnRoundStarting(int round)
     {
         string roundText = "Round " + MatchController.LocalInstance.Round;
         roundNumberTextTop.text = roundText;
         roundNumberTextMid.text = roundText;
         middleContent.SetActive(true);
-        Timer.Start(this, "MidContent", 1.5f, () => middleContent.SetActive(false));
+        
     }
-  
+    private void OnRoundStarted()
+    {
+        middleContent.SetActive(false);
+    }
     private void OnRoundEnded()
     {
         

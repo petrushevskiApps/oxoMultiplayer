@@ -20,7 +20,7 @@ public class RoomController : MonoBehaviourPunCallbacks
     public static RoomStatusChangeEvent StatusChanged = new RoomStatusChangeEvent();
     
     public static string RoomName => PhotonNetwork.CurrentRoom.Name;
-    public static bool IsRoomFull => PhotonNetwork.CurrentRoom.MaxPlayers == PhotonNetwork.CurrentRoom.PlayerCount;
+    public static int MaxPlayers => PhotonNetwork.CurrentRoom.MaxPlayers;
 
     // Players in Room
     private List<Player> PlayersList => PhotonNetwork.CurrentRoom.Players.Values.ToList();
@@ -67,20 +67,15 @@ public class RoomController : MonoBehaviourPunCallbacks
     
     private void SetRoomStatus(bool check = false)
     {
-        bool roomReady = true;
-        
-        if (!IsRoomFull)
+        if (networkPlayers.Values.Count < MaxPlayers)
         {
             Status = RoomStatus.Waiting;
         }
         else
         {
-            foreach (NetworkPlayer player in networkPlayers.Values)
-            {
-                roomReady &= player.IsReady;
-            }
+            bool isReady = networkPlayers.Values.Aggregate(true, (roomReady, player) => roomReady && player.IsReady);
             
-            Status = roomReady ? RoomStatus.Ready : RoomStatus.Full;
+            Status = isReady ? RoomStatus.Ready : RoomStatus.Full;
         }
     }
     

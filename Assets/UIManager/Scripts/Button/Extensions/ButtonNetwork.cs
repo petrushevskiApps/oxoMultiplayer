@@ -38,7 +38,7 @@ namespace PetrushevskiApps.UIManager
         }
         private void ShowNoNetworkPopup()
         {
-            if (NetworkManager.Instance.ConnectionController.IsOffline)
+            if (!NetworkManager.Instance.ConnectionController.IsOnline)
             {
                 UIManager.Instance.OpenPopup<UINetworkPopup>();
             }

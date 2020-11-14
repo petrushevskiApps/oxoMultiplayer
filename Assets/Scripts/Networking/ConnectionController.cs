@@ -15,11 +15,10 @@ namespace com.petrushevskiapps.Oxo
         public UnityEvent OnOnline = new UnityEvent();
         public UnityEvent OnOffline = new UnityEvent();
         
-        public bool IsOnline => currNetworkStatus;
-        public bool IsOffline => !currNetworkStatus;
-        
+        public bool IsOnline { get; private set; } = false;
+
         private bool prevNetworkStatus = false;
-        private bool currNetworkStatus = false;
+
         private bool isConnecting = false;
         private string gameVersion = "1";
         private bool masterConnectionEstablished = false;
@@ -117,7 +116,8 @@ namespace com.petrushevskiapps.Oxo
         }
         private void UpdateNetworkStatus(bool netStatus)
         {
-            currNetworkStatus = netStatus;
+            IsOnline = netStatus;
+            
             if (netStatus != prevNetworkStatus)
             {
                 prevNetworkStatus = netStatus;

@@ -6,7 +6,7 @@ namespace PetrushevskiApps.UIManager
 {
     public class UIButton : Button
     {
-        private bool isNetworkAvailable = false;
+        private bool isNetworkAvailable = true;
         private bool isInteractable = true;
         
         public void SetNetworkStatus(bool status)
