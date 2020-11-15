@@ -75,7 +75,7 @@ public class RoomController : MonoBehaviourPunCallbacks
     
     private Dictionary<string, NetworkPlayer> networkPlayers = new Dictionary<string, NetworkPlayer>();
     
-    public INetworkProperties Properties { get; private set; }
+    public RoomProperties Properties { get; private set; }
     
     public static RoomController Instance;
     
@@ -83,18 +83,27 @@ public class RoomController : MonoBehaviourPunCallbacks
     {
         Instance = this;
         MatchController.MatchEnd.AddListener(OnMatchEnded);
-
+        MatchController.MatchStart.AddListener(OnMatchStarted);
+        
         Properties = new RoomProperties();
+        Properties.SetPlayerTTL(RoomProperties.PLAYER_TTL_DEFAULT);
         PlayersList.ForEach(CreateNetworkPlayer);
     }
 
     private void OnDestroy()
     {
+        MatchController.MatchStart.RemoveListener(OnMatchStarted);
         MatchController.MatchEnd.RemoveListener(OnMatchEnded);
     }
-
+    
+    private void OnMatchStarted()
+    {
+        Properties.SetPlayerTTL(RoomProperties.PLAYER_TTL_IN_GAME);
+    }
+    
     private void OnMatchEnded(bool arg0)
     {
+        Properties.SetPlayerTTL(RoomProperties.PLAYER_TTL_DEFAULT);
         Status = RoomStatus.Waiting;
     }
     

@@ -9,9 +9,12 @@ namespace com.petrushevskiapps.Oxo.Properties
         private readonly Hashtable properties = new Hashtable();
         private bool cached = false;
         
-        public RoomProperties()
+        public const int PLAYER_TTL_IN_GAME =  30000; // 30 sec
+        public const int PLAYER_TTL_DEFAULT = 0;
+
+        public void SetPlayerTTL(int ttlSeconds)
         {
-            PhotonNetwork.CurrentRoom.PlayerTtl = 30000; // 30 sec
+            PhotonNetwork.CurrentRoom.PlayerTtl = ttlSeconds;
         }
         
         public INetworkProperties Set(string key, object value)
