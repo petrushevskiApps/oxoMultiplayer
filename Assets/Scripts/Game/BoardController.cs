@@ -40,10 +40,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnMatchEnded(bool arg0)
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.RemoveRPCs(photonView);
-        }
+        NetworkManager.Instance.ClearRpcs(photonView);
     }
 
     private void OnDestroy()
@@ -85,12 +82,14 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     private void TurnEnded(int tileId)
     {
         int playerId = RoomController.Instance.ActivePlayer.PlayerId;
-        photonView.RPC("TurnEnd", RpcTarget.AllBufferedViaServer, tileId, playerId);
+//        photonView.RPC(RPCs.RPC_TURN_END, RpcTarget.AllBufferedViaServer, tileId, playerId);
+        NetworkManager.Instance.SendRpc(photonView, RPCs.RPC_TURN_END, true, tileId, playerId);
     }
     
     [PunRPC]
     private void TurnEnd(int tileId, int playerId)
     {
+        RoomController.Instance.LocalRpcBufferCount++;
         UpdateTile(tileId, playerId);
        
         bool isWin = winCondition.CheckWinCondition(tilesTable);

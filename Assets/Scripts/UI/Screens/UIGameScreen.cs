@@ -32,6 +32,9 @@ public class UIGameScreen : UIScreen
     
     [SerializeField] private TileImages symbols;
 
+    [Header("Syncronization")] 
+    [SerializeField] private GameObject syncPanel;
+    
     private List<NetworkPlayer> players;
 
     private void Awake()
@@ -61,8 +64,32 @@ public class UIGameScreen : UIScreen
         MatchController.RoundEnd.RemoveListener(OnRoundEnded);
         RoomController.PlayerEnteredRoom.RemoveListener(OnPlayerEnteredRoom);
         RoomController.PlayerExitedRoom.RemoveListener(OnPlayerExitedRoom);
-        
+
         ClearPlayerUIs();
+    }
+
+    private void OnEnable()
+    {
+        ShowSyncPanel();
+    }
+
+    private bool isListenerSet = false;
+    private void ShowSyncPanel()
+    {
+        if (!RoomController.Instance.IsSynced && !isListenerSet)
+        {
+            isListenerSet = true;
+            RoomController.LocalRpcBufferCountUpdated.AddListener(ShowSyncPanel);
+        }
+        
+        if(RoomController.Instance.IsSynced && isListenerSet)
+        {
+            isListenerSet = false;
+            RoomController.LocalRpcBufferCountUpdated.RemoveListener(ShowSyncPanel);
+        }
+        
+        Debug.Log($"RPC IS SYNCED:: {RoomController.Instance.IsSynced}");
+        syncPanel.SetActive(!RoomController.Instance.IsSynced);
     }
 
     private void OnMatchStarted()

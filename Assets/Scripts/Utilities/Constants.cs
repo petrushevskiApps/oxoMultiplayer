@@ -29,7 +29,8 @@
         public const string PLAYER_MATCH_SCORE = "playerScore";
         
         public const string ROOM_STATUS = "roomStatus";
-        
+        public const string RPC_BUFFERED_COUNT = "rpcBufferedCount";
+
         public const string USERNAME = "username";
         public const string PLAYED_GAMES = "playedGames";
         public const string WON_GAMES = "gamesWon";
@@ -42,6 +43,7 @@
     public static class RPCs
     {
         public const string RPC_START_MATCH = "StartMatchSynced";
+        public const string RPC_TURN_END = "TurnEnd";
     }
 
     public static class TimerKeys

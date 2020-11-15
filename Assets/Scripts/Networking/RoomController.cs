@@ -18,7 +18,9 @@ public class RoomController : MonoBehaviourPunCallbacks
     public static PlayerRoomEvent PlayerEnteredRoom = new PlayerRoomEvent();
     public static PlayerRoomEvent PlayerExitedRoom = new PlayerRoomEvent();
     public static RoomStatusChangeEvent StatusChanged = new RoomStatusChangeEvent();
-    
+    public static UnityEvent RpcBufferCountUpdated = new UnityEvent();
+    public static UnityEvent LocalRpcBufferCountUpdated = new UnityEvent();
+
     public static string RoomName => PhotonNetwork.CurrentRoom.Name;
     public static int MaxPlayers => PhotonNetwork.CurrentRoom.MaxPlayers;
 
@@ -37,6 +39,37 @@ public class RoomController : MonoBehaviourPunCallbacks
             
             StatusChanged.Invoke(value);
             Properties.Set(Keys.ROOM_STATUS, value).Sync();
+        }
+    }
+
+    public bool IsSynced => LocalRpcBufferCount == RoomRpcBufferedCount;
+    
+    private int localRpcBufferCount;
+    
+    public int LocalRpcBufferCount
+    {
+        get => localRpcBufferCount;
+        set
+        {
+            localRpcBufferCount = value;
+            LocalRpcBufferCountUpdated.Invoke();
+            Debug.Log($"RPC LOCAL COUNT:: {localRpcBufferCount}");
+            // Sync room buffered count when count increased or restarted.
+            if (RoomRpcBufferedCount < localRpcBufferCount || localRpcBufferCount == 0)
+            {
+                RoomRpcBufferedCount = localRpcBufferCount;
+            }
+        }
+    }
+    
+    private int RoomRpcBufferedCount
+    {
+        get => Properties.GetProperty<int>(Keys.RPC_BUFFERED_COUNT);
+        set
+        {
+            if (RoomRpcBufferedCount == value) return;
+            
+            Properties.Set(Keys.RPC_BUFFERED_COUNT, value).Sync();
         }
     }
     
@@ -113,6 +146,11 @@ public class RoomController : MonoBehaviourPunCallbacks
         base.OnRoomPropertiesUpdate(changedProperties);
         
         Properties.Updated();
+        
+        if (changedProperties.ContainsKey(Keys.RPC_BUFFERED_COUNT))
+        {
+            RpcBufferCountUpdated.Invoke();
+        }
     }
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)

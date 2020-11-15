@@ -50,7 +50,7 @@ namespace com.petrushevskiapps.Oxo.Properties
             {
                 PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(key, out result);
             }
-            Debug.Log($"RoomProperties:: {key} = {result}");
+             Debug.Log($"RoomProperties:: {key} = {result}");
             if (result == null) return default;
             else return (T) result;
         }

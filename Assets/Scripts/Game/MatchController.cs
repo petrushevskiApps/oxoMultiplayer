@@ -58,12 +58,13 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     {
         CreateBoard();
         MatchStart.Invoke();
-        NetworkManager.Instance.SendRpc(photonView, RPCs.RPC_START_MATCH);
+        NetworkManager.Instance.SendRpc(photonView, RPCs.RPC_START_MATCH, false);
     }
     
     [PunRPC]
     public void StartMatchSynced()
     {
+        RoomController.Instance.LocalRpcBufferCount++;
         UIManager.Instance.OpenScreen<UIGameScreen>();
         StartRound();
         MatchStartSynced.Invoke();
@@ -130,11 +131,7 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
         Round = 0;
         MatchEnd.Invoke(isLocalWin);
         UIManager.Instance.OpenScreen<UIEndScreen>();
-        
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.RemoveRPCs(photonView);
-        }
+        NetworkManager.Instance.ClearRpcs(photonView);
     }
     
     private void CreateBoard()

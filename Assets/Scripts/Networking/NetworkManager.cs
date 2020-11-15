@@ -142,11 +142,24 @@ namespace com.petrushevskiapps.Oxo
         {
             PhotonNetwork.NickName = userName;
         }
-        public void SendRpc(PhotonView pv, string rpcMethodName)
+        public void SendRpc(PhotonView pv, string rpcMethodName, bool overrideMaster, params object[] parameters)
         {
+            if (PhotonNetwork.IsMasterClient || overrideMaster)
+            {
+                pv.RPC(rpcMethodName, RpcTarget.AllBufferedViaServer, parameters);
+                
+                Debug.Log($"Buffered RPCs Count: {RoomController.Instance.LocalRpcBufferCount}");
+            }
+        }
+
+        public void ClearRpcs(PhotonView pv)
+        {
+            RoomController.Instance.LocalRpcBufferCount = 0;
+            Debug.Log($"Clean RPC Buffer");
+            
             if (PhotonNetwork.IsMasterClient)
             {
-                pv.RPC(rpcMethodName, RpcTarget.AllBufferedViaServer);
+                PhotonNetwork.RemoveRPCs(pv);
             }
         }
     }
