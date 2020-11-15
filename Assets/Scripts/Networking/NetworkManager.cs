@@ -14,6 +14,8 @@ namespace com.petrushevskiapps.Oxo
 {
     public class NetworkManager : MonoBehaviourPunCallbacks
     {
+        public static UnityEvent MasterSwitched = new UnityEvent();
+        
         [Header("Controllers")]
         [SerializeField] private ConnectionController connectionController;
 
@@ -142,6 +144,14 @@ namespace com.petrushevskiapps.Oxo
         {
             PhotonNetwork.NickName = userName;
         }
+        
+        
+        public override void OnMasterClientSwitched(Player newMasterClient)
+        {
+            base.OnMasterClientSwitched(newMasterClient);
+            MasterSwitched.Invoke();
+        }
+        
         public void SendRpc(PhotonView pv, string rpcMethodName, bool overrideMaster, params object[] parameters)
         {
             if (PhotonNetwork.IsMasterClient || overrideMaster)

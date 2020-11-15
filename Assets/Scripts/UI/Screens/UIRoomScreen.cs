@@ -20,6 +20,11 @@ public class UIRoomScreen : UIScreen
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI labelText;
 
+    [Header("Context")] 
+    [SerializeField] private RoomScreenContext masterContext;
+    [SerializeField] private RoomScreenContext clientContext;
+
+    private RoomScreenContext activeContext;
     private void Awake()
     {
         base.Awake();
@@ -31,34 +36,44 @@ public class UIRoomScreen : UIScreen
 
     private void OnEnable()
     {
+        NetworkManager.MasterSwitched.AddListener(OnMasterSwitched);
         RoomController.StatusChanged.AddListener(SetStartButton);
         RoomController.StatusChanged.AddListener(SetRoomLabel);
         
-        SetRoomTitle();
-        SetRoomLabel(RoomController.Instance.Status);
-
-        if (NetworkManager.Instance.IsMasterClient)
-        {
-            SetButtonsStatus(true, false);
-            SetStartButton(RoomController.Instance.Status);
-        }
-        else
-        {
-            SetButtonsStatus(false, true);
-        }
+        SetupScreen();
     }
     public void OnDisable()
     {
+        NetworkManager.MasterSwitched.RemoveListener(OnMasterSwitched);
         RoomController.StatusChanged.RemoveListener(SetStartButton);
-        RoomController.StatusChanged.AddListener(SetRoomLabel);
-        
-        SetButtonsStatus(false, false);
+        RoomController.StatusChanged.RemoveListener(SetRoomLabel);
     }
     
-    private void SetButtonsStatus(bool startBtnShow, bool readyBtnShow)
+    private void OnMasterSwitched()
     {
-        startGame.gameObject.SetActive(startBtnShow);
-        playerReady.gameObject.SetActive(readyBtnShow);
+        SetupScreen();
+    }
+
+    private void SetupScreen()
+    {
+        SetContext();
+        SetRoomTitle();
+        SetRoomLabel(RoomController.Instance.Status);
+        SetButtonsStatus();
+        SetStartButton(RoomController.Instance.Status);
+    }
+
+    
+    
+    private void SetContext()
+    {
+        activeContext = NetworkManager.Instance.IsMasterClient ? masterContext : clientContext;
+    }
+    
+    private void SetButtonsStatus()
+    {
+        startGame.gameObject.SetActive(activeContext.startButtonStatus);
+        playerReady.gameObject.SetActive(activeContext.readyButtonStatus);
     }
     
     private void SetStartButton(RoomStatus currentRoomStatus)
@@ -78,26 +93,10 @@ public class UIRoomScreen : UIScreen
 
     private void SetRoomLabel(RoomStatus currentRoomStatus)
     {
-        switch (currentRoomStatus)
-        {
-            case RoomStatus.Waiting:
-                labelText.text = Constants.WAITING_PLAYERS_MESSAGE;
-                break;
-            case RoomStatus.Full:
-                labelText.text = Constants.PLAYERS_NOT_READY_MESSAGE;
-                break;
-            case RoomStatus.Ready:
-                labelText.text = Constants.PLAYERS_READY_MESSAGE;
-                break;
-            default:
-                labelText.text = Constants.WAITING_PLAYERS_MESSAGE;
-                break;
-        }
+        labelText.text = activeContext.GetRoomLabel(currentRoomStatus);
     }
 
     private void StartGame() => MatchController.LocalInstance.StartMatch();
-
-    private void ExitRoom() => NetworkManager.Instance.LeaveRoom();
 
     protected override void OnBackButtonPressed()
     {

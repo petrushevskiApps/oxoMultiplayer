@@ -20,7 +20,7 @@ public class RoomController : MonoBehaviourPunCallbacks
     public static RoomStatusChangeEvent StatusChanged = new RoomStatusChangeEvent();
     public static UnityEvent RpcBufferCountUpdated = new UnityEvent();
     public static UnityEvent LocalRpcBufferCountUpdated = new UnityEvent();
-
+    
     public static string RoomName => PhotonNetwork.CurrentRoom.Name;
     public static int MaxPlayers => PhotonNetwork.CurrentRoom.MaxPlayers;
 
@@ -37,7 +37,7 @@ public class RoomController : MonoBehaviourPunCallbacks
         {
             if (Status == value) return;
             
-            StatusChanged.Invoke(value);
+           
             Properties.Set(Keys.ROOM_STATUS, value).Sync();
         }
     }
@@ -159,6 +159,10 @@ public class RoomController : MonoBehaviourPunCallbacks
         if (changedProperties.ContainsKey(Keys.RPC_BUFFERED_COUNT))
         {
             RpcBufferCountUpdated.Invoke();
+        }
+        if (changedProperties.ContainsKey(Keys.ROOM_STATUS))
+        {
+            StatusChanged.Invoke((RoomStatus)changedProperties[Keys.ROOM_STATUS]);
         }
     }
 

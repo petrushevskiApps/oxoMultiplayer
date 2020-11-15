@@ -464,6 +464,9 @@
           </e>
           <e p="PlayerDataController.cs" t="Include" />
           <e p="UI" t="Include">
+            <e p="Data" t="Include">
+              <e p="RoomScreenContext.cs" t="Include" />
+            </e>
             <e p="PlayerRow.cs" t="Include" />
             <e p="Popups" t="Include">
               <e p="UIChangeUsernamePopup.cs" t="Include" />

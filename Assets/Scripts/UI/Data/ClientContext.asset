@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ad21dee37158646a0648f3645f7a5b, type: 3}
+  m_Name: ClientContext
+  m_EditorClassIdentifier: 
+  startButtonStatus: 0
+  readyButtonStatus: 1
+  labelTexts:
+  - key: 0
+    labelText: ...
+  - key: 2
+    labelText: Waiting for host to start the match...
+  - key: 1
+    labelText: Click "Ready" button when you are ready to play...
