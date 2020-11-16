@@ -38,6 +38,7 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     private int turn;
+    
     public int Turn
     {
         get => turn;
@@ -51,9 +52,18 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     private void Awake()
     {
         LocalInstance = this;
+        NetworkManager.MasterSwitched.AddListener(OnMasterSwitched);
     }
 
-    
+    private void OnMasterSwitched()
+    {
+        if (board == null)
+        {
+            board = FindObjectOfType<BoardController>().gameObject;
+        }
+    }
+
+
     public void StartMatch()
     {
         CreateBoard();
@@ -80,20 +90,30 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
             RoundStarted.Invoke();
         });
     }
-    
-    public void EndRound(bool isRoundWon)
-    {
-        if(isRoundWon) UpdateScore();
-        
-        RoundEnd.Invoke();
 
-        StartCoroutine(WaitRoundComplete());
+    public void RoundWon()
+    {
+        RoomController.Instance.LocalPlayer.Score++;
+            
+        if (RoomController.Instance.IsSynced)
+        {
+            NetworkManager.Instance.SendRpc(photonView, RPCs.RPC_ROUND_COMPLETED, true);
+        }
     }
-
-    IEnumerator WaitRoundComplete()
+    public void RoundTie()
     {
-        yield return new WaitWhile(() => RoomController.Instance.PlayersInRoom.Sum(player => player.Score) < Round);
-
+        if (RoomController.Instance.IsSynced)
+        {
+            NetworkManager.Instance.SendRpc(photonView, RPCs.RPC_ROUND_COMPLETED, false);
+        }
+    }
+    
+    [PunRPC]
+    private void WaitRoundCompletion()
+    {
+        RoomController.Instance.LocalRpcBufferCount++;
+        RoundEnd.Invoke();
+        
         if (IsMatchCompleted())
         {
             EndMatch(IsLocalMatchWin());
@@ -102,23 +122,19 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
         {
             StartRound();
         }
-        
     }
-
+    
     private bool IsMatchCompleted()
     {
         int max = RoomController.Instance.PlayersInRoom.Max(player => player.Score);
         int sum = RoomController.Instance.PlayersInRoom.Sum(player => player.Score);
-        float winningPossibility = sum / (float) MatchRounds; // Winning possibilit > 0.5
+        
+        float winningPossibility = sum / (float) MatchRounds; // Winning probability > 0.5
         float scoreDistribution = max / (float)sum; // Distribution > 0.5 
         
-        return (Round == MatchRounds) || (winningPossibility > 0.5f && scoreDistribution > 0.5f);
+        return winningPossibility > 0.5f && scoreDistribution >= 0.6f;
     }
-    
-    private void UpdateScore()
-    {
-        RoomController.Instance.LocalPlayer.Score++;
-    }
+   
 
     private bool IsLocalMatchWin()
     {
@@ -130,8 +146,8 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     {
         Round = 0;
         MatchEnd.Invoke(isLocalWin);
-        UIManager.Instance.OpenScreen<UIEndScreen>();
         NetworkManager.Instance.ClearRpcs(photonView);
+        UIManager.Instance.OpenScreen<UIEndScreen>();
     }
     
     private void CreateBoard()

@@ -165,6 +165,7 @@ namespace com.petrushevskiapps.Oxo
         public void ClearRpcs(PhotonView pv)
         {
             RoomController.Instance.LocalRpcBufferCount = 0;
+            
             Debug.Log($"Clean RPC Buffer");
             
             if (PhotonNetwork.IsMasterClient)

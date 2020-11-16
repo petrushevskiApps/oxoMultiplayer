@@ -55,7 +55,7 @@ public class RoomController : MonoBehaviourPunCallbacks
             LocalRpcBufferCountUpdated.Invoke();
             Debug.Log($"RPC LOCAL COUNT:: {localRpcBufferCount}");
             // Sync room buffered count when count increased or restarted.
-            if (RoomRpcBufferedCount < localRpcBufferCount || localRpcBufferCount == 0)
+            if (localRpcBufferCount > RoomRpcBufferedCount || localRpcBufferCount == 0)
             {
                 RoomRpcBufferedCount = localRpcBufferCount;
             }
@@ -154,15 +154,15 @@ public class RoomController : MonoBehaviourPunCallbacks
     {
         base.OnRoomPropertiesUpdate(changedProperties);
         
-        Properties.Updated();
-        
         if (changedProperties.ContainsKey(Keys.RPC_BUFFERED_COUNT))
         {
             RpcBufferCountUpdated.Invoke();
+            Properties.Updated(Keys.RPC_BUFFERED_COUNT);
         }
         if (changedProperties.ContainsKey(Keys.ROOM_STATUS))
         {
             StatusChanged.Invoke((RoomStatus)changedProperties[Keys.ROOM_STATUS]);
+            Properties.Updated(Keys.RPC_BUFFERED_COUNT);
         }
     }
 

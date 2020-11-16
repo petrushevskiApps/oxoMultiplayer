@@ -44,6 +44,8 @@
     {
         public const string RPC_START_MATCH = "StartMatchSynced";
         public const string RPC_TURN_END = "TurnEnd";
+        public const string RPC_ROUND_COMPLETED = "WaitRoundCompletion";
+
     }
 
     public static class TimerKeys

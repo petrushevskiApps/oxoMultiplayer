@@ -36,7 +36,8 @@ public class UIGameScreen : UIScreen
     [SerializeField] private GameObject syncPanel;
     
     private List<NetworkPlayer> players;
-
+    private bool isListenerSet = false;
+    
     private void Awake()
     {
         base.Awake();
@@ -73,7 +74,7 @@ public class UIGameScreen : UIScreen
         ShowSyncPanel();
     }
 
-    private bool isListenerSet = false;
+    
     private void ShowSyncPanel()
     {
         if (!RoomController.Instance.IsSynced && !isListenerSet)

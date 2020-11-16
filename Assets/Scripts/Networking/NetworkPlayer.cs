@@ -47,7 +47,7 @@ public class NetworkPlayer
         {
             if (Score == value) return;
             
-            ScoreUpdated.Invoke(value);
+//            ScoreUpdated.Invoke(value);
             Properties.Set(Keys.PLAYER_MATCH_SCORE, value).Sync();
             Debug.Log($"NetworkPlayer:: {Nickname}:: New Score:: {value}");
         }
@@ -97,16 +97,16 @@ public class NetworkPlayer
     
     public void UpdatePlayerStatuses(Hashtable properties)
     {
-        Properties.Updated();
-        
         if (properties.ContainsKey(Keys.PLAYER_READY_KEY))
         {
             ReadyStatusChanged.Invoke((bool)properties[Keys.PLAYER_READY_KEY]);
+            Properties.Updated(Keys.PLAYER_READY_KEY);
         }
         
         if (properties.ContainsKey(Keys.PLAYER_MATCH_SCORE))
         {
             ScoreUpdated.Invoke((int)properties[Keys.PLAYER_MATCH_SCORE]);
+            Properties.Updated(Keys.PLAYER_MATCH_SCORE);
         }
     }
 

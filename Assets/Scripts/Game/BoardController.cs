@@ -82,7 +82,6 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     private void TurnEnded(int tileId)
     {
         int playerId = RoomController.Instance.ActivePlayer.PlayerId;
-//        photonView.RPC(RPCs.RPC_TURN_END, RpcTarget.AllBufferedViaServer, tileId, playerId);
         NetworkManager.Instance.SendRpc(photonView, RPCs.RPC_TURN_END, true, tileId, playerId);
     }
     
@@ -94,14 +93,19 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
        
         bool isWin = winCondition.CheckWinCondition(tilesTable);
         bool isTie = winCondition.CheckTie(tilesTable);
-        
-        
-        if (isWin || isTie)
+
+        if (isWin)
         {
             RoundEnded(playerId);
             return;
         }
 
+        if (isTie)
+        {
+            MatchController.LocalInstance.RoundTie();
+            return;
+        }
+        
         MatchController.LocalInstance.IncrementTurn();
         
     }
@@ -123,7 +127,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         Timer.Start(this, "RoundEndDelay", 0.5f, ()=>
         {
             PhotonNetwork.IsMessageQueueRunning = true;
-            MatchController.LocalInstance.EndRound(isRoundWon);
+            if(isRoundWon) MatchController.LocalInstance.RoundWon();
         });
     }
     

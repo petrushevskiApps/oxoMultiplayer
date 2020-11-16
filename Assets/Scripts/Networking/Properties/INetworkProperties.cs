@@ -4,7 +4,7 @@
     {
         INetworkProperties Set(string key, object value);
         void Sync();
-        void Updated();
+        void Updated(string key);
         T GetProperty<T>(string key);
     }
 }

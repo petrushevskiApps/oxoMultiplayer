@@ -15,12 +15,21 @@ public class UIPlayersList : MonoBehaviourPunCallbacks
     
     private Dictionary<string, GameObject> playersDictionary = new Dictionary<string, GameObject>();
 
-    
+    private void Awake()
+    {
+        RoomController.PlayerEnteredRoom.AddListener(AddPlayerToUiList);
+        RoomController.PlayerExitedRoom.AddListener(RemovePlayerFromUi);
+    }
+
+    private void OnDestroy()
+    {
+        RoomController.PlayerEnteredRoom.RemoveListener(AddPlayerToUiList);
+        RoomController.PlayerExitedRoom.RemoveListener(RemovePlayerFromUi);
+    }
+
     public override void OnEnable()
     {
         base.OnEnable();
-        RoomController.PlayerEnteredRoom.AddListener(AddPlayerToUiList);
-        RoomController.PlayerExitedRoom.AddListener(RemovePlayerFromUi);
         
         SetPlayersList();
     }
@@ -29,8 +38,7 @@ public class UIPlayersList : MonoBehaviourPunCallbacks
     {
         base.OnDisable();
         
-        RoomController.PlayerEnteredRoom.RemoveListener(AddPlayerToUiList);
-        RoomController.PlayerExitedRoom.RemoveListener(RemovePlayerFromUi);
+        
         
 //        foreach (KeyValuePair<string, GameObject> keyValuePair in playersDictionary)
 //        {

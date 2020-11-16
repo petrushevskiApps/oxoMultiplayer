@@ -65,6 +65,7 @@ namespace PetrushevskiApps.UIManager
             if (backStack.Count > 0 && backStack.Peek().GetType().BaseType == typeof(T))
             {
                 UIWindow currentWindow = backStack.Peek();
+                
                 if (!currentWindow.IsBackStackable)
                 {
                     backStack.Pop().Hide();

@@ -4227,7 +4227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 963502b997fa37442b9876c79d97a817, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainScreenIndex: 1
+  mainScreenIndex: 2
   dontDestroyOnLoad: 0
   screens:
   - {fileID: 1404080530}
@@ -11537,7 +11537,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5beac2f0c2c4f264e92035d76348a9b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backStackable: 1
+  backStackable: 0
   popupMessage: {fileID: 1001844721}
   timerText: {fileID: 310660740}
 --- !u!222 &1909728401

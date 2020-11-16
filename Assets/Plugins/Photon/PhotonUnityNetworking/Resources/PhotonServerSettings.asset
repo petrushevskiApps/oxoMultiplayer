@@ -47,6 +47,7 @@ MonoBehaviour:
   - SetupMatch
   - StartMatchRPC
   - StartMatchSynced
+  - WaitRoundCompletion
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

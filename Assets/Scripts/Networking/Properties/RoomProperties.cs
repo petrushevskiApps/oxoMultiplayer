@@ -7,14 +7,16 @@ namespace com.petrushevskiapps.Oxo.Properties
     public class RoomProperties : INetworkProperties
     {
         private readonly Hashtable properties = new Hashtable();
-        private bool cached = false;
         
         public const int PLAYER_TTL_IN_GAME =  30000; // 30 sec
         public const int PLAYER_TTL_DEFAULT = 0;
 
         public void SetPlayerTTL(int ttlSeconds)
         {
-            PhotonNetwork.CurrentRoom.PlayerTtl = ttlSeconds;
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.CurrentRoom.PlayerTtl = ttlSeconds;
+            }
         }
         
         public INetworkProperties Set(string key, object value)
@@ -30,21 +32,22 @@ namespace com.petrushevskiapps.Oxo.Properties
         
         public void Sync()
         {
-            cached = true;
             PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
         }
 
-        public void Updated()
+        public void Updated(string key)
         {
-            cached = false;
-            properties.Clear();
+            if (properties.ContainsKey(key))
+            {
+                properties.Remove(key);
+            }
         }
 
         public T GetProperty<T>(string key)
         {
             object result = null;
             
-            if (cached)
+            if (properties.ContainsKey(key))
             {
                 // Use cached value while server is updated
                 properties.TryGetValue(key, out result);
@@ -53,7 +56,8 @@ namespace com.petrushevskiapps.Oxo.Properties
             {
                 PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(key, out result);
             }
-             Debug.Log($"RoomProperties:: {key} = {result}");
+            
+            Debug.Log($"Properties::Room:: {key} = {result}");
             if (result == null) return default;
             else return (T) result;
         }

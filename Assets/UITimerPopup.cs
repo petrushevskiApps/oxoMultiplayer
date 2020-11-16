@@ -12,7 +12,7 @@ public class UITimerPopup : UIPopup
     [SerializeField] private TextMeshProUGUI timerText;
 
     private Coroutine timer;
-    private int timerSeconds = 30;
+    private int timerSeconds;
 
     private void OnPlayerEntered(NetworkPlayer player)
     {
@@ -21,6 +21,7 @@ public class UITimerPopup : UIPopup
 
     private void OnEnable()
     {
+        timerSeconds = 30;
         timer = StartCoroutine(StartTimer());
         RoomController.PlayerEnteredRoom.AddListener(OnPlayerEntered);
     }
@@ -48,6 +49,7 @@ public class UITimerPopup : UIPopup
 
     private void TimerCompleted()
     {
+        OnBackButtonPressed();
         MatchController.LocalInstance.EndMatch(true);
     }
     
@@ -62,4 +64,5 @@ public class UITimerPopup : UIPopup
         
         TimerCompleted();
     }
+    
 }

@@ -10,8 +10,6 @@ namespace com.petrushevskiapps.Oxo.Properties
         private Player player;
         private readonly Hashtable properties = new Hashtable();
 
-        private bool cached = false;
-        
         public PlayerProperties(Player player)
         {
             this.player = player;
@@ -33,8 +31,6 @@ namespace com.petrushevskiapps.Oxo.Properties
         public void Sync()
         {
             if (!player.IsLocal) return;
-            
-            cached = true;
             player.SetCustomProperties(properties);
         }
 
@@ -42,7 +38,7 @@ namespace com.petrushevskiapps.Oxo.Properties
         {
             object result = null;
             
-            if (cached)
+            if (properties.ContainsKey(key))
             {
                 // Use cached value while server is updated
                 properties.TryGetValue(key, out result);
@@ -52,14 +48,17 @@ namespace com.petrushevskiapps.Oxo.Properties
                 player.CustomProperties.TryGetValue(key, out result);
             }
             
+            Debug.Log($"Properties::Player:: {key} = {result}");
             if (result == null) return default;
             else return (T) result;
         }
 
-        public void Updated()
+        public void Updated(string key)
         {
-            cached = false;
-            properties.Clear();
+            if (properties.ContainsKey(key))
+            {
+                properties.Remove(key);
+            }
         }
     }
 }
