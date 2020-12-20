@@ -37,18 +37,12 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         SetupBoardTiles();
         SetTilesTable();
     }
-
-    private void OnMatchEnded(bool arg0)
-    {
-        NetworkManager.Instance.ClearRpcs(photonView);
-    }
-
     private void OnDestroy()
     {
         MatchController.RoundEnd.RemoveListener(ResetBoard);
         MatchController.MatchEnd.RemoveListener(OnMatchEnded);
     }
-
+    
     private void SetupBoardTiles()
     {
         tiles = GetComponentsInChildren<Tile>().ToList();
@@ -78,17 +72,22 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
     }
-  
+    private void OnMatchEnded(bool arg0)
+    {
+        NetworkManager.Instance.ClearRpcs(photonView);
+    }
+    
     private void TurnEnded(int tileId)
     {
-        int playerId = RoomController.Instance.ActivePlayer.PlayerId;
+        int playerId = NetworkManager.Instance.RoomController.ActivePlayer.PlayerId;
         NetworkManager.Instance.SendRpc(photonView, RPCs.RPC_TURN_END, true, tileId, playerId);
     }
     
     [PunRPC]
     private void TurnEnd(int tileId, int playerId)
     {
-        RoomController.Instance.LocalRpcBufferCount++;
+        NetworkManager.Instance.RoomController.LocalRpcBufferCount++;
+        
         UpdateTile(tileId, playerId);
        
         bool isWin = winCondition.CheckWinCondition(tilesTable);
@@ -106,7 +105,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
             return;
         }
         
-        MatchController.LocalInstance.IncrementTurn();
+        MatchController.LocalInstance.Turn++;
         
     }
     
@@ -120,7 +119,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     private void RoundEnded(int playerId)
     {
         PhotonNetwork.IsMessageQueueRunning = false;
-        bool isRoundWon = RoomController.Instance.LocalPlayer.PlayerId == playerId;
+        bool isRoundWon = NetworkManager.Instance.RoomController.LocalPlayer.PlayerId == playerId;
         
         StrikeEffect(isRoundWon);
 

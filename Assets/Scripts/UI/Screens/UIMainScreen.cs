@@ -23,11 +23,16 @@ public class UIMainScreen : UIScreen
     private void Start()
     {
         joinGameBtn.onClick.AddListener(UIManager.Instance.OpenScreen<UIJoinScreen>);
-        playRandomBtn.onClick.AddListener(NetworkManager.Instance.JoinRandomRoom);
+        playRandomBtn.onClick.AddListener(OnPlayRandomClick);
         createGameBtn.onClick.AddListener(UIManager.Instance.OpenScreen<UICreateGameScreen>);
         userScreenBtn.onClick.AddListener(UIManager.Instance.OpenScreen<UIUserScreen>);
         helpBtn.onClick.AddListener(UIManager.Instance.OpenScreen<UIHelpScreen>);
         settingsBtn.onClick.AddListener(()=> UIManager.Instance.OpenPopup<UISettingsPopup>());
     }
 
+    private void OnPlayRandomClick()
+    {
+        UIManager.Instance.OpenScreen<UILoadingScreen>();
+        NetworkManager.Instance.JoinRandomRoom();
+    }
 }

@@ -14,7 +14,6 @@ public class UIEndScreen : UIScreen
     [Header("Buttons")]
     [SerializeField] private UIButton exitBtn;
     [SerializeField] private UIButton settingsButton;
-    [SerializeField] private UIButton replayButton;
     
     [Header("Texts")]
     [SerializeField] private GameObject wonText;
@@ -37,10 +36,9 @@ public class UIEndScreen : UIScreen
         base.Initialize(onBackButtonAction);
         
         MatchController.MatchEnd.AddListener(MatchEnded);
-        RoomController.PlayerExitedRoom.AddListener(OnPlayerExitedRoom);
+        
         exitBtn.onClick.AddListener(ExitRoom);
         settingsButton.onClick.AddListener(ShowSettings);
-        replayButton.onClick.AddListener(Replay);
 
         wonText.SetActive(false);
         lostText.SetActive(false);
@@ -48,11 +46,8 @@ public class UIEndScreen : UIScreen
 
     private void OnDestroy()
     {
-        RoomController.PlayerExitedRoom.RemoveListener(OnPlayerExitedRoom);
         MatchController.MatchEnd.RemoveListener(MatchEnded);
     }
-
-    private void Replay() => UIManager.Instance.OpenScreen<UIRoomScreen>();
 
     private void ShowSettings() => UIManager.Instance.OpenPopup<UISettingsPopup>();
 
@@ -65,12 +60,7 @@ public class UIEndScreen : UIScreen
         SetIcon(isWin);
         PlayAudio(isWin);
     }
-    
-    private void OnPlayerExitedRoom(NetworkPlayer player)
-    {
-        if(!gameObject.activeSelf) return;
-        replayButton.SetInteractableStatus(false);
-    }
+
     private void PlayAudio(bool isWin)
     {
         AudioManager.Instance.PlaySoundEffect(isWin ? winAudio : loseAudio);

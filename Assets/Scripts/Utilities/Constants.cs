@@ -22,6 +22,13 @@
 
     }
 
+    public static class LoadingMessage
+    {
+        public const string ROOM_SEARCHING = "Looking for Available Room";
+        public const string ROOM_NOT_FOUND = "Room not found. Creating room ...";
+        public const string ROOM_FOUND = "Room found. Joining ...";
+        public const string ROOM_JOINED = "Waiting for opponent to join game";
+    }
     public static class Keys
     {
         public const string PLAYER_READY_KEY = "playerReady";

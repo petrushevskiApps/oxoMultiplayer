@@ -27,4 +27,10 @@
         Win,
         Lose,
     }
+    
+    public enum SceneTypes
+    {
+        Menu = 0,
+        Game = 1,
+    }
 }

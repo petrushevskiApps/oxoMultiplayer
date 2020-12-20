@@ -17,12 +17,12 @@ public class RoomController : MonoBehaviourPunCallbacks
     //Events
     public static PlayerRoomEvent PlayerEnteredRoom = new PlayerRoomEvent();
     public static PlayerRoomEvent PlayerExitedRoom = new PlayerRoomEvent();
+    
     public static RoomStatusChangeEvent StatusChanged = new RoomStatusChangeEvent();
     public static UnityEvent RpcBufferCountUpdated = new UnityEvent();
     public static UnityEvent LocalRpcBufferCountUpdated = new UnityEvent();
     
-    public static string RoomName => PhotonNetwork.CurrentRoom.Name;
-    public static int MaxPlayers => PhotonNetwork.CurrentRoom.MaxPlayers;
+    private static int MaxPlayers => PhotonNetwork.CurrentRoom.MaxPlayers;
 
     // Players in Room
     private List<Player> PlayersList => PhotonNetwork.CurrentRoom.Players.Values.ToList();
@@ -33,19 +33,17 @@ public class RoomController : MonoBehaviourPunCallbacks
     public RoomStatus Status
     {
         get => Properties.GetProperty<RoomStatus>(Keys.ROOM_STATUS);
+        
         private set
         {
             if (Status == value) return;
-            
            
             Properties.Set(Keys.ROOM_STATUS, value).Sync();
         }
     }
 
     public bool IsSynced => LocalRpcBufferCount == RoomRpcBufferedCount;
-    
-    private int localRpcBufferCount;
-    
+
     public int LocalRpcBufferCount
     {
         get => localRpcBufferCount;
@@ -73,24 +71,37 @@ public class RoomController : MonoBehaviourPunCallbacks
         }
     }
     
-    private Dictionary<string, NetworkPlayer> networkPlayers = new Dictionary<string, NetworkPlayer>();
-    
     public RoomProperties Properties { get; private set; }
     
-    public static RoomController Instance;
+    private int localRpcBufferCount;
+    private Dictionary<string, NetworkPlayer> networkPlayers;
     
     private void Awake()
     {
-        Instance = this;
-        MatchController.MatchEnd.AddListener(OnMatchEnded);
-        MatchController.MatchStart.AddListener(OnMatchStarted);
-        
-        Properties = new RoomProperties();
-        Properties.SetPlayerTTL(RoomProperties.PLAYER_TTL_DEFAULT);
-        PlayersList.ForEach(CreateNetworkPlayer);
+        NetworkManager.JoinedRoom.AddListener(OnRoomEntered);
+        NetworkManager.LeftRoom.AddListener(OnRoomExited);
     }
 
     private void OnDestroy()
+    {
+        NetworkManager.JoinedRoom.RemoveListener(OnRoomEntered);
+        NetworkManager.LeftRoom.RemoveListener(OnRoomExited);
+    }
+
+    private void OnRoomEntered()
+    {
+        MatchController.MatchEnd.AddListener(OnMatchEnded);
+        MatchController.MatchStart.AddListener(OnMatchStarted);
+        
+        networkPlayers = new Dictionary<string, NetworkPlayer>();
+        
+        Properties = new RoomProperties();
+        Properties.SetPlayerTTL(RoomProperties.PLAYER_TTL_DEFAULT);
+        
+        PlayersList.ForEach(CreateNetworkPlayer);
+    }
+
+    private void OnRoomExited()
     {
         MatchController.MatchStart.RemoveListener(OnMatchStarted);
         MatchController.MatchEnd.RemoveListener(OnMatchEnded);
@@ -107,7 +118,7 @@ public class RoomController : MonoBehaviourPunCallbacks
         Status = RoomStatus.Waiting;
     }
     
-    private void SetRoomStatus(bool check = false)
+    private void SetRoomStatus()
     {
         if (networkPlayers.Values.Count < MaxPlayers)
         {
@@ -115,27 +126,17 @@ public class RoomController : MonoBehaviourPunCallbacks
         }
         else
         {
-            bool isReady = networkPlayers.Values.Aggregate(true, (roomReady, player) => roomReady && player.IsReady);
-            
-            Status = isReady ? RoomStatus.Ready : RoomStatus.Full;
+            if(Status == RoomStatus.Ready) return;
+            Status = RoomStatus.Ready;
+            NetworkManager.Instance.ChangeScene(SceneTypes.Game);
         }
     }
     
-    private void CreateNetworkPlayer(Player player)
-    {
-        if (networkPlayers.ContainsKey(player.UserId)) return;
-        
-        NetworkPlayer netPlayer = new NetworkPlayer(player);
-        netPlayer.ReadyStatusChanged.AddListener(SetRoomStatus);
-        networkPlayers.Add(player.UserId, netPlayer);
-        
-        if (player.IsLocal) LocalPlayer = netPlayer;
-        
-        PlayerEnteredRoom.Invoke(netPlayer);
-    }
+    
     
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
+        if (networkPlayers.ContainsKey(newPlayer.UserId)) return;
         CreateNetworkPlayer(newPlayer);
         SetRoomStatus();
     }
@@ -149,6 +150,16 @@ public class RoomController : MonoBehaviourPunCallbacks
         SetRoomStatus();
         
     }
+    private void CreateNetworkPlayer(Player player)
+    {
+        NetworkPlayer netPlayer = new NetworkPlayer(player);
+        netPlayer.ReadyStatusChanged.AddListener(SetRoomStatus);
+        networkPlayers.Add(player.UserId, netPlayer);
+        
+        if (player.IsLocal) LocalPlayer = netPlayer;
+        
+        PlayerEnteredRoom.Invoke(netPlayer);
+    }
     
     public override void OnRoomPropertiesUpdate(Hashtable changedProperties)
     {
@@ -159,10 +170,11 @@ public class RoomController : MonoBehaviourPunCallbacks
             RpcBufferCountUpdated.Invoke();
             Properties.Updated(Keys.RPC_BUFFERED_COUNT);
         }
+        
         if (changedProperties.ContainsKey(Keys.ROOM_STATUS))
         {
             StatusChanged.Invoke((RoomStatus)changedProperties[Keys.ROOM_STATUS]);
-            Properties.Updated(Keys.RPC_BUFFERED_COUNT);
+            Properties.Updated(Keys.ROOM_STATUS);
         }
     }
 

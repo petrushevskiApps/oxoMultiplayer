@@ -58,10 +58,6 @@ public class UIChangeUsernamePopup : UIPopup
         
     private void EnableSaveButton(string userName)
     {
-        if (!string.IsNullOrEmpty(userName))
-        {
-            saveBtn.interactable = true;
-        }
-        else saveBtn.interactable = false;
+        saveBtn.interactable = !string.IsNullOrEmpty(userName);
     }
 }

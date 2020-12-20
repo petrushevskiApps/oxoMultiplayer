@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public bool IsUsernameSet { get; private set; }
-    public bool IsApplicationQuiting { get; private set; } = false;
+    public bool IsApplicationQuiting { get; private set; }
 
     private void Awake()
     {
@@ -28,11 +28,12 @@ public class GameManager : MonoBehaviour
         SetUsername();
     }
 
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
     {
         if (PhotonNetwork.InRoom)
         {
-            UIManager.Instance.OpenScreen<UIRoomScreen>();
+            UIManager.Instance.OpenScreen<UIGameScreen>();
         }
         else
         {

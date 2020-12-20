@@ -11,16 +11,23 @@ namespace com.petrushevskiapps.Oxo
 {
     public class ConnectionController : MonoBehaviourPunCallbacks
     {
-        public UnityBoolEvent OnNetworkStatusChange = new UnityBoolEvent();
-        public UnityEvent OnOnline = new UnityEvent();
-        public UnityEvent OnOffline = new UnityEvent();
-        
-        public bool IsOnline { get; private set; } = false;
+        public UnityBoolEvent NetworkStatusChange = new UnityBoolEvent();
 
-        private bool prevNetworkStatus = false;
+        public bool IsOnline
+        {
+            get => networkStatus;
+            private set
+            {
+                if (networkStatus == value) return;
+                networkStatus = value;
+                NetworkStatusChange.Invoke(value);
+            }
+        }
 
-        private bool isConnecting = false;
+        private bool networkStatus = false;
+
         private string gameVersion = "1";
+        private bool isConnecting = false;
         private bool masterConnectionEstablished = false;
         
         private Coroutine connectingCoroutine;
@@ -32,6 +39,10 @@ namespace com.petrushevskiapps.Oxo
             connectingCoroutine = StartCoroutine(Connect());
         }
         
+        private void OnDestroy()
+        {
+            StopCoroutines();
+        }
         private IEnumerator Connect()
         {
             // Initiate the connection to the server.
@@ -87,16 +98,14 @@ namespace com.petrushevskiapps.Oxo
         public override void OnConnected()
         {
             base.OnConnected();
-            UpdateNetworkStatus(true);
-            OnOnline.Invoke();
+            IsOnline = true;
         }
 
         
         public override void OnDisconnected(DisconnectCause cause)
         {
             base.OnDisconnected(cause);
-            UpdateNetworkStatus(false);
-            OnOffline.Invoke();
+            IsOnline = false;
 
             if (masterConnectionEstablished)
             {
@@ -114,21 +123,8 @@ namespace com.petrushevskiapps.Oxo
             }
             
         }
-        private void UpdateNetworkStatus(bool netStatus)
-        {
-            IsOnline = netStatus;
-            
-            if (netStatus != prevNetworkStatus)
-            {
-                prevNetworkStatus = netStatus;
-                OnNetworkStatusChange.Invoke(netStatus);
-            }
-        }
+
         
-        private void OnDestroy()
-        {
-            StopCoroutines();
-        }
 
         private void StopCoroutines()
         {

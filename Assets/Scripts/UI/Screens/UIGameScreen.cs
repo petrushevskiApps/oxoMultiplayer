@@ -77,20 +77,20 @@ public class UIGameScreen : UIScreen
     
     private void ShowSyncPanel()
     {
-        if (!RoomController.Instance.IsSynced && !isListenerSet)
+        if (!NetworkManager.Instance.RoomController.IsSynced && !isListenerSet)
         {
             isListenerSet = true;
             RoomController.LocalRpcBufferCountUpdated.AddListener(ShowSyncPanel);
         }
         
-        if(RoomController.Instance.IsSynced && isListenerSet)
+        if(NetworkManager.Instance.RoomController.IsSynced && isListenerSet)
         {
             isListenerSet = false;
             RoomController.LocalRpcBufferCountUpdated.RemoveListener(ShowSyncPanel);
         }
         
-        Debug.Log($"RPC IS SYNCED:: {RoomController.Instance.IsSynced}");
-        syncPanel.SetActive(!RoomController.Instance.IsSynced);
+        Debug.Log($"RPC IS SYNCED:: {NetworkManager.Instance.RoomController.IsSynced}");
+        syncPanel.SetActive(!NetworkManager.Instance.RoomController.IsSynced);
     }
 
     private void OnMatchStarted()
@@ -99,7 +99,7 @@ public class UIGameScreen : UIScreen
     }
     private void SetupPlayerRefs()
     {
-        players = RoomController.Instance.PlayersInRoom;
+        players = NetworkManager.Instance.RoomController.PlayersInRoom;
         
         for (int i = 0; i < players.Count; i++)
         {

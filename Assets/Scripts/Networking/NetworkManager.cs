@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using com.petrushevskiapps.Oxo.Utilities;
+using Data;
 using PetrushevskiApps.UIManager;
 using Photon.Pun;
 using Photon.Realtime;
@@ -15,20 +16,25 @@ namespace com.petrushevskiapps.Oxo
     public class NetworkManager : MonoBehaviourPunCallbacks
     {
         public static UnityEvent MasterSwitched = new UnityEvent();
+        public static UnityEvent JoinRandomFailed = new UnityEvent();
+        public static UnityEvent JoinedRoom = new UnityEvent();
+        public static UnityEvent LeftRoom = new UnityEvent();
         
-        [Header("Controllers")]
-        [SerializeField] private ConnectionController connectionController;
-
-        public ConnectionController ConnectionController => connectionController;
-        public bool IsMasterClient => PhotonNetwork.IsMasterClient;
-        
-
         [Tooltip("The maximum number of players per room.")]
+        [Header("Parameters")]
         [SerializeField] private byte maxPlayersPerRoom = 4;
 
+        [Header("Controllers")]
+        [SerializeField] private ConnectionController connectionController;
+        [SerializeField] private RoomController roomController;
+        
+        public ConnectionController ConnectionController => connectionController;
+        public RoomController RoomController => roomController;
+        
+        public static bool IsMasterClient => PhotonNetwork.IsMasterClient;
+        
         public static NetworkManager Instance;
 
-        
         private Dictionary<string, RoomInfo> cachedRoomsDictionary = new Dictionary<string, RoomInfo>();
         
         private void Awake()
@@ -68,21 +74,21 @@ namespace com.petrushevskiapps.Oxo
         
         public void JoinRandomRoom()
         {
-            // #Critical we need at this point to attempt joining a Random Room. If it fails, we'll get notified
-            // in OnJoinRandomFailed() and we'll create one.
+            // #Critical we need at this point to attempt joining a Random Room.
+            // If it fails, we'll get notified in OnJoinRandomFailed() and we'll create one.
             StartCoroutine(DelayJoin(() => { PhotonNetwork.JoinRandomRoom(); }));
-
         }
 
         IEnumerator DelayJoin(Action joinAction)
         {
-            UIManager.Instance.OpenScreen<UILoadingScreen>();
             yield return new WaitForSeconds(1f);
             joinAction.Invoke();
         }
         
         public override void OnJoinRandomFailed(short returnCode, string message)
         {
+            JoinRandomFailed.Invoke();
+            
             Debug.Log("PUN:: OnJoinRandomFailed() was called by PUN. " +
                       "No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
 
@@ -93,20 +99,30 @@ namespace com.petrushevskiapps.Oxo
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN:: OnJoinedRoom() called by PUN. Now this client is in a room.");
-            PhotonNetwork.LoadLevel(1);
+            
+            JoinedRoom.Invoke();
+        }
+        
+        public void LeaveRoom()
+        {
+            PhotonNetwork.LeaveRoom();
         }
         
         public override void OnLeftRoom()
         {
+            LeftRoom.Invoke();
             // Prevent loading scene when application is quiting
             if (!GameManager.Instance.IsApplicationQuiting)
             {
-                PhotonNetwork.LoadLevel(0);
+                ChangeScene(SceneTypes.Menu);
             }
         }
-        public void LeaveRoom()
+
+        public void ChangeScene(SceneTypes sceneType)
         {
-            PhotonNetwork.LeaveRoom();
+            if(PhotonNetwork.InRoom && !PhotonNetwork.IsMasterClient) return;
+            
+            PhotonNetwork.LoadLevel((int)sceneType);
         }
 
         public override void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -118,19 +134,15 @@ namespace com.petrushevskiapps.Oxo
             {
                 if (room.RemovedFromList)
                 {
-                    if (cachedRoomsDictionary.ContainsKey(room.Name))
-                    {
-                        cachedRoomsDictionary.Remove(room.Name);
-                        Debug.Log("Room: " + room.Name + " removed!!");
-                    }
+                    if (!cachedRoomsDictionary.ContainsKey(room.Name)) return;
+                    cachedRoomsDictionary.Remove(room.Name);
+                    Debug.Log("Room: " + room.Name + " removed!!");
                 }
                 else
                 {
-                    if (!cachedRoomsDictionary.ContainsKey(room.Name))
-                    {
-                        cachedRoomsDictionary.Add(room.Name, room);
-                        Debug.Log("Room: " + room.Name + " added!!");
-                    }
+                    if (cachedRoomsDictionary.ContainsKey(room.Name)) return;
+                    cachedRoomsDictionary.Add(room.Name, room);
+                    Debug.Log("Room: " + room.Name + " added!!");
                 }
             });
         }
@@ -154,17 +166,15 @@ namespace com.petrushevskiapps.Oxo
         
         public void SendRpc(PhotonView pv, string rpcMethodName, bool overrideMaster, params object[] parameters)
         {
-            if (PhotonNetwork.IsMasterClient || overrideMaster)
-            {
-                pv.RPC(rpcMethodName, RpcTarget.AllBufferedViaServer, parameters);
+            if (!PhotonNetwork.IsMasterClient && !overrideMaster) return;
+            pv.RPC(rpcMethodName, RpcTarget.AllBufferedViaServer, parameters);
                 
-                Debug.Log($"Buffered RPCs Count: {RoomController.Instance.LocalRpcBufferCount}");
-            }
+            Debug.Log($"Buffered RPCs Count: {RoomController.LocalRpcBufferCount}");
         }
 
         public void ClearRpcs(PhotonView pv)
         {
-            RoomController.Instance.LocalRpcBufferCount = 0;
+            RoomController.LocalRpcBufferCount = 0;
             
             Debug.Log($"Clean RPC Buffer");
             
@@ -175,5 +185,6 @@ namespace com.petrushevskiapps.Oxo
         }
     }
 }
+
 
 

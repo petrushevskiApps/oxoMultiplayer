@@ -24,12 +24,12 @@ namespace PetrushevskiApps.UIManager
                 ToggleInteractivity(false);
             }
             
-            NetworkManager.Instance.ConnectionController.OnNetworkStatusChange.AddListener(ToggleInteractivity);
+            NetworkManager.Instance.ConnectionController.NetworkStatusChange.AddListener(ToggleInteractivity);
         }
 
         private void OnDisable()
         {
-            NetworkManager.Instance.ConnectionController.OnNetworkStatusChange.RemoveListener(ToggleInteractivity);
+            NetworkManager.Instance.ConnectionController.NetworkStatusChange.RemoveListener(ToggleInteractivity);
         }
 
         public void OnPointerUp(PointerEventData eventData)

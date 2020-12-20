@@ -6,16 +6,17 @@ using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class NetworkPlayer
 {
-    public readonly UnityBoolEvent ReadyStatusChanged = new UnityBoolEvent();
+    public readonly UnityEvent ReadyStatusChanged = new UnityEvent();
     public readonly UnityIntegerEvent ScoreUpdated = new UnityIntegerEvent();
     
-    public INetworkProperties Properties { get; }
+    private INetworkProperties Properties { get; }
     
     public string Nickname => player.NickName;
-    public string UserId => player.UserId;
+    
     public TileType PlayerSymbol { get; }
 
     public int PlayerId
@@ -28,14 +29,14 @@ public class NetworkPlayer
         }
     }
 
-    public bool IsReady
+    private bool IsReady
     {
         get => player.IsMasterClient || Properties.GetProperty<bool>(Keys.PLAYER_READY_KEY);
         set
         {
             if (IsReady == value) return;
             
-            ReadyStatusChanged.Invoke(value);
+            ReadyStatusChanged.Invoke();
             Properties.Set(Keys.PLAYER_READY_KEY, value).Sync();
         }
     }
@@ -47,8 +48,8 @@ public class NetworkPlayer
         {
             if (Score == value) return;
             
-//            ScoreUpdated.Invoke(value);
             Properties.Set(Keys.PLAYER_MATCH_SCORE, value).Sync();
+            ScoreUpdated.Invoke(value);
             Debug.Log($"NetworkPlayer:: {Nickname}:: New Score:: {value}");
         }
     }
@@ -58,23 +59,19 @@ public class NetworkPlayer
         get
         {
             int turn = MatchController.LocalInstance.Turn;
-            return turn % PhotonNetwork.CurrentRoom.PlayerCount == (PlayerId - 1);
+            return (turn % PhotonNetwork.CurrentRoom.PlayerCount) == (PlayerId - 1);
         }
     }
 
-    public bool IsConnected => !player.IsInactive;
     
     private Player player;
     private bool isActive;
 
-    
     public NetworkPlayer(Player player)
     {
         this.player = player;
         Properties = new PlayerProperties(player);
-        Properties.Set(Keys.PLAYER_READY_KEY, player.IsMasterClient)
-                    .Set(Keys.PLAYER_MATCH_SCORE, 0)
-                    .Sync();
+        SetDefaultProperties(player.IsMasterClient);
         
         if (player.IsLocal)
         {
@@ -84,6 +81,24 @@ public class NetworkPlayer
         
         PlayerId = player.ActorNumber;
         PlayerSymbol = (TileType) player.ActorNumber;
+    }
+    
+    ~ NetworkPlayer()
+    {
+        SetDefaultProperties(false);
+        
+        if (player.IsLocal)
+        {
+            MatchController.MatchStartSynced.RemoveListener(OnMatchStarted);
+            MatchController.MatchEnd.RemoveListener(OnMatchEnded);
+        }
+    }
+
+    private void SetDefaultProperties(bool isReady)
+    {
+        Properties.Set(Keys.PLAYER_READY_KEY, isReady)
+                  .Set(Keys.PLAYER_MATCH_SCORE, 0)
+                  .Sync();
     }
     
     private void OnMatchStarted()
@@ -99,13 +114,11 @@ public class NetworkPlayer
     {
         if (properties.ContainsKey(Keys.PLAYER_READY_KEY))
         {
-            ReadyStatusChanged.Invoke((bool)properties[Keys.PLAYER_READY_KEY]);
             Properties.Updated(Keys.PLAYER_READY_KEY);
         }
         
         if (properties.ContainsKey(Keys.PLAYER_MATCH_SCORE))
         {
-            ScoreUpdated.Invoke((int)properties[Keys.PLAYER_MATCH_SCORE]);
             Properties.Updated(Keys.PLAYER_MATCH_SCORE);
         }
     }
