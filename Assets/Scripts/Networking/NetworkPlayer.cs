@@ -17,7 +17,7 @@ public class NetworkPlayer
     
     public string Nickname => player.NickName;
     
-    public TileType PlayerSymbol { get; }
+    public TilePlayerSign PlayerSignSymbol { get; }
 
     public int PlayerId
     {
@@ -80,7 +80,7 @@ public class NetworkPlayer
         }
         
         PlayerId = player.ActorNumber;
-        PlayerSymbol = (TileType) player.ActorNumber;
+        PlayerSignSymbol = (TilePlayerSign) player.ActorNumber;
     }
     
     ~ NetworkPlayer()

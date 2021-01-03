@@ -18,6 +18,7 @@ public class UIMainScreen : UIScreen
         {
             UIManager.Instance.OpenScreen<UIUsernameScreen>();
         }
+        
     }
 
     private void Start()
@@ -32,7 +33,7 @@ public class UIMainScreen : UIScreen
 
     private void OnPlayRandomClick()
     {
-        UIManager.Instance.OpenScreen<UILoadingScreen>();
-        NetworkManager.Instance.JoinRandomRoom();
+        UIManager.Instance.OpenScreen<UIDifficultyScreen>();
+        
     }
 }

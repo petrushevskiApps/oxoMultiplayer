@@ -13,15 +13,14 @@ using UnityEngine.Events;
 
 public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
 {
+    [SerializeField] private Grid grid;
     
-    private int[,] tilesTable = new int[maxRow, maxColumn];
+    private int[,] tilesTable;
 
-    private List<Tile> tiles = new List<Tile>();
-    
     private WinCondition winCondition;
     
-    private static int maxRow = 3;
-    private static int maxColumn = 3;
+    private int rows;
+    private int columns;
     
     private int xSize = 0;
     private int ySize = 0;
@@ -29,34 +28,44 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     
     private void Awake()
     {
-        winCondition = GetComponent<WinCondition>();
+        winCondition = new WinCondition(3);
         
         MatchController.RoundEnd.AddListener(ResetBoard);
         MatchController.MatchEnd.AddListener(OnMatchEnded);
         
-        SetupBoardTiles();
+        rows = NetworkManager.Instance.RoomController.Properties.GetProperty<int>("r");
+        columns = NetworkManager.Instance.RoomController.Properties.GetProperty<int>("c");
+
+        SetupBoard(rows,columns);
         SetTilesTable();
     }
+    
     private void OnDestroy()
     {
         MatchController.RoundEnd.RemoveListener(ResetBoard);
         MatchController.MatchEnd.RemoveListener(OnMatchEnded);
     }
+
     
-    private void SetupBoardTiles()
+    private void SetupBoard(int rows, int columns)
     {
-        tiles = GetComponentsInChildren<Tile>().ToList();
+        tilesTable = new int[rows, columns];
+        grid.CreateGrid(rows, columns);
         
-        tiles.ForEach(x =>
+        int tileId = 0;
+        
+        grid.ForEachOfComponent<Tile>(tile =>
         {
-            x.TileStateChange.AddListener(TurnEnded);
+            tile.StateChange.AddListener(TurnEnded);
+            tile.Id = tileId;
+            tileId++;
         });
     }
-    
+
     private void ResetBoard()
     {
         SetTilesTable();
-        tiles.ForEach(tile => tile.SetTile());
+        grid.ForEachOfComponent<Tile>(tile => tile.SetTile());
     }
     
     private void SetTilesTable()
@@ -88,18 +97,17 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     {
         NetworkManager.Instance.RoomController.LocalRpcBufferCount++;
         
-        UpdateTile(tileId, playerId);
-       
-        bool isWin = winCondition.CheckWinCondition(tilesTable);
-        bool isTie = winCondition.CheckTie(tilesTable);
+        ElementIndex index = new ElementIndex(tileId, xSize, ySize);
+        
+        UpdateTile(index, tileId, playerId);
 
-        if (isWin)
+        if (winCondition.IsRoundWon(playerId, index, tilesTable))
         {
             RoundEnded(playerId);
             return;
         }
 
-        if (isTie)
+        if (winCondition.IsTableFull(tilesTable))
         {
             MatchController.LocalInstance.RoundTie();
             return;
@@ -108,14 +116,17 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         MatchController.LocalInstance.Turn++;
         
     }
+
     
-    private void UpdateTile(int id, int playerId)
+    
+    private void UpdateTile(ElementIndex index,int id, int playerId)
     {
-        tiles[id].ChangeState(playerId);
-        tilesTable[id / (xSize + 1), id % (ySize + 1)] = playerId;
-        PrintTable();
+        grid.ElementAt<Tile>(id).ChangeState(playerId);
+        tilesTable[index.Row, index.Column] = playerId;
+        
+        Utilities<int>.PrintTable(tilesTable);
     }
-    
+
     private void RoundEnded(int playerId)
     {
         PhotonNetwork.IsMessageQueueRunning = false;
@@ -134,32 +145,15 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     
     private void StrikeEffect(bool isRoundWon)
     {
-        List<WinCondition.RowColumIndex> rowColumnIndex = winCondition.GetWinIndexes();
-            
-        rowColumnIndex.ForEach(index =>
+        List<ElementIndex> winIndexes = winCondition.GetWinIndexes().ToList();
+        
+        winIndexes.ForEach(index =>
         {
-            int tileId = (index.row * maxColumn) + index.column;
-            tiles[tileId].StrikeTileEffect(isRoundWon);
+            grid.ElementAt<Tile>(index.GetTileId(columns)).ShowStrikeEffect(isRoundWon);
         });
     }
 
-    private void PrintTable()
-    {
-        int printIndex = 0;
-        StringBuilder sb = new StringBuilder();
-        sb.AppendLine();
-        foreach (int tile in tilesTable)
-        {
-            sb.Append(tile + " ");
-            printIndex++;
-            if (printIndex % 3 == 0 && printIndex > 0)
-            {
-                sb.AppendLine();
-            }
-        }
-        Debug.Log(sb);
-    }
-
+    
     
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

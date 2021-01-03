@@ -11,38 +11,38 @@ public class TileImages : ScriptableObject
     [SerializeField] private  Sprite loseBackground;
 
     [Header("Tile State")]
-    
     [SerializeField] private  Sprite crossState;
     [SerializeField] private  Sprite circleState;
     [SerializeField] private  Sprite endCrossState;
     [SerializeField] private  Sprite endCircleState;
 
-    public Sprite GetTileBackground(TileType state)
+    public Sprite GetTileBackground(TileBackground playerState)
     {
-        switch (state)
+        switch (playerState)
         {
-            case TileType.Empty : return emptyBackground;
-            case TileType.Win   : return winBackground;
-            case TileType.Lose   : return loseBackground;
+            case TileBackground.Default : return emptyBackground;
+            case TileBackground.Win   : return winBackground;
+            case TileBackground.Lose  : return loseBackground;
             default: return emptyBackground;
         }
     }
-    public Sprite GetTileState(TileType state)
+    public Sprite GetTilePlayerSign(TilePlayerSign playerSign)
     {
-        switch (state)
+        switch (playerSign)
         {
-            case TileType.Cross : return crossState;
-            case TileType.Circle: return circleState;
+            case TilePlayerSign.Cross : return crossState;
+            case TilePlayerSign.Circle: return circleState;
+            case TilePlayerSign.Empty:
             default: return null;
         }
     }
 
-    public Sprite GetEndTileState(TileType tile)
+    public Sprite GetEndTileState(TilePlayerSign tile)
     {
         switch (tile)
         {
-            case TileType.Cross : return endCrossState;
-            case TileType.Circle: return endCircleState;
+            case TilePlayerSign.Cross : return endCrossState;
+            case TilePlayerSign.Circle: return endCircleState;
             default: return null;
         }
     }

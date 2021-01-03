@@ -36,10 +36,10 @@ public class UICreateGameScreen : UIScreen
     {
         string roomName = inputField.text;
         
-        if (ValidateRoomName(roomName))
-        {
-            NetworkManager.Instance.CreateRoom(roomName);
-        }
+//        if (ValidateRoomName(roomName))
+//        {
+//            NetworkManager.Instance.CreateRoom(roomName);
+//        }
     }
 
     private bool ValidateRoomName(string roomName)

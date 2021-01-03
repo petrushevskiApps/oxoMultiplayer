@@ -19,13 +19,18 @@
         InGame
     }
     
-    public enum TileType
+    public enum TilePlayerSign
     {
         Empty,
         Cross,
-        Circle,
+        Circle
+    }
+
+    public enum TileBackground
+    {
+        Default,
         Win,
-        Lose,
+        Lose
     }
     
     public enum SceneTypes

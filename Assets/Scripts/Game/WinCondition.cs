@@ -1,132 +1,87 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
-public class WinCondition : MonoBehaviour
+public class WinCondition
 {
-    private List<RowColumIndex> winIndexes = new List<RowColumIndex>();
-
-    public List<RowColumIndex> GetWinIndexes() => winIndexes;
-
-    public bool CheckWinCondition(int[,] tilesTable)
+    private int minStrike;
+    private List<ExtractArray<int>> extractStrategies = new List<ExtractArray<int>>();
+    private List<ElementIndex> arrayIndexes;
+    private int winOffset;
+    
+    
+    public WinCondition(int minStrike)
     {
-        return CheckRows(tilesTable) 
-               || CheckColumns(tilesTable) 
-               || CheckDiagonal(tilesTable) 
-               || CheckReverseDiagonal(tilesTable);
+        this.minStrike = minStrike;
+        SetupExtractStrategies();
     }
-    public bool CheckTie(int[,] tilesTable)
+    
+    private void SetupExtractStrategies()
+    {
+        extractStrategies.Add(new ExtractRow<int>());
+        extractStrategies.Add(new ExtractColumn<int>());
+        extractStrategies.Add(new ExtractDiagonal<int>());
+        extractStrategies.Add(new ExtractReverseDiagonal<int>());
+    }
+    
+    public bool IsRoundWon(int playerId, ElementIndex index, int[,] table)
+    {
+        foreach (ExtractArray<int> strategy in extractStrategies)
+        {
+            if (IsWin(playerId, strategy.Extract(table, index)))
+            {
+                arrayIndexes = strategy.GetIndexes();
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    public bool IsTableFull(int[,] tilesTable)
     {
         int count = tilesTable.Cast<int>().Count(t => t != 0);
         return count == tilesTable.Length;
     }
-    private bool CheckRows(int[,] tilesTable)
+    
+    public IEnumerable<ElementIndex> GetWinIndexes()
     {
-        for (int i = 0; i <= tilesTable.GetUpperBound(0); i++)
+        for (int i = winOffset; i < arrayIndexes.Count; i++)
         {
-            int t1 = tilesTable[i, 0];
-            int t2 = tilesTable[i, 1];
-            int t3 = tilesTable[i, 2];
-            if( t1 == 0 || t2 == 0 || t3 == 0) continue;
-            if (t1 == t2 && t2 == t3)
-            {
-                winIndexes.Add(new RowColumIndex(i, 0));
-                winIndexes.Add(new RowColumIndex(i, 1));
-                winIndexes.Add(new RowColumIndex(i, 2));
-                return true;
-            }
+            yield return arrayIndexes[i];
         }
-
-        return false;
-    }
-
-    private bool CheckColumns(int[,] tilesTable)
-    {
-        // Compare columns
-        for (int i = 0; i <= tilesTable.GetUpperBound(1); i++)
-        {
-            int t1 = tilesTable[0, i];
-            int t2 = tilesTable[1, i];
-            int t3 = tilesTable[2, i];
-            if( t1 == 0 || t2 == 0 || t3 == 0) continue;
-            if( t1 == t2  &&  t2 == t3)
-            {
-                winIndexes.Add(new RowColumIndex( 0, i));
-                winIndexes.Add(new RowColumIndex( 1, i));
-                winIndexes.Add(new RowColumIndex( 2, i));
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private bool CheckDiagonal(int[,] tilesTable)
-    {
-        // Compare diagonal elements
-        int m1 = tilesTable[0, 0];
-        
-        for (int i = 0; i <= tilesTable.GetUpperBound(0); i++)
-        {
-            winIndexes.Add(new RowColumIndex(i, i));
-
-            if (tilesTable[i, i] != m1 || tilesTable[i, i] == 0)
-            {
-                break;
-            }
-            
-            if (i == tilesTable.GetUpperBound(0))
-            {
-                if(tilesTable[i, i] == m1) return true;
-            }
-        }
-        
-        winIndexes.Clear();
-        return false;
     }
     
-    private bool CheckReverseDiagonal(int[,] tilesTable)
+    private bool IsWin(int id, int[] array)
     {
-        // Compare reverse diagonal elements
-        int i = 0;
-        int j = tilesTable.GetUpperBound(0);
-        bool isEqual = true;
-       
-        winIndexes.Add(new RowColumIndex(i, j));
+        int winCount = 0;
+        int bound = array.Length - minStrike;
+
+        if (bound < 0) return false;
         
-        while (j > 0 && isEqual)
+        for (int offset = 0; offset <= bound; offset++)
         {
-            int currentPosition = tilesTable[i, j];
-            if (currentPosition == 0)
+            for (int i = offset; i < offset + minStrike; i++)
             {
-                isEqual = false;
-                break;
+                if (array[i] == id)
+                {
+                    winCount++;
+                }
+                else
+                {
+                    winCount = 0;
+                    break;
+                }
             }
-            
-            int nextPosition = tilesTable[++i, --j];
-            winIndexes.Add(new RowColumIndex(i, j));
-            
-            if (currentPosition != nextPosition)
+
+            if (winCount >= minStrike)
             {
-                isEqual = false;
+                winOffset = offset;
+                return true;
             }
-            
+            else winCount = 0;
         }
 
-        if(!isEqual) winIndexes.Clear();
-        return isEqual;
+        return winCount >= 3;
     }
 
-    public class RowColumIndex
-    {
-        public int row;
-        public int column;
-
-        public RowColumIndex(int row, int column)
-        {
-            this.row = row;
-            this.column = column;
-        }
-    }
 }

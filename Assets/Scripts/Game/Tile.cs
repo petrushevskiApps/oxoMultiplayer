@@ -10,24 +10,28 @@ using UnityEngine.UI;
 
 public class Tile : MonoBehaviour
 {
-    [SerializeField] private TileImages images;
-    [SerializeField] private SpriteRenderer tileStateImage;
-    
     [HideInInspector] 
-    public UnityIntegerEvent TileStateChange = new UnityIntegerEvent();
-    
-    public int tileId = 0;
+    public UnityIntegerEvent StateChange = new UnityIntegerEvent();
 
-    private Animator animator;
-    private SpriteRenderer tileBackgroundImage;
-    private TileType tile;
+    private int id = 0;
+
+    public int Id
+    {
+        get => id;
+        set
+        {
+            if (value >= 0) id = value;
+        }
+    }
+    
+    private TilePlayerSign tilePlayerSign;
     private BoxCollider2D clickCollider;
+    private TileView tileView;
     
     private void Awake()
     {
-        animator = GetComponent<Animator>();
-        tileBackgroundImage = GetComponent<SpriteRenderer>();
         clickCollider = GetComponent<BoxCollider2D>();
+        tileView = GetComponent<TileView>();
         
         MatchController.RoundStarting.AddListener(OnRoundStarting);
         MatchController.RoundStarted.AddListener(OnRoundStarted);
@@ -43,10 +47,8 @@ public class Tile : MonoBehaviour
 
     public void SetTile()
     {
-        tile = TileType.Empty;
-        
-        tileBackgroundImage.sprite = images.GetTileBackground(TileType.Empty);
-        tileStateImage.sprite = images.GetTileState(TileType.Empty);
+        tilePlayerSign = TilePlayerSign.Empty;
+        tileView.SetView(tilePlayerSign, TileBackground.Default);
     }
     
     private void OnRoundStarting(int arg0)
@@ -62,29 +64,27 @@ public class Tile : MonoBehaviour
     {
         if (!NetworkManager.Instance.RoomController.LocalPlayer.IsActive) return;
         
-        if (tile == TileType.Empty)
+        if (tilePlayerSign == TilePlayerSign.Empty)
         {
             ChangeState(NetworkManager.Instance.RoomController.ActivePlayer?.PlayerId ?? 0);
-            TileStateChange.Invoke(tileId);
+            StateChange.Invoke(Id);
         }
         else
         {
-            //TODO:: "Show wrong tile clicked here with effects!"
+            tileView.WrongTileClickedEffect();
         }
     }
     
     public void ChangeState(int playerId)
     {
-        if (tile != TileType.Empty) return;
-        tile = (TileType) playerId;
-        tileStateImage.sprite = images.GetTileState(tile);
+        if (tilePlayerSign != TilePlayerSign.Empty) return;
+        tilePlayerSign = (TilePlayerSign) playerId;
+        tileView.ChangeStateView(tilePlayerSign);
     }
-
-    public void StrikeTileEffect(bool isWin)
+    
+    public void ShowStrikeEffect(bool isWin)
     {
-        animator.SetTrigger(Animator.StringToHash("Zoom"));
-        tileBackgroundImage.sprite = images.GetTileBackground(isWin ? TileType.Win : TileType.Lose);
-        tileStateImage.sprite = images.GetEndTileState(tile);
+        tileView.StrikeTileEffect(isWin, tilePlayerSign);
     }
 
 }

@@ -2,6 +2,8 @@
 {
     public static class Constants
     {
+        public const int MIN_STRIKE = 3;
+        
         public const string LEAVE_MATCH_TITLE = "Leave Match";
         public const string LEAVE_MATCH_MESSAGE = "Are you sure?\nLeaving the match will result with your opponent winning!";
         

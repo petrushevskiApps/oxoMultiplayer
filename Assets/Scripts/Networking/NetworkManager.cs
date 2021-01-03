@@ -36,6 +36,8 @@ namespace com.petrushevskiapps.Oxo
         public static NetworkManager Instance;
 
         private Dictionary<string, RoomInfo> cachedRoomsDictionary = new Dictionary<string, RoomInfo>();
+
+        [SerializeField] private RoomConfiguration configuration;
         
         private void Awake()
         {
@@ -50,13 +52,18 @@ namespace com.petrushevskiapps.Oxo
             }
         }
 
-        public void CreateRoom(string roomName)
+        public void CreateRoom(string roomName = null)
         {
             if (PhotonNetwork.IsConnected)
             {
                 StartCoroutine(DelayJoin(() =>
                 {
-                    PhotonNetwork.CreateRoom(roomName, new RoomOptions { MaxPlayers = maxPlayersPerRoom, PublishUserId = true});
+                    RoomOptions roomOptions = new RoomOptions();
+                    roomOptions.MaxPlayers = maxPlayersPerRoom;
+                    roomOptions.PublishUserId = true;
+                    roomOptions.CustomRoomPropertiesForLobby = configuration.GetPropertiesNames();
+                    roomOptions.CustomRoomProperties = configuration.GetConfigHashtable();
+                    PhotonNetwork.CreateRoom(roomName, roomOptions);
                 }));
             }
         }
@@ -78,7 +85,18 @@ namespace com.petrushevskiapps.Oxo
             // If it fails, we'll get notified in OnJoinRandomFailed() and we'll create one.
             StartCoroutine(DelayJoin(() => { PhotonNetwork.JoinRandomRoom(); }));
         }
-
+        public void JoinRandomRoom(RoomConfiguration configuration)
+        {
+            // #Critical we need at this point to attempt joining a Random Room.
+            // If it fails, we'll get notified in OnJoinRandomFailed() and we'll create one.
+            this.configuration = configuration;
+            
+            StartCoroutine(DelayJoin(() =>
+            {
+                PhotonNetwork.JoinRandomRoom(configuration.GetConfigHashtable(), maxPlayersPerRoom);
+            }));
+        }
+        
         IEnumerator DelayJoin(Action joinAction)
         {
             yield return new WaitForSeconds(1f);
@@ -93,7 +111,7 @@ namespace com.petrushevskiapps.Oxo
                       "No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
 
             // #Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
-            PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = maxPlayersPerRoom, PublishUserId = true});
+            CreateRoom();
         }
         
         public override void OnJoinedRoom()
@@ -143,6 +161,7 @@ namespace com.petrushevskiapps.Oxo
                     if (cachedRoomsDictionary.ContainsKey(room.Name)) return;
                     cachedRoomsDictionary.Add(room.Name, room);
                     Debug.Log("Room: " + room.Name + " added!!");
+                    Debug.Log("Room Is Open: " + roomList[0].IsOpen);
                 }
             });
         }

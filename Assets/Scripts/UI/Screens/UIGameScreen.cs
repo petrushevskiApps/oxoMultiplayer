@@ -170,7 +170,7 @@ public class UIGameScreen : UIScreen
             this.normalColor = normalColor;
             
             nicknameText.text = player.Nickname;
-            symbolImage.sprite = symbols.GetEndTileState(player.PlayerSymbol);
+            symbolImage.sprite = symbols.GetEndTileState(player.PlayerSignSymbol);
             
             UpdateScoreText(player.Score);
             SetupBackgrounds();
