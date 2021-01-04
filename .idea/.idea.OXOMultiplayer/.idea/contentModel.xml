@@ -424,7 +424,6 @@
             <e p="PhotonHelper.cs" t="Include" />
             <e p="ScriptsEditor.asmdef" t="Include" />
           </e>
-          <e p="ElementIndex.cs" t="Include" />
           <e p="Game" t="Include">
             <e p="BoardController.cs" t="Include" />
             <e p="MatchController.cs" t="Include" />
@@ -435,7 +434,7 @@
           <e p="GameAssembly.asmdef" t="Include" />
           <e p="GameManager.cs" t="Include" />
           <e p="Grid" t="Include">
-            <e p="Grid.cs" t="Include" />
+            <e p="GridCreator.cs" t="Include" />
             <e p="GridWorldCamera.cs" t="Include" />
             <e p="GridWorldSize.cs" t="Include" />
           </e>
@@ -456,11 +455,14 @@
             <e p="Popups" t="Include">
               <e p="UIChangeUsernamePopup.cs" t="Include" />
               <e p="UIExitPopup.cs" t="Include" />
+              <e p="UILeavePopup.cs" t="Include" />
               <e p="UINetworkPopup.cs" t="Include" />
               <e p="UISettingsPopup.cs" t="Include" />
+              <e p="UITimerPopup.cs" t="Include" />
             </e>
             <e p="Screens" t="Include">
               <e p="UICreateGameScreen.cs" t="Include" />
+              <e p="UIDifficultyScreen.cs" t="Include" />
               <e p="UIEndScreen.cs" t="Include" />
               <e p="UIGameScreen.cs" t="Include" />
               <e p="UIHelpScreen.cs" t="Include" />
@@ -470,10 +472,7 @@
               <e p="UIUsernameScreen.cs" t="Include" />
               <e p="UIUserScreen.cs" t="Include" />
             </e>
-            <e p="UIDifficultyScreen.cs" t="Include" />
-            <e p="UILeavePopup.cs" t="Include" />
             <e p="UIPageSlider.cs" t="Include" />
-            <e p="UITimerPopup.cs" t="Include" />
           </e>
           <e p="UIManager" t="Include">
             <e p="Scripts" t="Include">
@@ -519,12 +518,12 @@
               <e p="ExtractReverseDiagonal.cs" t="Include" />
               <e p="ExtractRow.cs" t="Include" />
             </e>
+            <e p="Singleton.cs" t="Include" />
             <e p="Timer.cs" t="Include" />
             <e p="Utilities.cs" t="Include" />
           </e>
         </e>
         <e p="Tests" t="Include">
-          <e p="ElementIndexTests.cs" t="Include" />
           <e p="ExtracColumnTests.cs" t="Include" />
           <e p="ExtractDiagonalTests.cs" t="Include" />
           <e p="ExtractReverseDiagonalTests.cs" t="Include" />

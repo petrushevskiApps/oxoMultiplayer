@@ -14,10 +14,7 @@ public class UIMainScreen : UIScreen
 
     private void OnEnable()
     {
-        if (string.IsNullOrEmpty(PlayerDataController.Username))
-        {
-            UIManager.Instance.OpenScreen<UIUsernameScreen>();
-        }
+        
         
     }
 

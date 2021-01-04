@@ -3,40 +3,31 @@ using com.petrushevskiapps.Oxo.Utilities;
 
 public class ExtractDiagonal<T> : ExtractArray<T>
 {
-    public override T[] Extract(T[,] table, ElementIndex index)
+    public override T[] Extract(T[,] table, int elementId)
     {
-        indexes.Clear();
-        
-        if (index == null) throw new ArgumentNullException();
+        if (elementId < 0 || elementId > table.Length - 1) throw new ArgumentOutOfRangeException();
 
-        if (index.Row < 0 || index.Row > table.GetUpperBound(0))
-        {
-            throw new ArgumentOutOfRangeException();
-        }
-
-        if (index.Column < 0 || index.Column > table.GetUpperBound(1))
-        {
-            throw new ArgumentOutOfRangeException();
-        }
-        
         int length = table.GetUpperBound(0) + 1;
         int dLength = 0;
         
         int startRow = 0;
         int startColumn = 0;
+
+        int elementRow = Utilities.GetRowFromId(elementId, table);
+        int elementColumn = Utilities.GetColumnFromId(elementId, table);
         
-        if (index.Row > index.Column)
+        if (elementRow > elementColumn)
         {
             //Below Main Diagonal
-            startRow = index.Row -  index.Column;
+            startRow = elementRow - elementColumn;
             startColumn = 0;
             dLength = length - startRow;
         }
-        else if (index.Row < index.Column)
+        else if (elementRow < elementColumn)
         {
             //Above Main Diagonal
             startRow = 0;
-            startColumn = index.Column - index.Row;
+            startColumn = elementColumn - elementRow;
             dLength = length - startColumn;
         }
         else
@@ -50,10 +41,9 @@ public class ExtractDiagonal<T> : ExtractArray<T>
         for (int di=0, r = startRow, c = startColumn; di < dLength; di++, r++, c++)
         {
             diagonal[di] = table[r, c];
-            indexes.Add(new ElementIndex(r, c));
         }
 
-        Utilities<T>.PrintArray(diagonal);
+        Utilities.PrintArray(diagonal);
         return diagonal;
     }
 

@@ -13,9 +13,8 @@ public class TileView : MonoBehaviour
     [SerializeField] private TileImages images;
     [SerializeField] private SpriteRenderer tileStateImage;
     
-    private Animator animator;
     private SpriteRenderer tileBackgroundImage;
-
+    private Animator animator;
     
     private void Awake()
     {
@@ -25,8 +24,8 @@ public class TileView : MonoBehaviour
     
     public void SetView(TilePlayerSign playerSign, TileBackground background)
     {
-        tileBackgroundImage.sprite = images.GetTileBackground(background);
         tileStateImage.sprite = images.GetTilePlayerSign(playerSign);
+        tileBackgroundImage.sprite = images.GetTileBackground(background);
     }
     
     public void ChangeStateView(TilePlayerSign tilePlayerSign)

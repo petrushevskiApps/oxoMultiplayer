@@ -3,34 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : Singleton<AudioManager>
 {
     [SerializeField] private AudioSource backgroundMusicSource;
     [SerializeField] private AudioSource sfxMusicSource;
 
-    public static AudioManager Instance;
-    
-    private void Awake()
+    protected override void RegisterListeners()
     {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        
         PlayerDataController.backgroundMusicStatusChange.AddListener(OnBgMusicStatusChange);
         PlayerDataController.sfxStatusChange.AddListener(OnSfxStatusChange);
     }
-
-    private void OnDestroy()
+    
+    protected override void UnregisterListeners()
     {
         PlayerDataController.backgroundMusicStatusChange.RemoveListener(OnBgMusicStatusChange);
         PlayerDataController.sfxStatusChange.RemoveListener(OnSfxStatusChange);
     }
+
+    
 
     private void OnEnable()
     {

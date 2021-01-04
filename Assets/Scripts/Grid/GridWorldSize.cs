@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-public partial class Grid
+
+namespace Grid
 {
     public class GridWorldSize
     {

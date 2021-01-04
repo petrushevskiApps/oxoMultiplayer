@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using com.petrushevskiapps.Oxo.Utilities;
 using Data;
 using PetrushevskiApps.UIManager;
@@ -50,6 +51,18 @@ namespace com.petrushevskiapps.Oxo
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
             }
+            
+            PlayerDataController.UsernameChanged.AddListener(SetNetworkUsername);
+        }
+        
+        private void OnDestroy()
+        {
+            PlayerDataController.UsernameChanged.RemoveListener(SetNetworkUsername);
+        }
+
+        private void Start()
+        {
+            SetNetworkUsername(PlayerDataController.Username);
         }
 
         public void CreateRoom(string roomName = null)

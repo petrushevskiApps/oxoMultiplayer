@@ -8,17 +8,9 @@
     public enum RoomStatus
     {
         Waiting,
-        Full,
         Ready,
-        MatchStarted,
     }
 
-    public enum RoomState
-    {
-        InRoom,
-        InGame
-    }
-    
     public enum TilePlayerSign
     {
         Empty,

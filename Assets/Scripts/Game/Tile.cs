@@ -23,8 +23,20 @@ public class Tile : MonoBehaviour
             if (value >= 0) id = value;
         }
     }
-    
-    private TilePlayerSign tilePlayerSign;
+
+    private int playerId;
+    public int PlayerId
+    {
+        get => playerId;
+        set
+        {
+            if(playerId == value ||  value < 0) return;
+            playerId = value;
+        }
+    }
+
+    public TilePlayerSign TilePlayerSign => (TilePlayerSign) PlayerId;
+
     private BoxCollider2D clickCollider;
     private TileView tileView;
     
@@ -35,20 +47,22 @@ public class Tile : MonoBehaviour
         
         MatchController.RoundStarting.AddListener(OnRoundStarting);
         MatchController.RoundStarted.AddListener(OnRoundStarted);
-        
-        SetTile();
     }
-
     private void OnDestroy()
     {
         MatchController.RoundStarting.RemoveListener(OnRoundStarting);
         MatchController.RoundStarted.RemoveListener(OnRoundStarted);
     }
+    
+    private void Start()
+    {
+        SetTile();
+    }
 
     public void SetTile()
     {
-        tilePlayerSign = TilePlayerSign.Empty;
-        tileView.SetView(tilePlayerSign, TileBackground.Default);
+        PlayerId = 0;
+        tileView.SetView(TilePlayerSign, TileBackground.Default);
     }
     
     private void OnRoundStarting(int arg0)
@@ -64,7 +78,7 @@ public class Tile : MonoBehaviour
     {
         if (!NetworkManager.Instance.RoomController.LocalPlayer.IsActive) return;
         
-        if (tilePlayerSign == TilePlayerSign.Empty)
+        if (TilePlayerSign == TilePlayerSign.Empty)
         {
             ChangeState(NetworkManager.Instance.RoomController.ActivePlayer?.PlayerId ?? 0);
             StateChange.Invoke(Id);
@@ -77,14 +91,14 @@ public class Tile : MonoBehaviour
     
     public void ChangeState(int playerId)
     {
-        if (tilePlayerSign != TilePlayerSign.Empty) return;
-        tilePlayerSign = (TilePlayerSign) playerId;
-        tileView.ChangeStateView(tilePlayerSign);
+        if (PlayerId != 0) return;
+        PlayerId = playerId;
+        tileView.ChangeStateView(TilePlayerSign);
     }
     
-    public void ShowStrikeEffect(bool isWin)
+    public void ShowEndEffect(bool isWin)
     {
-        tileView.StrikeTileEffect(isWin, tilePlayerSign);
+        tileView.StrikeTileEffect(isWin, TilePlayerSign);
     }
 
 }

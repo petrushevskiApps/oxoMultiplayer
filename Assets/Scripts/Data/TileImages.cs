@@ -1,6 +1,5 @@
 ﻿using Data;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "TileStates", menuName = "Data/TileStates", order = 1)]
 public class TileImages : ScriptableObject
@@ -21,8 +20,8 @@ public class TileImages : ScriptableObject
         switch (playerState)
         {
             case TileBackground.Default : return emptyBackground;
-            case TileBackground.Win   : return winBackground;
-            case TileBackground.Lose  : return loseBackground;
+            case TileBackground.Win     : return winBackground;
+            case TileBackground.Lose    : return loseBackground;
             default: return emptyBackground;
         }
     }
@@ -32,7 +31,7 @@ public class TileImages : ScriptableObject
         {
             case TilePlayerSign.Cross : return crossState;
             case TilePlayerSign.Circle: return circleState;
-            case TilePlayerSign.Empty:
+            case TilePlayerSign.Empty : 
             default: return null;
         }
     }
@@ -43,6 +42,7 @@ public class TileImages : ScriptableObject
         {
             case TilePlayerSign.Cross : return endCrossState;
             case TilePlayerSign.Circle: return endCircleState;
+            case TilePlayerSign.Empty : 
             default: return null;
         }
     }

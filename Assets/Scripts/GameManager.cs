@@ -6,28 +6,18 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    public static GameManager Instance;
-    public bool IsUsernameSet { get; private set; }
     public bool IsApplicationQuiting { get; private set; }
 
-    private void Awake()
+    protected override void RegisterListeners()
     {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-        
-        SetUsername();
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
-
+    protected override void UnregisterListeners()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
     {
@@ -37,22 +27,14 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            UIManager.Instance.OpenScreen<UIMainScreen>();
+            if (PlayerDataController.IsUsernameSet)
+            {
+                UIManager.Instance.OpenScreen<UIMainScreen>();
+            }
+            else UIManager.Instance.OpenScreen<UIUsernameScreen>();
         }
     }
 
-    public void SetUsername(string username = "")
-    {
-        string nickname = PlayerDataController.Username;
-
-        if (!string.IsNullOrEmpty(nickname))
-        {
-            NetworkManager.Instance.SetNetworkUsername(nickname);
-            IsUsernameSet = true;
-        }
-        else IsUsernameSet = false;
-    }
-    
     private void OnApplicationQuit()
     {
         IsApplicationQuiting = true;

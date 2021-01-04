@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1019472270226966418}
   - component: {fileID: 1019472270226966416}
   - component: {fileID: 1019472270226966419}
+  - component: {fileID: 2429647553327836740}
   - component: {fileID: 1019472270226966417}
   - component: {fileID: 1477887055938369759}
   m_Layer: 0
@@ -97,9 +98,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57e07a79238f5a549a19f221aac38401, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2429647553327836740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1019472270226966421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83b1d7bfd221fe24c97148810ab792b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   images: {fileID: 11400000, guid: 6f4a72aab3eaf8b4aa5def6f0f18e6eb, type: 2}
   tileStateImage: {fileID: 7836237879595977197}
-  tileId: 0
 --- !u!61 &1019472270226966417
 BoxCollider2D:
   m_ObjectHideFlags: 0

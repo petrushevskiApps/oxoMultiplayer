@@ -19,12 +19,12 @@ namespace com.petrushevskiapps.Oxo
         {
             base.Awake();
             usernameBtn.onClick.AddListener(OnUsernameBtnClicked);
-            PlayerDataController.usernameChanged.AddListener(OnUsernameChanged);
+            PlayerDataController.UsernameChanged.AddListener(OnUsernameChanged);
         }
         private void OnDestroy()
         {
             usernameBtn.onClick.RemoveListener(OnUsernameBtnClicked);
-            PlayerDataController.usernameChanged.RemoveListener(OnUsernameChanged);
+            PlayerDataController.UsernameChanged.RemoveListener(OnUsernameChanged);
         }
 
         private void OnEnable()

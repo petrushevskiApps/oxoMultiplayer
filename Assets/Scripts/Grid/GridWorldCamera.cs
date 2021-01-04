@@ -1,27 +1,29 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class GridWorldCamera : MonoBehaviour
+namespace Grid
 {
-    private Camera camera;
-    private void Awake()
+    public class GridWorldCamera : MonoBehaviour
     {
-        Grid.GridCreated.AddListener(OnGridCreated);
-        camera = GetComponent<Camera>();
-    }
-
-    private void OnDestroy()
-    {
-        Grid.GridCreated.RemoveListener(OnGridCreated);
-    }
-
-    private void OnGridCreated(Grid.GridWorldSize worldSize)
-    {
-        if (camera != null)
+        private Camera camera;
+        private void Awake()
         {
-            camera.orthographicSize = worldSize.GetWorldSize().x + 2f;
+            GridCreator.GridCreated.AddListener(OnGridCreated);
+            camera = GetComponent<Camera>();
+        }
+
+        private void OnDestroy()
+        {
+            GridCreator.GridCreated.RemoveListener(OnGridCreated);
+        }
+
+        private void OnGridCreated(GridWorldSize worldSize)
+        {
+            if (camera != null)
+            {
+                camera.orthographicSize = worldSize.GetWorldSize().x + 2f;
+            }
         }
     }
+
 }
+

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class StatisticsManager : MonoBehaviour
 {
@@ -21,6 +18,7 @@ public class StatisticsManager : MonoBehaviour
     {
         PlayerDataController.IncreasePlayedGames();
     }
+    
     private void OnMatchEnded(bool isWin)
     {
         if (isWin)

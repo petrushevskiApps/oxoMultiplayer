@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace com.petrushevskiapps.Oxo.Utilities
 {
-    public class Utilities<T>
+    public static class Utilities
     {
-        public static void PrintArray(T[] row)
+        public static void PrintArray<T>(T[] row)
         {
             StringBuilder sb = new StringBuilder();
             for (int i=0; i<row.Length; i++)
@@ -15,12 +15,12 @@ namespace com.petrushevskiapps.Oxo.Utilities
             Debug.Log($"ROW: {row.Length} -> {sb.ToString()}");
         }
         
-        public static void PrintTable(int[,] table)
+        public static void PrintTable<T>(T[,] table)
         {
             int printIndex = 0;
             StringBuilder sb = new StringBuilder();
             sb.AppendLine();
-            foreach (int tile in table)
+            foreach (T tile in table)
             {
                 sb.Append(tile + " ");
                 printIndex++;
@@ -31,7 +31,9 @@ namespace com.petrushevskiapps.Oxo.Utilities
             }
             Debug.Log(sb);
         }
-
+        
+        public static int GetRowFromId<T>(int tileId, T[,] table) => tileId / (table.GetUpperBound(0) + 1);
+        public static int GetColumnFromId<T>(int tileId, T[,] table) => tileId % (table.GetUpperBound(1) + 1);
     }
     
     

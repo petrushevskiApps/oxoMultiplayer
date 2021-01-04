@@ -36,16 +36,14 @@ public class UIChangeUsernamePopup : UIPopup
 
     private void SaveChanges()
     {
-        if (inputField != null)
-        {
-            string userName = inputField.text;
-                
-            if (!string.IsNullOrEmpty(userName))
-            {
-                PlayerDataController.Username = userName;
-                OnBackButtonPressed();
-            }
-        }
+        if (inputField == null) return;
+        
+        string userName = inputField.text;
+
+        if (string.IsNullOrEmpty(userName)) return;
+        
+        PlayerDataController.Username = userName;
+        OnBackButtonPressed();
     }
 
     private void SetDefaultUsername()

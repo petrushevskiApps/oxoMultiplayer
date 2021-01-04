@@ -119,6 +119,7 @@ public class NetworkPlayer
         
         if (properties.ContainsKey(Keys.PLAYER_MATCH_SCORE))
         {
+            ScoreUpdated.Invoke((int)properties[Keys.PLAYER_MATCH_SCORE]);
             Properties.Updated(Keys.PLAYER_MATCH_SCORE);
         }
     }

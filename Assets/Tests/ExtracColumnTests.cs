@@ -15,19 +15,19 @@ namespace Tests
                 {2, 1, 1},
                 {1, 2, 2},
                 {2, 2, 1}
-            }, new ElementIndex(0, 0)).Returns(new int[] {2, 1, 2}).SetName("Table3x3_FirstColumn");
+            }, 0).Returns(new int[] {2, 1, 2}).SetName("Table3x3_FirstColumn");
             yield return new TestCaseData(new int[,]
             {
                 {2, 1, 1},
                 {1, 2, 2},
                 {2, 2, 1}
-            }, new ElementIndex(0, 1)).Returns(new int[] {1, 2, 2}).SetName("Table3x3_MiddleColumn");
+            }, 1).Returns(new int[] {1, 2, 2}).SetName("Table3x3_MiddleColumn");
             yield return new TestCaseData(new int[,]
             {
                 {2, 1, 1},
                 {1, 2, 2},
                 {2, 2, 1}
-            }, new ElementIndex(0, 2)).Returns(new int[] {1, 2, 1}).SetName("Table3x3_LastColumn");
+            }, 2).Returns(new int[] {1, 2, 1}).SetName("Table3x3_LastColumn");
 
             yield return new TestCaseData(new int[,]
             {
@@ -35,21 +35,21 @@ namespace Tests
                 {2, 1, 2, 1},
                 {1, 2, 1, 2},
                 {1, 1, 2, 2}
-            }, new ElementIndex(0, 0)).Returns(new int[] {1, 2, 1, 1}).SetName("Table4x4_FirstColumn");
+            }, 0).Returns(new int[] {1, 2, 1, 1}).SetName("Table4x4_FirstColumn");
             yield return new TestCaseData(new int[,]
             {
                 {1, 1, 2, 2},
                 {2, 1, 2, 1},
                 {1, 2, 1, 2},
                 {1, 1, 2, 2}
-            }, new ElementIndex(0, 2)).Returns(new int[] {2, 2, 1, 2}).SetName("Table4x4_MiddleColumn");
+            }, 2).Returns(new int[] {2, 2, 1, 2}).SetName("Table4x4_MiddleColumn");
             yield return new TestCaseData(new int[,]
             {
                 {1, 1, 2, 2},
                 {2, 1, 2, 1},
                 {1, 2, 1, 2},
                 {1, 1, 2, 2}
-            }, new ElementIndex(0, 3)).Returns(new int[] {2, 1, 2, 2}).SetName("Table4x4_LastColumn");
+            }, 3).Returns(new int[] {2, 1, 2, 2}).SetName("Table4x4_LastColumn");
 
 
             yield return new TestCaseData(new int[,]
@@ -59,7 +59,7 @@ namespace Tests
                 {2, 2, 1, 1, 2},
                 {1, 2, 2, 2, 1},
                 {2, 1, 1, 2, 1}
-            }, new ElementIndex(0, 0)).Returns(new int[] {1, 1, 2, 1, 2}).SetName("Table5x5_FirstColumn");
+            }, 0).Returns(new int[] {1, 1, 2, 1, 2}).SetName("Table5x5_FirstColumn");
             yield return new TestCaseData(new int[,]
             {
                 {1, 2, 1, 2, 1},
@@ -67,7 +67,7 @@ namespace Tests
                 {2, 2, 1, 1, 2},
                 {1, 2, 2, 2, 1},
                 {2, 1, 1, 2, 1}
-            }, new ElementIndex(0, 2)).Returns(new int[] {1, 2, 1, 2, 1}).SetName("Table5x5_MiddleColumn");
+            }, 2).Returns(new int[] {1, 2, 1, 2, 1}).SetName("Table5x5_MiddleColumn");
             yield return new TestCaseData(new int[,]
             {
                 {1, 2, 1, 2, 1},
@@ -75,7 +75,7 @@ namespace Tests
                 {2, 2, 1, 1, 2},
                 {1, 2, 2, 2, 1},
                 {2, 1, 1, 2, 1}
-            }, new ElementIndex(0, 4)).Returns(new int[] {1, 2, 2, 1, 1}).SetName("Table5x5_LastColumn");
+            }, 4).Returns(new int[] {1, 2, 2, 1, 1}).SetName("Table5x5_LastColumn");
         }
 
         private static IEnumerable<TestCaseData> TableDataForColumnLength()
@@ -106,16 +106,24 @@ namespace Tests
 
         }
 
-        private static IEnumerable<TestCaseData> TableDataForColumnIndex()
+        private static IEnumerable<TestCaseData> TableDataForIdOutOfBounds()
         {
-            yield return new TestCaseData(new int[,] { }, new ElementIndex(0, 1)).SetName("TableEmpty_Index01");
-
+            yield return new TestCaseData(new int[,] { }, -1).SetName("TableEmpty_NegativeID");
+            yield return new TestCaseData(new int[,] { }, 1).SetName("TableEmpty_PositiveID");
+            
             yield return new TestCaseData(new int[,]
             {
                 {2, 1, 1},
                 {1, 2, 2},
                 {2, 2, 1}
-            }, new ElementIndex(0, 3)).SetName("Table3x3_Index03");
+            }, -1).SetName("Table3x3_NegativeIdOutOfBounds");
+            
+            yield return new TestCaseData(new int[,]
+            {
+                {2, 1, 1},
+                {1, 2, 2},
+                {2, 2, 1}
+            }, 9).SetName("Table3x3_PositiveIdOutOfBounds");
 
             yield return new TestCaseData(new int[,]
             {
@@ -123,7 +131,15 @@ namespace Tests
                 {2, 1, 2, 1},
                 {1, 2, 1, 2},
                 {1, 1, 2, 2}
-            }, new ElementIndex(0, 4)).SetName("Table4x4_Index04");
+            }, -1).SetName("Table4x4_NegativeIdOutOfBounds");
+
+            yield return new TestCaseData(new int[,]
+            {
+                {1, 1, 2, 2},
+                {2, 1, 2, 1},
+                {1, 2, 1, 2},
+                {1, 1, 2, 2}
+            }, 16).SetName("Table4x4_PositiveIdOutOfBounds");
 
             yield return new TestCaseData(new int[,]
             {
@@ -132,26 +148,7 @@ namespace Tests
                 {2, 2, 1, 1, 2},
                 {1, 2, 2, 2, 1},
                 {2, 1, 1, 2, 1}
-            }, new ElementIndex(0, 5)).SetName("Table5x5_Index05");
-
-        }
-
-        private static IEnumerable<TestCaseData> TableDataForListSize()
-        {
-            yield return new TestCaseData(new int[,]
-            {
-                {2, 1, 1},
-                {1, 2, 2},
-                {2, 2, 1}
-            }, new ElementIndex(0, 1)).SetName("Table3x3_Index03");
-
-            yield return new TestCaseData(new int[,]
-            {
-                {1, 1, 2, 2},
-                {2, 1, 2, 1},
-                {1, 2, 1, 2},
-                {1, 1, 2, 2}
-            }, new ElementIndex(0, 2)).SetName("Table4x4_Index04");
+            }, -1).SetName("Table5x5_NegativeIdOutOfBounds");
 
             yield return new TestCaseData(new int[,]
             {
@@ -160,10 +157,10 @@ namespace Tests
                 {2, 2, 1, 1, 2},
                 {1, 2, 2, 2, 1},
                 {2, 1, 1, 2, 1}
-            }, new ElementIndex(0, 4)).SetName("Table5x5_Index05");
+            }, 25).SetName("Table5x5_PositiveIdOutOfBounds");
 
         }
-        
+
         [SetUp]
         public void SetUp()
         {
@@ -172,41 +169,27 @@ namespace Tests
 
         [Test]
         [TestCaseSource(nameof(TableDataForColumnMatch))]
-        public int[] Extract_WhenCalled_ReturnsColumnAtGivenIndex(int[,] table, ElementIndex index)
+        public int[] Extract_WhenCalled_ReturnsColumnAtGivenIndex(int[,] table, int id)
         {
-            return extractColumn.Extract(table, index);
+            return extractColumn.Extract(table, id);
         }
 
         [Test]
         [TestCaseSource(nameof(TableDataForColumnLength))]
         public void Extract_WhenCalled_ReturnsArrayWithLengthEqualToColumnLength(int[,] table)
         {
-            int[] column = extractColumn.Extract(table, new ElementIndex(0, 0));
+            int[] column = extractColumn.Extract(table, 0);
             Assert.That(column.Length, Is.EqualTo(table.GetUpperBound(1) + 1));
         }
 
-        [Test]
-        public void Extract_ElementIndexIsNull_ThrowArgumentNullException()
-        {
-            Assert.That(() => extractColumn.Extract(new int[,] {{0, 0, 0}, {0, 0, 0}}, null),
-                Throws.ArgumentNullException);
-        }
 
         [Test]
-        [TestCaseSource(nameof(TableDataForColumnIndex))]
-        public void Extract_ColumnIndexIsHigherThanColumnLength_ThrowException(int[,] table, ElementIndex index)
+        [TestCaseSource(nameof(TableDataForIdOutOfBounds))]
+        public void Extract_IdOutOfBounds_ThrowArgumentOutOfRangeException(int[,] table, int id)
         {
-            Assert.That(() => extractColumn.Extract(table, index), Throws.Exception.TypeOf<ArgumentOutOfRangeException>());
+            Assert.That(() => extractColumn.Extract(table, id), Throws.Exception.TypeOf<ArgumentOutOfRangeException>());
         }
 
-        [Test]
-        [TestCaseSource(nameof(TableDataForListSize))]
-        public void GetIndexes_ListLengthEqualsArrayLength_ReturnsSizeEquality(int[,] table, ElementIndex index)
-        {
-            int[] column = extractColumn.Extract(table, index);
-
-            Assert.That(extractColumn.GetIndexes().Count, Is.EqualTo(column.Length));
-        }
        
         
     }

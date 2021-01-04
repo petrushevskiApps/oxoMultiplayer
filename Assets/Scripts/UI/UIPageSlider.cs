@@ -16,6 +16,7 @@ public class UIPageSlider : MonoBehaviour
     private float paginationSize;
     private int elementsCount = 0;
     private int currentElement = 1;
+    
     private void Awake()
     {
         layout = GetComponent<GridLayoutGroup>();
@@ -31,7 +32,6 @@ public class UIPageSlider : MonoBehaviour
 
     private void SlidePageRight()
     {
-        Debug.Log("CLICKED SlidePageRight");
         if(currentElement + 1 > elementsCount) return;
 
         currentElement++;
@@ -42,7 +42,6 @@ public class UIPageSlider : MonoBehaviour
 
     private void SlidePageLeft()
     {
-        Debug.Log("CLICKED SlidePageLeft");
         if(currentElement - 1 <= 0) return;
 
         currentElement--;

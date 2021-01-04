@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using com.petrushevskiapps.Oxo;
 using com.petrushevskiapps.Oxo.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,21 +14,21 @@ public class PlayerDataController : MonoBehaviour
     public static UnityBoolEvent sfxStatusChange = new UnityBoolEvent();
     public static UnityBoolEvent vibrationStatusChange = new UnityBoolEvent();
     
-    public static UnityStringEvent usernameChanged = new UnityStringEvent();
+    public static UnityStringEvent UsernameChanged = new UnityStringEvent();
     
     public static UnityIntegerEvent playedGamesChange = new UnityIntegerEvent();
     public static UnityIntegerEvent wonGamesChange = new UnityIntegerEvent();
     public static UnityIntegerEvent lostGamesChange = new UnityIntegerEvent();
 
-   
+    public static bool IsUsernameSet => !string.IsNullOrEmpty(Username);
+    
     public static string Username
     {
         get => PlayerPrefs.GetString(Keys.USERNAME, string.Empty);
         set
         {
             PlayerPrefs.SetString(Keys.USERNAME, value);
-            GameManager.Instance.SetUsername(value);
-            usernameChanged.Invoke(value);
+            UsernameChanged.Invoke(value);
         }
     }
 
@@ -86,4 +87,5 @@ public class PlayerDataController : MonoBehaviour
         }
     }
 
+    
 }
