@@ -32,27 +32,34 @@ namespace com.petrushevskiapps.Oxo
         
         private Coroutine connectingCoroutine;
         private Coroutine reconnectCoroutine;
+
+        private IAuth authStrategy;
         
         private void Awake()
         {
+            GameManager.Instance.FacebookService.LoginCompleted.AddListener(OnFacebookLogin);
             PhotonNetwork.AutomaticallySyncScene = true;
-            connectingCoroutine = StartCoroutine(Connect());
         }
-        
+
+        private void OnFacebookLogin(string tokenString, string userId)
+        {
+            SetAuthAndConnect(new FacebookAuth());
+        }
+
         private void OnDestroy()
         {
             StopCoroutines();
         }
-        private IEnumerator Connect()
+        
+        public void SetAuthAndConnect(IAuth auth)
         {
-            // Initiate the connection to the server.
-            while (!PhotonNetwork.IsConnected)
-            {
-                // #Critical, we must first and foremost connect to Photon Online Server.
-                isConnecting = PhotonNetwork.ConnectUsingSettings();
-                PhotonNetwork.GameVersion = gameVersion;
-                yield return new WaitForSeconds(3f);
-            }
+            authStrategy = auth;
+            Connect();
+        }
+        
+        private void Connect()
+        {
+            connectingCoroutine = StartCoroutine(authStrategy.Connect(gameVersion));
         }
         
         private IEnumerator Reconnect()
@@ -118,13 +125,11 @@ namespace com.petrushevskiapps.Oxo
             {
                 if (connectingCoroutine == null)
                 {
-                    connectingCoroutine = StartCoroutine(Connect());
+                    Connect();
                 }
             }
             
         }
-
-        
 
         private void StopCoroutines()
         {
@@ -137,5 +142,8 @@ namespace com.petrushevskiapps.Oxo
                 StopCoroutine(connectingCoroutine);
             }
         }
+
+
+        
     }
 }

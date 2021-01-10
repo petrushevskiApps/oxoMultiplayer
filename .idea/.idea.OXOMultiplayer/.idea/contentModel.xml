@@ -5,8 +5,52 @@
     <e p="C:\Users\petru\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_OXOMultiplayer.-1826518771.00" t="ExcludeRecursive" />
     <e p="D:\14 - BlastGames\OXOMultiplayer" t="IncludeRecursive">
       <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="Art" t="Include">
+          <e p="Fonts" t="Include">
+            <e p="chunkfiveex" t="Include">
+              <e p="SIL Open Font License 1.1.txt" t="Include" />
+            </e>
+            <e p="firasansheavy" t="Include">
+              <e p="SIL Open Font License.txt" t="Include" />
+            </e>
+            <e p="kaushanscript" t="Include">
+              <e p="SIL Open Font License.txt" t="Include" />
+            </e>
+            <e p="molot" t="Include">
+              <e p="molot-eula.txt" t="Include" />
+            </e>
+            <e p="peacesans" t="Include">
+              <e p="FREE FONT LICENSE.txt" t="Include" />
+            </e>
+            <e p="Read Me.txt" t="Include" />
+          </e>
+        </e>
+        <e p="FacebookSDK" t="Include">
+          <e p="Examples" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="ConsoleBase.cs" t="Include" />
+              <e p="LogView.cs" t="Include" />
+              <e p="MenuBase.cs" t="Include" />
+              <e p="SubMenus" t="Include">
+                <e p="AccessTokenMenu.cs" t="Include" />
+                <e p="AppEvents.cs" t="Include" />
+                <e p="AppLinks.cs" t="Include" />
+                <e p="AppRequests.cs" t="Include" />
+                <e p="DialogShare.cs" t="Include" />
+                <e p="GraphRequest.cs" t="Include" />
+                <e p="MainMenu.cs" t="Include" />
+                <e p="Pay.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="link.xml" t="Include" />
+        </e>
         <e p="Plugins" t="Include">
+          <e p="Android" t="Include">
+            <e p="AndroidManifest.xml" t="Include" />
+          </e>
           <e p="Coffee" t="Include">
             <e p="UIExtensions" t="Include">
               <e p="UIParticle" t="Include">
@@ -424,6 +468,9 @@
             <e p="PhotonHelper.cs" t="Include" />
             <e p="ScriptsEditor.asmdef" t="Include" />
           </e>
+          <e p="Facebook" t="Include">
+            <e p="FacebookService.cs" t="Include" />
+          </e>
           <e p="Game" t="Include">
             <e p="BoardController.cs" t="Include" />
             <e p="MatchController.cs" t="Include" />
@@ -440,6 +487,9 @@
           </e>
           <e p="Networking" t="Include">
             <e p="ConnectionController.cs" t="Include" />
+            <e p="DefaultAuth.cs" t="Include" />
+            <e p="FacebookAuth.cs" t="Include" />
+            <e p="IAuth.cs" t="Include" />
             <e p="NetworkManager.cs" t="Include" />
             <e p="NetworkPlayer.cs" t="Include" />
             <e p="Properties" t="Include">
@@ -518,6 +568,7 @@
               <e p="ExtractReverseDiagonal.cs" t="Include" />
               <e p="ExtractRow.cs" t="Include" />
             </e>
+            <e p="ImageDownloader.cs" t="Include" />
             <e p="Singleton.cs" t="Include" />
             <e p="Timer.cs" t="Include" />
             <e p="Utilities.cs" t="Include" />

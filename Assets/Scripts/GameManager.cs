@@ -8,12 +8,17 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
+    public FacebookService FacebookService { get; private set; }
     public bool IsApplicationQuiting { get; private set; }
 
     protected override void RegisterListeners()
     {
+        FacebookService = GetComponent<FacebookService>();
+        FacebookService.Initialize();
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
+
+
     protected override void UnregisterListeners()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;

@@ -40,7 +40,10 @@
         public const string ROOM_STATUS = "roomStatus";
         public const string RPC_BUFFERED_COUNT = "rpcBufferedCount";
 
-        public const string USERNAME = "username";
+        public const string USER_NAME = "user_name";
+        public const string USER_ID = "user_id";
+        public const string USER_PICTURE_URL = "user_picture";
+
         public const string PLAYED_GAMES = "playedGames";
         public const string WON_GAMES = "gamesWon";
         public const string LOST_GAMES = "gamesLost";

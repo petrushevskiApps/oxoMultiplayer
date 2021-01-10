@@ -54,7 +54,7 @@ namespace com.petrushevskiapps.Oxo
             
             PlayerDataController.UsernameChanged.AddListener(SetNetworkUsername);
         }
-        
+
         private void OnDestroy()
         {
             PlayerDataController.UsernameChanged.RemoveListener(SetNetworkUsername);
@@ -64,7 +64,7 @@ namespace com.petrushevskiapps.Oxo
         {
             SetNetworkUsername(PlayerDataController.Username);
         }
-
+        
         public void CreateRoom(string roomName = null)
         {
             if (PhotonNetwork.IsConnected)
@@ -91,7 +91,10 @@ namespace com.petrushevskiapps.Oxo
                 }));
             }
         }
-        
+        public override void OnCustomAuthenticationFailed(string debugMessage)
+        {
+            Debug.LogErrorFormat("Error authenticating to Photon using Facebook: {0}", debugMessage);
+        }
         public void JoinRandomRoom()
         {
             // #Critical we need at this point to attempt joining a Random Room.
@@ -184,11 +187,10 @@ namespace com.petrushevskiapps.Oxo
             return cachedRoomsDictionary.ContainsKey(roomName);
         }
         
-        public void SetNetworkUsername(string userName)
+        private void SetNetworkUsername(string userName)
         {
             PhotonNetwork.NickName = userName;
         }
-        
         
         public override void OnMasterClientSwitched(Player newMasterClient)
         {

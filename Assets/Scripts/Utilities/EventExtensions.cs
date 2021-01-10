@@ -1,4 +1,5 @@
-﻿using UnityEngine.Events;
+﻿using UnityEngine;
+using UnityEngine.Events;
 
 namespace com.petrushevskiapps.Oxo.Utilities
 {
@@ -14,6 +15,10 @@ namespace com.petrushevskiapps.Oxo.Utilities
     {
     }
     public class UnityStringEvent : UnityEvent<string>
+         {
+         }
+    public class UnityTextureEvent : UnityEvent<Texture2D>
     {
     }
+    
 }

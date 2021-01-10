@@ -15,7 +15,9 @@ public class PlayerDataController : MonoBehaviour
     public static UnityBoolEvent vibrationStatusChange = new UnityBoolEvent();
     
     public static UnityStringEvent UsernameChanged = new UnityStringEvent();
-    
+    public static UnityStringEvent UserIdChanged = new UnityStringEvent();
+    public static UnityStringEvent UserPictureUrlChanged = new UnityStringEvent();
+
     public static UnityIntegerEvent playedGamesChange = new UnityIntegerEvent();
     public static UnityIntegerEvent wonGamesChange = new UnityIntegerEvent();
     public static UnityIntegerEvent lostGamesChange = new UnityIntegerEvent();
@@ -24,14 +26,33 @@ public class PlayerDataController : MonoBehaviour
     
     public static string Username
     {
-        get => PlayerPrefs.GetString(Keys.USERNAME, string.Empty);
+        get => PlayerPrefs.GetString(Keys.USER_NAME, string.Empty);
         set
         {
-            PlayerPrefs.SetString(Keys.USERNAME, value);
+            PlayerPrefs.SetString(Keys.USER_NAME, value);
             UsernameChanged.Invoke(value);
         }
     }
 
+    public static string UserId
+    {
+        get => PlayerPrefs.GetString(Keys.USER_ID, string.Empty);
+        set
+        {
+            PlayerPrefs.SetString(Keys.USER_ID, value);
+            UserIdChanged.Invoke(value);
+        }
+    }
+    public static string UserPictureUrl
+    {
+        get => PlayerPrefs.GetString(Keys.USER_PICTURE_URL, string.Empty);
+        set
+        {
+            PlayerPrefs.SetString(Keys.USER_PICTURE_URL, value);
+            UserPictureUrlChanged.Invoke(value);
+        }
+    }
+    
     public static int PlayedGames => PlayerPrefs.GetInt(Keys.PLAYED_GAMES, 0);
 
     public static void IncreasePlayedGames()
@@ -87,5 +108,50 @@ public class PlayerDataController : MonoBehaviour
         }
     }
 
+    private static Texture2D cachedUserImage;
     
+    private void Awake()
+    {
+        FacebookService.UsernameUpdated.AddListener(UpdateUsername);
+        FacebookService.UserIdUpdated.AddListener(UpdateUserId);
+        FacebookService.UserImageUpdate.AddListener(UpdateUserImage);
+    }
+
+    
+
+    private void OnDestroy()
+    {
+        FacebookService.UsernameUpdated.RemoveListener(UpdateUsername);
+        FacebookService.UserIdUpdated.RemoveListener(UpdateUserId);
+        FacebookService.UserImageUpdate.RemoveListener(UpdateUserImage);
+    }
+
+    private void UpdateUserId(string newUserId)
+    {
+        UserId = newUserId;
+    }
+
+    private void UpdateUsername(string newUsername)
+    {
+        Username = newUsername;
+    }
+    
+    private void UpdateUserImage(string url)
+    {
+        UserPictureUrl = url;
+        Debug.Log($"URL GET IMAGE:: {url}");
+        GetUserImage();
+    }
+
+    public static Texture2D GetUserImage()
+    {
+        if (cachedUserImage != null) return cachedUserImage;
+        
+        ImageDownloader.DownloadImage(GameManager.Instance, UserPictureUrl, texture =>
+        {
+            cachedUserImage = texture;
+        });
+        
+        return cachedUserImage;
+    }
 }
