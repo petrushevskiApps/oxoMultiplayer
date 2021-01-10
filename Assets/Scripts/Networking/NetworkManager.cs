@@ -95,6 +95,7 @@ namespace com.petrushevskiapps.Oxo
         {
             Debug.LogErrorFormat("Error authenticating to Photon using Facebook: {0}", debugMessage);
         }
+        
         public void JoinRandomRoom()
         {
             // #Critical we need at this point to attempt joining a Random Room.

@@ -37,14 +37,15 @@ namespace com.petrushevskiapps.Oxo
         
         private void Awake()
         {
-            GameManager.Instance.FacebookService.LoginCompleted.AddListener(OnFacebookLogin);
+//            GameManager.Instance.FacebookService.LoginCompleted.AddListener(OnFacebookLogin);
+            SetAuthAndConnect(new DefaultAuth());
             PhotonNetwork.AutomaticallySyncScene = true;
         }
 
-        private void OnFacebookLogin(string tokenString, string userId)
-        {
-            SetAuthAndConnect(new FacebookAuth());
-        }
+//        private void OnFacebookLogin(string tokenString, string userId)
+//        {
+//            SetAuthAndConnect(new FacebookAuth());
+//        }
 
         private void OnDestroy()
         {

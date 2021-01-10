@@ -112,46 +112,46 @@ public class PlayerDataController : MonoBehaviour
     
     private void Awake()
     {
-        FacebookService.UsernameUpdated.AddListener(UpdateUsername);
-        FacebookService.UserIdUpdated.AddListener(UpdateUserId);
-        FacebookService.UserImageUpdate.AddListener(UpdateUserImage);
+//        FacebookService.UsernameUpdated.AddListener(UpdateUsername);
+//        FacebookService.UserIdUpdated.AddListener(UpdateUserId);
+//        FacebookService.UserImageUpdate.AddListener(UpdateUserImage);
     }
 
     
 
     private void OnDestroy()
     {
-        FacebookService.UsernameUpdated.RemoveListener(UpdateUsername);
-        FacebookService.UserIdUpdated.RemoveListener(UpdateUserId);
-        FacebookService.UserImageUpdate.RemoveListener(UpdateUserImage);
+//        FacebookService.UsernameUpdated.RemoveListener(UpdateUsername);
+//        FacebookService.UserIdUpdated.RemoveListener(UpdateUserId);
+//        FacebookService.UserImageUpdate.RemoveListener(UpdateUserImage);
     }
-
-    private void UpdateUserId(string newUserId)
-    {
-        UserId = newUserId;
-    }
-
-    private void UpdateUsername(string newUsername)
-    {
-        Username = newUsername;
-    }
-    
-    private void UpdateUserImage(string url)
-    {
-        UserPictureUrl = url;
-        Debug.Log($"URL GET IMAGE:: {url}");
-        GetUserImage();
-    }
-
-    public static Texture2D GetUserImage()
-    {
-        if (cachedUserImage != null) return cachedUserImage;
-        
-        ImageDownloader.DownloadImage(GameManager.Instance, UserPictureUrl, texture =>
-        {
-            cachedUserImage = texture;
-        });
-        
-        return cachedUserImage;
-    }
+//
+//    private void UpdateUserId(string newUserId)
+//    {
+//        UserId = newUserId;
+//    }
+//
+//    private void UpdateUsername(string newUsername)
+//    {
+//        Username = newUsername;
+//    }
+//    
+//    private void UpdateUserImage(string url)
+//    {
+//        UserPictureUrl = url;
+//        Debug.Log($"URL GET IMAGE:: {url}");
+//        GetUserImage();
+//    }
+//
+//    public static Texture2D GetUserImage()
+//    {
+//        if (cachedUserImage != null) return cachedUserImage;
+//        
+//        ImageDownloader.DownloadImage(GameManager.Instance, UserPictureUrl, texture =>
+//        {
+//            cachedUserImage = texture;
+//        });
+//        
+//        return cachedUserImage;
+//    }
 }

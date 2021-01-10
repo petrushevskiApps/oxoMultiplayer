@@ -13,8 +13,8 @@ public class GameManager : Singleton<GameManager>
 
     protected override void RegisterListeners()
     {
-        FacebookService = GetComponent<FacebookService>();
-        FacebookService.Initialize();
+//        FacebookService = GetComponent<FacebookService>();
+//        FacebookService.Initialize();
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 

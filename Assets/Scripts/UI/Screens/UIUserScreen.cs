@@ -15,9 +15,7 @@ namespace com.petrushevskiapps.Oxo
         [SerializeField] private TextMeshProUGUI gamesPlayedStat;
         [SerializeField] private TextMeshProUGUI gamesWonStat;
         [SerializeField] private TextMeshProUGUI gamesLostStat;
-
-        [SerializeField] private Image image;
-
+        
         private Rect rect = new Rect(0, 0, 600, 600);
         private void Awake()
         {
@@ -42,7 +40,6 @@ namespace com.petrushevskiapps.Oxo
             gamesPlayedStat.text = PlayerDataController.PlayedGames.ToString();
             gamesWonStat.text = PlayerDataController.WonGames.ToString();
             gamesLostStat.text = PlayerDataController.LostGames.ToString();
-            image.sprite = Sprite.Create(PlayerDataController.GetUserImage(), rect, Vector2.zero);
         }
         
         private void OnUsernameBtnClicked()
