@@ -14,12 +14,12 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Awake()
     {
-        winCondition = new WinCondition(3);
-        
         MatchController.RoundEnd.AddListener(ResetBoard);
         MatchController.MatchEnd.AddListener(OnMatchEnded);
         
         SetupBoard();
+        
+        winCondition = new WinCondition(tilesTable.GetUpperBound(0) + 1);
     }
     
     private void OnDestroy()
