@@ -17,6 +17,16 @@ namespace Tests
         private static IntegerTile id6 =  new IntegerTile(){ Id=6, Value = 0};
         private static IntegerTile id7 =  new IntegerTile(){ Id=7, Value = 1};
         private static IntegerTile id8 =  new IntegerTile(){ Id=8, Value = 0};
+        
+        private static IntegerTile id01 =  new IntegerTile(){ Id=0, Value = 0};
+        private static IntegerTile id11 =  new IntegerTile(){ Id=1, Value = 0};
+        private static IntegerTile id21 =  new IntegerTile(){ Id=2, Value = 0};
+        private static IntegerTile id31 =  new IntegerTile(){ Id=3, Value = 0};
+        private static IntegerTile id41 =  new IntegerTile(){ Id=4, Value = 0};
+        private static IntegerTile id51 =  new IntegerTile(){ Id=5, Value = 0};
+        private static IntegerTile id61 =  new IntegerTile(){ Id=6, Value = 0};
+        private static IntegerTile id71 =  new IntegerTile(){ Id=7, Value = 0};
+        private static IntegerTile id81 =  new IntegerTile(){ Id=8, Value = 0};
         // 2 0 1
         // 1 2 2
         // 0 1 0
@@ -29,6 +39,15 @@ namespace Tests
                 {id6,id7,id8}
             }).Returns(8).SetName("AiWins");
         }
+        private static IEnumerable<TestCaseData> TableData2()
+        {
+            yield return new TestCaseData(new [,]
+            {
+                {id01,id11,id21},
+                {id31,id41,id51},
+                {id61,id71,id81}
+            }).Returns(0).SetName("FirstMove");
+        }
         
         [SetUp]
         public void Setup()
@@ -39,12 +58,13 @@ namespace Tests
             
         }
         
-//        [Test]
-//        [TestCaseSource(nameof(TableData))]
-//        public int FindBestMove(AiBrain.IntegerTile[,] table)
-//        {
-////            return aiBrain.FindBestMove(table);
-//        }
+        [Test]
+        [TestCaseSource(nameof(TableData))]
+        [TestCaseSource(nameof(TableData2))]
+        public int FindBestMove(IntegerTile[,] table)
+        {
+            return aiBrain.FindBestMove(table);
+        }
         
     }
 }
