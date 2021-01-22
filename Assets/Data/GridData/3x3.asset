@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c52192f07b4a52e459f7c7c5bfbcaa3d, type: 3}
   m_Name: 3x3
   m_EditorClassIdentifier: 
+  publishUserId: 1
+  maxPlayers: 2
   rows: 3
   columns: 3

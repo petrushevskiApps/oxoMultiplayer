@@ -20,10 +20,7 @@ namespace com.petrushevskiapps.Oxo
         public static UnityEvent JoinRandomFailed = new UnityEvent();
         public static UnityEvent JoinedRoom = new UnityEvent();
         public static UnityEvent LeftRoom = new UnityEvent();
-        
-        [Tooltip("The maximum number of players per room.")]
-        [Header("Parameters")]
-        [SerializeField] private byte maxPlayersPerRoom = 4;
+
 
         [Header("Controllers")]
         [SerializeField] private ConnectionController connectionController;
@@ -33,12 +30,15 @@ namespace com.petrushevskiapps.Oxo
         public RoomController RoomController => roomController;
         
         public static bool IsMasterClient => PhotonNetwork.IsMasterClient;
+
+        
         
         public static NetworkManager Instance;
 
         private Dictionary<string, RoomInfo> cachedRoomsDictionary = new Dictionary<string, RoomInfo>();
 
-        [SerializeField] private RoomConfiguration configuration;
+        private RoomConfiguration configuration;
+        
         
         private void Awake()
         {
@@ -64,31 +64,36 @@ namespace com.petrushevskiapps.Oxo
         {
             SetNetworkUsername(PlayerDataController.Username);
         }
-        
+
         public void CreateRoom(string roomName = null)
         {
             if (PhotonNetwork.IsConnected)
             {
-                StartCoroutine(DelayJoin(() =>
+                Timer.Start(this, "CreateRoom", 1, ()=>
                 {
-                    RoomOptions roomOptions = new RoomOptions();
-                    roomOptions.MaxPlayers = maxPlayersPerRoom;
-                    roomOptions.PublishUserId = true;
-                    roomOptions.CustomRoomPropertiesForLobby = configuration.GetPropertiesNames();
-                    roomOptions.CustomRoomProperties = configuration.GetConfigHashtable();
-                    PhotonNetwork.CreateRoom(roomName, roomOptions);
-                }));
+                    PhotonNetwork.CreateRoom(roomName, GetRoomOptions());
+                });
             }
+        }
+
+        private RoomOptions GetRoomOptions()
+        {
+            RoomOptions roomOptions = new RoomOptions();
+            roomOptions.MaxPlayers = configuration.maxPlayers;
+            roomOptions.PublishUserId = configuration.publishUserId;
+            roomOptions.CustomRoomPropertiesForLobby = configuration.GetPropertiesNames();
+            roomOptions.CustomRoomProperties = configuration.GetConfigHashtable();
+            return roomOptions;
         }
         
         public void JoinRoom(string roomName)
         {
             if (PhotonNetwork.IsConnected)
             {
-                StartCoroutine(DelayJoin(() =>
+                Timer.Start(this, "JoinRoom", 1, ()=>
                 {
                     PhotonNetwork.JoinRoom(roomName);
-                }));
+                });
             }
         }
         public override void OnCustomAuthenticationFailed(string debugMessage)
@@ -96,30 +101,30 @@ namespace com.petrushevskiapps.Oxo
             Debug.LogErrorFormat("Error authenticating to Photon using Facebook: {0}", debugMessage);
         }
         
+        public void JoinRandomRoomQuick()
+        {
+            Timer.Start(this, "JoinRoomQuick", 1, ()=>
+            {
+                PhotonNetwork.JoinRandomRoom();
+            });
+        }
+        
         public void JoinRandomRoom()
         {
             // #Critical we need at this point to attempt joining a Random Room.
             // If it fails, we'll get notified in OnJoinRandomFailed() and we'll create one.
-            StartCoroutine(DelayJoin(() => { PhotonNetwork.JoinRandomRoom(); }));
-        }
-        public void JoinRandomRoom(RoomConfiguration configuration)
-        {
-            // #Critical we need at this point to attempt joining a Random Room.
-            // If it fails, we'll get notified in OnJoinRandomFailed() and we'll create one.
-            this.configuration = configuration;
             
-            StartCoroutine(DelayJoin(() =>
+            Timer.Start(this, "JoinRandomRoom", 1, ()=>
             {
-                PhotonNetwork.JoinRandomRoom(configuration.GetConfigHashtable(), maxPlayersPerRoom);
-            }));
+                PhotonNetwork.JoinRandomRoom(configuration.GetConfigHashtable(), configuration.maxPlayers);
+            });
         }
-        
-        IEnumerator DelayJoin(Action joinAction)
+
+        public void SetConfiguration(RoomConfiguration configuration)
         {
-            yield return new WaitForSeconds(1f);
-            joinAction.Invoke();
+            this.configuration = configuration;
         }
-        
+
         public override void OnJoinRandomFailed(short returnCode, string message)
         {
             JoinRandomFailed.Invoke();
@@ -199,25 +204,9 @@ namespace com.petrushevskiapps.Oxo
             MasterSwitched.Invoke();
         }
         
-        public void SendRpc(PhotonView pv, string rpcMethodName, bool overrideMaster, params object[] parameters)
-        {
-            if (!PhotonNetwork.IsMasterClient && !overrideMaster) return;
-            pv.RPC(rpcMethodName, RpcTarget.AllBufferedViaServer, parameters);
-                
-            Debug.Log($"Buffered RPCs Count: {RoomController.LocalRpcBufferCount}");
-        }
+        
 
-        public void ClearRpcs(PhotonView pv)
-        {
-            RoomController.LocalRpcBufferCount = 0;
-            
-            Debug.Log($"Clean RPC Buffer");
-            
-            if (PhotonNetwork.IsMasterClient)
-            {
-                PhotonNetwork.RemoveRPCs(pv);
-            }
-        }
+        
     }
 }
 

@@ -1,29 +1,30 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-public class WinCondition
+public class WinCondition<T> where T : ITile
 {
-    private int minStrike;
-    private List<ExtractArray<Tile>> extractStrategies = new List<ExtractArray<Tile>>();
+    public int WinStrike { get; private set; }
+    
+    private List<ExtractArray<T>> extractStrategies = new List<ExtractArray<T>>();
     private List<int> winIds = new List<int>();
 
-    public WinCondition(int minStrike)
+    public WinCondition(int winStrike)
     {
-        this.minStrike = minStrike;
+        WinStrike = winStrike;
         SetupExtractStrategies();
     }
     
-    private void SetupExtractStrategies()
+    public void SetupExtractStrategies()
     {
-        extractStrategies.Add(new ExtractRow<Tile>());
-        extractStrategies.Add(new ExtractColumn<Tile>());
-        extractStrategies.Add(new ExtractDiagonal<Tile>());
-        extractStrategies.Add(new ExtractReverseDiagonal<Tile>());
+        extractStrategies.Add(new ExtractRow<T>());
+        extractStrategies.Add(new ExtractColumn<T>());
+        extractStrategies.Add(new ExtractDiagonal<T>());
+        extractStrategies.Add(new ExtractReverseDiagonal<T>());
     }
     
-    public bool IsRoundWon(int playerId, int elementId, Tile[,] table)
+    public bool IsRoundWon(int playerId, int elementId, T[,] table)
     {
-        foreach (ExtractArray<Tile> strategy in extractStrategies)
+        foreach (ExtractArray<T> strategy in extractStrategies)
         {
             if (IsWin(playerId, strategy.Extract(table, elementId)))
             {
@@ -34,9 +35,9 @@ public class WinCondition
         return false;
     }
     
-    public bool IsTableFull(Tile[,] tilesTable)
+    public bool IsRoundTie(T[,] tilesTable)
     {
-        int count = tilesTable.Cast<Tile>().Count(t => t.Id != 0);
+        int count = tilesTable.Cast<T>().Count(t => t.Value != 0);
         return count == tilesTable.Length;
     }
 
@@ -45,10 +46,10 @@ public class WinCondition
         return winIds;
     }
     
-    private bool IsWin(int id, Tile[] array)
+    private bool IsWin(int id, T[] array)
     {
         int winCount = 0;
-        int bound = array.Length - minStrike;
+        int bound = array.Length - WinStrike;
 
         if (bound < 0) return false;
         
@@ -56,11 +57,11 @@ public class WinCondition
         {
             winIds.Clear();
             
-            for (int i = offset; i < offset + minStrike; i++)
+            for (int i = offset; i < offset + WinStrike; i++)
             {
-                Tile tile = array[i];
+                T tile = array[i];
                 
-                if (tile.PlayerId == id)
+                if (tile.Value == id)
                 {
                     winCount++;
                     winIds.Add(tile.Id);
@@ -72,7 +73,7 @@ public class WinCondition
                 }
             }
 
-            if (winCount >= minStrike) return true;
+            if (winCount >= WinStrike) return true;
             
             winCount = 0;
         }

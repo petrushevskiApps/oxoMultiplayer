@@ -22,6 +22,7 @@
 
         public const string TIMER_POPUP_MESSAGE = "Waiting for {playerName} to rejoin the game.";
 
+        
     }
 
     public static class LoadingMessage
@@ -55,14 +56,15 @@
     public static class RPCs
     {
         public const string RPC_START_MATCH = "StartMatchSynced";
-        public const string RPC_TURN_END = "TurnEnd";
-        public const string RPC_ROUND_COMPLETED = "WaitRoundCompletion";
+        public const string RPC_TURN_END = "TurnEnded";
+        public const string RPC_ROUND_COMPLETED = "RoundCompleted";
 
     }
 
     public static class TimerKeys
     {
         public const string ROUND_START_DELAY = "roundStartDelay";
+        public const string ROUND_ENDED = "RoundEndDelay";
     }
     
 }

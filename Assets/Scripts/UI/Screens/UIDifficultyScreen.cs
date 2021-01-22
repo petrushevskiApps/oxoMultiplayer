@@ -19,14 +19,22 @@ public class UIDifficultyScreen : UIScreen
     private void OnButtonClick(RoomConfiguration roomConfiguration)
     {
         UIManager.Instance.OpenScreen<UILoadingScreen>();
-        NetworkManager.Instance.JoinRandomRoom(roomConfiguration);
+        
+        NetworkManager.Instance.SetConfiguration(roomConfiguration);
+        
+        if (NetworkManager.Instance.ConnectionController.PlayOffline)
+        {
+           NetworkManager.Instance.CreateRoom();
+           return;
+        }
+        NetworkManager.Instance.JoinRandomRoom();
     }
     
     
     [Serializable]
     public class ButtonConfiguration
     {
-        [SerializeField] private Button button;
+        [SerializeField] private UIButton button;
         [SerializeField] private RoomConfiguration configuration;
 
         public void SetButtonAction(UnityAction<RoomConfiguration> onButtonClick)

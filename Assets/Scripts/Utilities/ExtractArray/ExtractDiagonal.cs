@@ -43,7 +43,7 @@ public class ExtractDiagonal<T> : ExtractArray<T>
             diagonal[di] = table[r, c];
         }
 
-        Utilities.PrintArray(diagonal);
+//        Utilities.PrintArray(diagonal);
         return diagonal;
     }
 

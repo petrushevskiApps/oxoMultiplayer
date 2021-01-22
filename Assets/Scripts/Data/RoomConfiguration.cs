@@ -4,6 +4,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "RoomConfiguration", menuName = "Data/RoomConfiguration", order = 1)]
 public class RoomConfiguration : ScriptableObject
 {
+    public bool publishUserId = false;
+    public byte maxPlayers = 0;
     public int rows = 0;
     public int columns = 0;
 

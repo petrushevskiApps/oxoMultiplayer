@@ -15,7 +15,7 @@ namespace com.petrushevskiapps.Oxo
 
         public bool IsOnline
         {
-            get => networkStatus;
+            get => networkStatus || PlayOffline;
             private set
             {
                 if (networkStatus == value) return;
@@ -23,6 +23,9 @@ namespace com.petrushevskiapps.Oxo
                 NetworkStatusChange.Invoke(value);
             }
         }
+
+        
+        public bool PlayOffline { get; set; }
 
         private bool networkStatus = false;
 
@@ -114,7 +117,12 @@ namespace com.petrushevskiapps.Oxo
         {
             base.OnDisconnected(cause);
             IsOnline = false;
-
+            if (PlayOffline)
+            {
+                PhotonNetwork.OfflineMode = PlayOffline;
+                return;
+            }
+            
             if (masterConnectionEstablished)
             {
                 if (reconnectCoroutine == null)

@@ -1,4 +1,5 @@
-﻿using com.petrushevskiapps.Oxo;
+﻿using System;
+using com.petrushevskiapps.Oxo;
 using com.petrushevskiapps.Oxo.Properties;
 using com.petrushevskiapps.Oxo.Utilities;
 using Data;
@@ -8,120 +9,109 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class NetworkPlayer
+public class NetworkPlayer : IPlayer
 {
-    public readonly UnityEvent ReadyStatusChanged = new UnityEvent();
-    public readonly UnityIntegerEvent ScoreUpdated = new UnityIntegerEvent();
-    
+    private readonly UnityIntegerEvent ScoreUpdated = new UnityIntegerEvent();
+
     private INetworkProperties Properties { get; }
-    
-    public string Nickname => player.NickName;
-    
-    public TilePlayerSign PlayerSignSymbol { get; }
-
-    public int PlayerId
-    {
-        get => Properties.GetProperty<int>(Keys.PLAYER_MATCH_ID);
-        private set
-        {
-            if(PlayerId > 0) return;
-            Properties.Set(Keys.PLAYER_MATCH_ID, value).Sync();
-        }
-    }
-
-    private bool IsReady
-    {
-        get => player.IsMasterClient || Properties.GetProperty<bool>(Keys.PLAYER_READY_KEY);
-        set
-        {
-            if (IsReady == value) return;
-            
-            ReadyStatusChanged.Invoke();
-            Properties.Set(Keys.PLAYER_READY_KEY, value).Sync();
-        }
-    }
-    
-    public int Score
-    {
-        get => Properties.GetProperty<int>(Keys.PLAYER_MATCH_SCORE);
-        set
-        {
-            if (Score == value) return;
-            
-            Properties.Set(Keys.PLAYER_MATCH_SCORE, value).Sync();
-            ScoreUpdated.Invoke(value);
-            Debug.Log($"NetworkPlayer:: {Nickname}:: New Score:: {value}");
-        }
-    }
-    
-    public bool IsActive
-    {
-        get
-        {
-            int turn = MatchController.LocalInstance.Turn;
-            return (turn % PhotonNetwork.CurrentRoom.PlayerCount) == (PlayerId - 1);
-        }
-    }
-
-    
-    private Player player;
-    private bool isActive;
+    private readonly Player player;
 
     public NetworkPlayer(Player player)
     {
         this.player = player;
         Properties = new PlayerProperties(player);
-        SetDefaultProperties(player.IsMasterClient);
+        SetDefaultProperties();
         
         if (player.IsLocal)
         {
-            MatchController.MatchStartSynced.AddListener(OnMatchStarted);
             MatchController.MatchEnd.AddListener(OnMatchEnded);
         }
         
-        PlayerId = player.ActorNumber;
-        PlayerSignSymbol = (TilePlayerSign) player.ActorNumber;
+        SetId(player.ActorNumber);
     }
     
     ~ NetworkPlayer()
     {
-        SetDefaultProperties(false);
+        SetDefaultProperties();
         
         if (player.IsLocal)
         {
-            MatchController.MatchStartSynced.RemoveListener(OnMatchStarted);
             MatchController.MatchEnd.RemoveListener(OnMatchEnded);
         }
     }
 
-    private void SetDefaultProperties(bool isReady)
+    public bool IsActive()
     {
-        Properties.Set(Keys.PLAYER_READY_KEY, isReady)
-                  .Set(Keys.PLAYER_MATCH_SCORE, 0)
-                  .Sync();
+        int turn = MatchController.LocalInstance.Turn;
+        return (turn % NetworkManager.Instance.RoomController.PlayersInRoom.Count) == (GetId() - 1);
     }
     
-    private void OnMatchStarted()
+    public TilePlayerSign GetSign()
     {
-        IsReady = player.IsMasterClient;
+        return (TilePlayerSign) player.ActorNumber;
     }
+    
+    public string GetNickname()
+    {
+        return player.NickName;
+    }
+    public int GetId()
+    {
+        return Properties.GetProperty<int>(Keys.PLAYER_MATCH_ID);
+    }
+
+    private void SetId(int playerId)
+    {
+        if(GetId() > 0) return;
+        Properties.Set(Keys.PLAYER_MATCH_ID, playerId).Sync();
+    }
+
+    public int GetScore()
+    {
+        return Properties.GetProperty<int>(Keys.PLAYER_MATCH_SCORE);
+    }
+
+    public void IncrementScore()
+    {
+        SetScore(GetScore() + 1);
+    }
+
+    public void SetScore(int score)
+    {
+        Properties.Set(Keys.PLAYER_MATCH_SCORE, score).Sync();
+        ScoreUpdated.Invoke(score);
+        Debug.Log($"NetworkPlayer:: {GetNickname()}:: New Score:: {score}");
+    }
+
+    
+    private void SetDefaultProperties()
+    {
+        Properties.Set(Keys.PLAYER_MATCH_SCORE, 0).Sync();
+    }
+
     private void OnMatchEnded(bool arg0)
     {
-        Score = 0;
+        SetScore(0);
     }
     
     public void UpdatePlayerStatuses(Hashtable properties)
     {
-        if (properties.ContainsKey(Keys.PLAYER_READY_KEY))
-        {
-            Properties.Updated(Keys.PLAYER_READY_KEY);
-        }
-        
         if (properties.ContainsKey(Keys.PLAYER_MATCH_SCORE))
         {
             ScoreUpdated.Invoke((int)properties[Keys.PLAYER_MATCH_SCORE]);
             Properties.Updated(Keys.PLAYER_MATCH_SCORE);
         }
+    }
+
+    
+    public void RegisterScoreListener(UnityAction<int> listener)
+    {
+        ScoreUpdated.AddListener(listener);
+    }
+
+    public void UnregisterScoreListener(UnityAction<int> listener)
+    {
+        ScoreUpdated.RemoveListener(listener);
     }
 
 

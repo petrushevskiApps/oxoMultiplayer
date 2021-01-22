@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using com.petrushevskiapps.Oxo;
 using com.petrushevskiapps.Oxo.Utilities;
@@ -8,9 +7,8 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UnityEngine.UI;
 
-public class UIGameScreen : UIScreen
+public partial class UIGameScreen : UIScreen
 {
     [Header("Buttons")]
     [SerializeField] private UIButton backButton;
@@ -35,7 +33,7 @@ public class UIGameScreen : UIScreen
     [Header("Syncronization")] 
     [SerializeField] private GameObject syncPanel;
     
-    private List<NetworkPlayer> players;
+    private List<IPlayer> players;
     private bool isListenerSet = false;
     
     private void Awake()
@@ -49,7 +47,7 @@ public class UIGameScreen : UIScreen
         MatchController.MatchEnd.AddListener(OnMatchEnded);
         MatchController.RoundStarting.AddListener(OnRoundStarting);
         MatchController.RoundStarted.AddListener(OnRoundStarted);
-        MatchController.RoundEnd.AddListener(OnRoundEnded);
+        MatchController.RoundCompletedEvent.AddListener(OnRoundEnded);
         RoomController.PlayerEnteredRoom.AddListener(OnPlayerEnteredRoom);
         RoomController.PlayerExitedRoom.AddListener(OnPlayerExitedRoom);
     }
@@ -62,7 +60,7 @@ public class UIGameScreen : UIScreen
         MatchController.MatchEnd.RemoveListener(OnMatchEnded);
         MatchController.RoundStarting.RemoveListener(OnRoundStarting);
         MatchController.RoundStarted.AddListener(OnRoundStarted);
-        MatchController.RoundEnd.RemoveListener(OnRoundEnded);
+        MatchController.RoundCompletedEvent.RemoveListener(OnRoundEnded);
         RoomController.PlayerEnteredRoom.RemoveListener(OnPlayerEnteredRoom);
         RoomController.PlayerExitedRoom.RemoveListener(OnPlayerExitedRoom);
 
@@ -118,6 +116,7 @@ public class UIGameScreen : UIScreen
     {
         middleContent.SetActive(false);
     }
+    
     private void OnRoundEnded()
     {
         
@@ -140,60 +139,13 @@ public class UIGameScreen : UIScreen
             .SetMessage(Constants.LEAVE_MATCH_MESSAGE);
     }
     
-    private void OnPlayerEnteredRoom(NetworkPlayer arg0)
+    private void OnPlayerEnteredRoom(IPlayer arg0)
     {
         SetupPlayerRefs();
     }
-    private void OnPlayerExitedRoom(NetworkPlayer player)
+    private void OnPlayerExitedRoom(IPlayer player)
     {
         if(!gameObject.activeInHierarchy) return;
-        UIManager.Instance.OpenPopup<UITimerPopup>().InitializePopup(player.Nickname);
-    }
-    
-    [Serializable]
-    public class PlayerUI
-    {
-        private NetworkPlayer player;
-        
-        [SerializeField] private TextMeshProUGUI nicknameText;
-        [SerializeField] private Image symbolImage;
-        [SerializeField] private TextMeshProUGUI scoreText;
-        [SerializeField] private List<Image> backgrounds;
-        
-        private Color activeColor;
-        private Color normalColor;
-        
-        public void Setup(NetworkPlayer player, TileImages symbols,Color activeColor,Color normalColor)
-        {
-            this.player = player;
-            this.activeColor = activeColor;
-            this.normalColor = normalColor;
-            
-            nicknameText.text = player.Nickname;
-            symbolImage.sprite = symbols.GetEndTileState(player.PlayerSignSymbol);
-            
-            UpdateScoreText(player.Score);
-            SetupBackgrounds();
-            
-            player.ScoreUpdated.AddListener(UpdateScoreText);
-            MatchController.TurnChanged.AddListener(SetupBackgrounds);
-        }
-
-        public void Clear()
-        {
-            if(player == null) return;
-            player.ScoreUpdated.RemoveListener(UpdateScoreText);
-            MatchController.TurnChanged.RemoveListener(SetupBackgrounds);
-        }
-
-        private void SetupBackgrounds(int arg0 = 0)
-        {
-            backgrounds.ForEach(background => background.color = player.IsActive ? activeColor : normalColor);
-        }
-        
-        private void UpdateScoreText(int score)
-        {
-            scoreText.text = score.ToString();
-        }
+        UIManager.Instance.OpenPopup<UITimerPopup>().InitializePopup(player.GetNickname());
     }
 }

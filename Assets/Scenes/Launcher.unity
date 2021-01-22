@@ -1475,10 +1475,9 @@ GameObject:
   - component: {fileID: 172579924}
   - component: {fileID: 172579923}
   - component: {fileID: 172579922}
-  - component: {fileID: 172579921}
   - component: {fileID: 172579920}
   m_Layer: 5
-  m_Name: HardMode
+  m_Name: 5x5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1518,18 +1517,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundConfig: {fileID: 11400000, guid: 19664d94370498a4e8ced4e0d2732910, type: 2}
---- !u!114 &172579921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 172579918}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7537448f57f4aa6aa42610455c1608f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &172579922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1638,7 +1625,7 @@ GameObject:
   - component: {fileID: 185456763}
   - component: {fileID: 185456764}
   m_Layer: 5
-  m_Name: PlayRandom
+  m_Name: PlayOnline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1657,11 +1644,11 @@ RectTransform:
   m_Children:
   - {fileID: 1377390809}
   m_Father: {fileID: 311328697}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 539.73065, y: -152.61977}
+  m_AnchoredPosition: {x: 539.73065, y: -490.4791}
   m_SizeDelta: {x: 730, y: 210}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &185456759
@@ -2178,7 +2165,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &266902748
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2964,8 +2951,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 185456758}
   - {fileID: 2111094821}
+  - {fileID: 185456758}
   - {fileID: 266902748}
   - {fileID: 1479317051}
   m_Father: {fileID: 2063291296}
@@ -2994,7 +2981,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: -80
+  m_Spacing: -200
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -3017,8 +3004,8 @@ MonoBehaviour:
   globalUiElements:
   - {fileID: 1286189987}
   activateSafeArea: 1
-  playRandomBtn: {fileID: 185456759}
-  joinGameBtn: {fileID: 2111094822}
+  playOnline: {fileID: 185456759}
+  playOffline: {fileID: 2111094822}
   createGameBtn: {fileID: 266902749}
   userScreenBtn: {fileID: 989266034}
   helpBtn: {fileID: 1104840685}
@@ -4161,7 +4148,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Normal
+  m_text: 4 x 4
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f3c55b49eb4cfed4a8228731530b5bd4, type: 2}
   m_sharedMaterial: {fileID: -969517826628101844, guid: f3c55b49eb4cfed4a8228731530b5bd4,
@@ -4231,10 +4218,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 530685592}
-    characterCount: 6
+    characterCount: 5
     spriteCount: 0
-    spaceCount: 0
-    wordCount: 1
+    spaceCount: 2
+    wordCount: 3
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -5526,7 +5513,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Hard
+  m_text: 5 x 5
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f3c55b49eb4cfed4a8228731530b5bd4, type: 2}
   m_sharedMaterial: {fileID: -969517826628101844, guid: f3c55b49eb4cfed4a8228731530b5bd4,
@@ -5596,10 +5583,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 764934682}
-    characterCount: 4
+    characterCount: 5
     spriteCount: 0
-    spaceCount: 0
-    wordCount: 1
+    spaceCount: 2
+    wordCount: 3
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -9113,7 +9100,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PLAY WITH FRIEND
+  m_text: Play Offline
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 774dd5f4fa5951445be6de1d447c15ba, type: 2}
   m_sharedMaterial: {fileID: -7996961122266716946, guid: 774dd5f4fa5951445be6de1d447c15ba,
@@ -9183,10 +9170,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1302363289}
-    characterCount: 16
+    characterCount: 12
     spriteCount: 0
-    spaceCount: 2
-    wordCount: 3
+    spaceCount: 1
+    wordCount: 2
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -10029,7 +10016,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PLAY RANDOM
+  m_text: Play Online
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 774dd5f4fa5951445be6de1d447c15ba, type: 2}
   m_sharedMaterial: {fileID: -7996961122266716946, guid: 774dd5f4fa5951445be6de1d447c15ba,
@@ -10580,10 +10567,9 @@ GameObject:
   - component: {fileID: 1421391021}
   - component: {fileID: 1421391020}
   - component: {fileID: 1421391019}
-  - component: {fileID: 1421391018}
   - component: {fileID: 1421391017}
   m_Layer: 5
-  m_Name: NormalMode
+  m_Name: 4x4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10623,18 +10609,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundConfig: {fileID: 11400000, guid: 19664d94370498a4e8ced4e0d2732910, type: 2}
---- !u!114 &1421391018
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1421391015}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7537448f57f4aa6aa42610455c1608f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1421391019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10763,7 +10737,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 539.73065, y: -798.3384}
+  m_AnchoredPosition: {x: 539.73065, y: -720.79846}
   m_SizeDelta: {x: 700, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1479317052
@@ -11269,7 +11243,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backStackable: 1
   globalUiElements: []
-  activateSafeArea: 0
+  activateSafeArea: 1
   buttonConfigurations:
   - button: {fileID: 1902681323}
     configuration: {fileID: 11400000, guid: e99f70a039a217a4dbf70ccd7b239c20, type: 2}
@@ -12498,7 +12472,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a41f67fd231429468823702839312c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPlayersPerRoom: 2
   connectionController: {fileID: 278950651}
   roomController: {fileID: 410232756}
   configuration: {fileID: 0}
@@ -13818,7 +13791,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Easy
+  m_text: 3 x 3
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f3c55b49eb4cfed4a8228731530b5bd4, type: 2}
   m_sharedMaterial: {fileID: -969517826628101844, guid: f3c55b49eb4cfed4a8228731530b5bd4,
@@ -13888,10 +13861,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1831865472}
-    characterCount: 4
+    characterCount: 5
     spriteCount: 0
-    spaceCount: 0
-    wordCount: 1
+    spaceCount: 2
+    wordCount: 3
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -14249,10 +14222,9 @@ GameObject:
   - component: {fileID: 1902681324}
   - component: {fileID: 1902681323}
   - component: {fileID: 1902681328}
-  - component: {fileID: 1902681327}
   - component: {fileID: 1902681326}
   m_Layer: 5
-  m_Name: EasyMode
+  m_Name: 3x3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14371,18 +14343,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundConfig: {fileID: 11400000, guid: 19664d94370498a4e8ced4e0d2732910, type: 2}
---- !u!114 &1902681327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1902681321}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7537448f57f4aa6aa42610455c1608f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1902681328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15603,10 +15563,9 @@ GameObject:
   - component: {fileID: 2111094823}
   - component: {fileID: 2111094822}
   - component: {fileID: 2111094825}
-  - component: {fileID: 2111094826}
   - component: {fileID: 2111094827}
   m_Layer: 5
-  m_Name: JoinGame
+  m_Name: PlayOffline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15625,11 +15584,11 @@ RectTransform:
   m_Children:
   - {fileID: 1302363288}
   m_Father: {fileID: 311328697}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 539.73065, y: -377.8593}
+  m_AnchoredPosition: {x: 539.73065, y: -230.1597}
   m_SizeDelta: {x: 730, y: 210}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2111094822
@@ -15724,18 +15683,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animationConfig: {fileID: 11400000, guid: 0fecb3f021c5c434d9d1365e3131f657, type: 2}
---- !u!114 &2111094826
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2111094820}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7537448f57f4aa6aa42610455c1608f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2111094827
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -14,11 +14,7 @@ public class UITimerPopup : UIPopup
     private Coroutine timer;
     private int timerSeconds;
 
-    private void OnPlayerEntered(NetworkPlayer player)
-    {
-        OnBackButtonPressed();
-    }
-
+    
     private void OnEnable()
     {
         timerSeconds = 30;
@@ -36,7 +32,11 @@ public class UITimerPopup : UIPopup
             timer = null;
         }
     }
-
+    private void OnPlayerEntered(IPlayer player)
+    {
+        OnBackButtonPressed();
+    }
+    
     public void InitializePopup(string playerName)
     {
         string message = Constants.TIMER_POPUP_MESSAGE;

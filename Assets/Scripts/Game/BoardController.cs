@@ -1,46 +1,44 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using com.petrushevskiapps.Oxo;
 using com.petrushevskiapps.Oxo.Utilities;
 using Grid;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
 {
     [SerializeField] private GridCreator gridCreator;
-    
-    private Tile[,] tilesTable;
-    private WinCondition winCondition;
 
+    public Tile[,] TilesTable { get; private set; }
+    
     private void Awake()
     {
-        MatchController.RoundEnd.AddListener(ResetBoard);
-        MatchController.MatchEnd.AddListener(OnMatchEnded);
-        
+        MatchController.RoundCompletedEvent.AddListener(ResetBoard);
+        MatchController.RoundEnded.AddListener(OnRoundEnded);
         SetupBoard();
-        
-        winCondition = new WinCondition(tilesTable.GetUpperBound(0) + 1);
     }
+
     
     private void OnDestroy()
     {
-        MatchController.RoundEnd.RemoveListener(ResetBoard);
-        MatchController.MatchEnd.RemoveListener(OnMatchEnded);
+        MatchController.RoundCompletedEvent.RemoveListener(ResetBoard);
+        MatchController.RoundEnded.RemoveListener(OnRoundEnded);
     }
-
     
-    private void SetupBoard()
+    public void SetupBoard()
     {
         int rows = NetworkManager.Instance.RoomController.Properties.GetProperty<int>("r");
         int columns = NetworkManager.Instance.RoomController.Properties.GetProperty<int>("c");
-        
-        tilesTable = gridCreator.CreateGrid<Tile>(rows, columns);
+
+        TilesTable = gridCreator.CreateGrid<Tile>(rows, columns);
 
         int tileId = 0;
         
-        foreach (Tile tile in tilesTable)
+        foreach (Tile tile in TilesTable)
         {
-            tile.StateChange.AddListener(TurnEnded);
+            tile.StateChange.AddListener(OnTileStateChange);
             tile.Id = tileId;
             tileId++;
         }
@@ -48,82 +46,43 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void ResetBoard()
     {
-        foreach (Tile tile in tilesTable)
+        foreach (Tile tile in TilesTable)
         {
             tile.SetTile();
         }
     }
-    
-    private void OnMatchEnded(bool arg0)
+
+    private void OnTileStateChange(int tileId)
     {
-        NetworkManager.Instance.ClearRpcs(photonView);
-    }
-    
-    private void TurnEnded(int tileId)
-    {
-        int playerId = NetworkManager.Instance.RoomController.ActivePlayer.PlayerId;
-        NetworkManager.Instance.SendRpc(photonView, RPCs.RPC_TURN_END, true, tileId, playerId);
+        int playerId = NetworkManager.Instance.RoomController.ActivePlayer.GetId();
+        NetworkManager.Instance.RoomController.SendRpc(photonView, RPCs.RPC_TURN_END, true, playerId,tileId);
     }
     
     [PunRPC]
-    private void TurnEnd(int tileId, int playerId)
+    private void TurnEnded(int playerId, int tileId)
     {
         NetworkManager.Instance.RoomController.LocalRpcBufferCount++;
         
-        UpdateTile(tileId, playerId);
+        UpdateTile(playerId, tileId);
 
-        if (winCondition.IsRoundWon(playerId, tileId, tilesTable))
-        {
-            RoundEnded(playerId);
-            return;
-        }
-
-        if (winCondition.IsTableFull(tilesTable))
-        {
-            MatchController.LocalInstance.RoundTie();
-            return;
-        }
-        
-        MatchController.LocalInstance.Turn++;
+        MatchController.LocalInstance.EndTurn(playerId, tileId, TilesTable);
         
     }
 
-    private void UpdateTile(int id, int playerId)
+    private void UpdateTile(int playerId, int id)
     {
-        Tile tile = tilesTable[Utilities.GetRowFromId(id,tilesTable), Utilities.GetColumnFromId(id, tilesTable)];
-        tile.ChangeState(playerId);
-        tile.PlayerId = playerId;
-        Utilities.PrintTable(tilesTable);
-    }
-    
-    private void RoundEnded(int playerId)
-    {
-        PhotonNetwork.IsMessageQueueRunning = false;
-        bool isRoundWon = NetworkManager.Instance.RoomController.LocalPlayer.PlayerId == playerId;
+        TilesTable[Utilities.GetRowFromId(id, TilesTable), Utilities.GetColumnFromId(id, TilesTable)].ChangeState(playerId);
         
-        StrikeEffect(isRoundWon);
+        Utilities.PrintTable(TilesTable);
+    }
 
-        Timer.Start(this, "RoundEndDelay", 0.5f, ()=>
+    private void OnRoundEnded(bool isRoundWon)
+    {
+        MatchController.LocalInstance.WinCondition.GetWinIds().ForEach(id =>
         {
-            PhotonNetwork.IsMessageQueueRunning = true;
-            if(isRoundWon) MatchController.LocalInstance.RoundWon();
-            ResetBoard();
+            TilesTable[Utilities.GetRowFromId(id, TilesTable), Utilities.GetColumnFromId(id, TilesTable)].EndEffect(isRoundWon);
         });
     }
-    
-    
-    
-    private void StrikeEffect(bool isRoundWon)
-    {
-        List<int> winIDs = winCondition.GetWinIds();
-        
-        winIDs.ForEach(id =>
-        {
-            tilesTable[Utilities.GetRowFromId(id, tilesTable), Utilities.GetColumnFromId(id, tilesTable)].ShowEndEffect(isRoundWon);
-        });
-    }
-
-    
     
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

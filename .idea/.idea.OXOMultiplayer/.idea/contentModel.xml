@@ -458,6 +458,8 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
+          <e p="AiBrain.cs" t="Include" />
+          <e p="AIPlayer.cs" t="Include" />
           <e p="AudioManager.cs" t="Include" />
           <e p="Data" t="Include">
             <e p="Enums.cs" t="Include" />
@@ -474,8 +476,15 @@
           <e p="Game" t="Include">
             <e p="BoardController.cs" t="Include" />
             <e p="MatchController.cs" t="Include" />
-            <e p="Tile.cs" t="Include" />
-            <e p="TileView.cs" t="Include" />
+            <e p="MatchMode" t="Include">
+              <e p="MatchMode.cs" t="Include" />
+              <e p="OfflineMatch.cs" t="Include" />
+              <e p="OnlineMatch.cs" t="Include" />
+            </e>
+            <e p="Tile" t="Include">
+              <e p="Tile.cs" t="Include" />
+              <e p="TileView.cs" t="Include" />
+            </e>
             <e p="WinCondition.cs" t="Include" />
           </e>
           <e p="GameAssembly.asmdef" t="Include" />
@@ -485,11 +494,15 @@
             <e p="GridWorldCamera.cs" t="Include" />
             <e p="GridWorldSize.cs" t="Include" />
           </e>
+          <e p="IntegerTile.cs" t="Include" />
           <e p="Networking" t="Include">
+            <e p="Auth" t="Include">
+              <e p="DefaultAuth.cs" t="Include" />
+              <e p="FacebookAuth.cs" t="Include" />
+              <e p="IAuth.cs" t="Include" />
+            </e>
             <e p="ConnectionController.cs" t="Include" />
-            <e p="DefaultAuth.cs" t="Include" />
-            <e p="FacebookAuth.cs" t="Include" />
-            <e p="IAuth.cs" t="Include" />
+            <e p="IPlayer.cs" t="Include" />
             <e p="NetworkManager.cs" t="Include" />
             <e p="NetworkPlayer.cs" t="Include" />
             <e p="Properties" t="Include">
@@ -511,6 +524,7 @@
               <e p="UITimerPopup.cs" t="Include" />
             </e>
             <e p="Screens" t="Include">
+              <e p="PlayerUI.cs" t="Include" />
               <e p="UICreateGameScreen.cs" t="Include" />
               <e p="UIDifficultyScreen.cs" t="Include" />
               <e p="UIEndScreen.cs" t="Include" />
@@ -575,6 +589,7 @@
           </e>
         </e>
         <e p="Tests" t="Include">
+          <e p="AIPlayerTests.cs" t="Include" />
           <e p="ExtracColumnTests.cs" t="Include" />
           <e p="ExtractDiagonalTests.cs" t="Include" />
           <e p="ExtractReverseDiagonalTests.cs" t="Include" />

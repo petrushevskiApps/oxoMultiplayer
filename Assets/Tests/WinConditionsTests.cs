@@ -10,7 +10,7 @@ namespace Tests
 {
     public class WinConditionsTests
     {
-        private WinCondition win;
+        private WinCondition<Tile> win;
         
         private static IEnumerable<TestCaseData> TableEmptyTestData()
         {
@@ -79,7 +79,7 @@ namespace Tests
         [SetUp]
         public void Setup()
         {
-            win = new WinCondition(3);
+            win = new WinCondition<Tile>(3);
         }
  
         [Test]
@@ -89,7 +89,7 @@ namespace Tests
         [TestCaseSource(nameof(TableFullTestData))]
         public bool IsTableFull(Tile[,] table)
         {
-            return win.IsTableFull(table);
+            return win.IsRoundTie(table);
         }
     }
 }

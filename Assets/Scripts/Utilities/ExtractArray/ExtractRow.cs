@@ -15,7 +15,7 @@ public class ExtractRow<T> : ExtractArray<T>
             row[columnIndex] = table[Utilities.GetRowFromId(elementId, table), columnIndex];
         }
         
-        Utilities.PrintArray(row);
+//        Utilities.PrintArray(row);
         
         return row;
     }

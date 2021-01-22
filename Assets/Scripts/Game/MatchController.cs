@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using com.petrushevskiapps.Oxo;
@@ -12,21 +11,27 @@ using UnityEngine.Events;
 
 public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
 {
-    public static UnityEvent MatchStart = new UnityEvent();
-    public static UnityEvent MatchStartSynced = new UnityEvent();
-    public static UnityBoolEvent MatchEnd = new UnityBoolEvent();
+    public static readonly UnityEvent         MatchStart       = new UnityEvent();
+    public static readonly UnityEvent         MatchStartSynced = new UnityEvent();
+    public static readonly UnityBoolEvent     MatchEnd         = new UnityBoolEvent();
     
-    public static UnityIntegerEvent RoundStarting = new UnityIntegerEvent();
-    public static UnityEvent RoundStarted = new UnityEvent();
-    public static UnityEvent RoundEnd = new UnityEvent();
+    public static readonly UnityIntegerEvent  RoundStarting = new UnityIntegerEvent();
+    public static readonly UnityEvent         RoundStarted  = new UnityEvent();
+    public static readonly UnityBoolEvent     RoundEnded    = new UnityBoolEvent();
+    public static readonly UnityEvent         RoundCompletedEvent      = new UnityEvent();
     
-    public static UnityIntegerEvent TurnChanged = new UnityIntegerEvent();
+    public static readonly UnityIntegerEvent  TurnChanged = new UnityIntegerEvent();
     
-    private static GameObject board;
+    public BoardController Board { get; private set; }
+    
     public static MatchController LocalInstance;
 
-    private const int MatchRounds = 3;
+    public WinCondition<ITile> WinCondition { get; private set; }
 
+    private MatchMode matchMode;
+    
+    private int round;
+    private int turn;
     
     public int Round
     {
@@ -42,23 +47,20 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     public int Turn
     {
         get => turn;
-        set
+        private set
         {
             if(turn == value) return;
             turn = value;
             TurnChanged.Invoke(turn);
         }
     }
-    
-    private int round;
-    private int turn;
-    
+  
     private void Awake()
     {
         LocalInstance = this;
         NetworkManager.MasterSwitched.AddListener(OnMasterSwitched);
         
-        if(!NetworkManager.IsMasterClient) return;
+        SetupMatch();
         StartMatch();
     }
 
@@ -66,25 +68,46 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     {
         NetworkManager.MasterSwitched.RemoveListener(OnMasterSwitched);
     }
-
-    private void OnMasterSwitched()
+    
+    private void SetupMatch()
     {
-        if (board == null)
-        {
-            board = FindObjectOfType<BoardController>().gameObject;
-        }
+        int rows = NetworkManager.Instance.RoomController.Properties.GetProperty<int>("r");
+        
+        SetupMode();
+        SetupWinCondition(rows);
+        CreateBoard();
     }
-
-
+    
+    private void SetupMode()
+    {
+        if (NetworkManager.Instance.ConnectionController.PlayOffline)
+        {
+            matchMode = new OfflineMatch(photonView, StartMatchSynced);
+        }
+        else matchMode = new OnlineMatch(photonView);
+    }
+    
+    private void SetupWinCondition(int winStrike)
+    {
+        WinCondition = new WinCondition<ITile>(winStrike);
+        WinCondition.SetupExtractStrategies();
+    }
+    
+    private void CreateBoard()
+    {
+        if (Board != null || !PhotonNetwork.IsMasterClient) return;
+        Board = PhotonNetwork.InstantiateRoomObject("Board", Vector3.zero, Quaternion.identity).GetComponent<BoardController>();
+    }
+    
     private void StartMatch()
     {
-        CreateBoard();
+        if(!NetworkManager.IsMasterClient) return;
         MatchStart.Invoke();
-        NetworkManager.Instance.SendRpc(photonView, RPCs.RPC_START_MATCH, false);
+        matchMode.StartMatch();
     }
     
     [PunRPC]
-    public void StartMatchSynced()
+    private void StartMatchSynced()
     {
         NetworkManager.Instance.RoomController.LocalRpcBufferCount++;
         UIManager.Instance.OpenScreen<UIGameScreen>();
@@ -97,34 +120,49 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
         Round++;
         Turn = (Round - 1) % 2;
         RoundStarting.Invoke(Round);
+        
         Timer.Start(this, TimerKeys.ROUND_START_DELAY, 1.5f, () =>
         {
             RoundStarted.Invoke();
         });
     }
 
-    public void RoundWon()
+    public void EndTurn(int playerId, int tileId, ITile[,] table)
     {
-        NetworkManager.Instance.RoomController.LocalPlayer.Score++;
-            
-        if (NetworkManager.Instance.RoomController.IsSynced)
+        if (WinCondition.IsRoundWon(playerId, tileId, table))
         {
-            NetworkManager.Instance.SendRpc(photonView, RPCs.RPC_ROUND_COMPLETED, true);
+            EndRound(playerId);
         }
-    }
-    public void RoundTie()
-    {
-        if (NetworkManager.Instance.RoomController.IsSynced)
+        else if (WinCondition.IsRoundTie(table))
         {
-            NetworkManager.Instance.SendRpc(photonView, RPCs.RPC_ROUND_COMPLETED, false);
+            matchMode.RoundTie();
+        }
+        else
+        {
+            Turn++;
         }
     }
     
+    private void EndRound(int winnerId)
+    {
+        PhotonNetwork.IsMessageQueueRunning = false;
+        bool isRoundWon = NetworkManager.Instance.RoomController.LocalPlayer.GetId() == winnerId;
+        
+        RoundEnded.Invoke(isRoundWon);
+        
+        Timer.Start(this, TimerKeys.ROUND_ENDED, 0.5f, ()=>
+        {
+            PhotonNetwork.IsMessageQueueRunning = true;
+            if(isRoundWon) matchMode.RoundWon();
+            else matchMode.RoundLost();
+        });
+    }
+    
     [PunRPC]
-    private void WaitRoundCompletion()
+    private void RoundCompleted()
     {
         NetworkManager.Instance.RoomController.LocalRpcBufferCount++;
-        RoundEnd.Invoke();
+        RoundCompletedEvent.Invoke();
         
         if (IsMatchCompleted())
         {
@@ -138,19 +176,18 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     
     private bool IsMatchCompleted()
     {
-        int max = NetworkManager.Instance.RoomController.PlayersInRoom.Max(player => player.Score);
-        int sum = NetworkManager.Instance.RoomController.PlayersInRoom.Sum(player => player.Score);
+        int max = NetworkManager.Instance.RoomController.PlayersInRoom.Max(player => player.GetScore());
+        int sum = NetworkManager.Instance.RoomController.PlayersInRoom.Sum(player => player.GetScore());
         
-        float winningPossibility = sum / (float) MatchRounds; // Winning probability > 0.5
+        float winningPossibility = sum / (float) WinCondition.WinStrike; // Winning probability > 0.5
         float scoreDistribution = max / (float)sum; // Distribution > 0.5 
         
         return winningPossibility > 0.5f && scoreDistribution >= 0.6f;
     }
    
-
     private bool IsLocalMatchWin()
     {
-        NetworkPlayer matchWinner = NetworkManager.Instance.RoomController.PlayersInRoom.OrderByDescending(x => x.Score).FirstOrDefault();
+        IPlayer matchWinner = NetworkManager.Instance.RoomController.PlayersInRoom.OrderByDescending(x => x.GetScore()).FirstOrDefault();
         return matchWinner == NetworkManager.Instance.RoomController.LocalPlayer;
     }
     
@@ -158,15 +195,15 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
     {
         Round = 0;
         MatchEnd.Invoke(isLocalWin);
-        NetworkManager.Instance.ClearRpcs(photonView);
+        NetworkManager.Instance.RoomController.ClearRpcs(photonView);
         UIManager.Instance.OpenScreen<UIEndScreen>();
     }
-    
-    private void CreateBoard()
+
+    private void OnMasterSwitched()
     {
-        if (board == null && PhotonNetwork.IsMasterClient)
+        if (Board == null)
         {
-            board = PhotonNetwork.InstantiateRoomObject("Board", Vector3.zero, Quaternion.identity);
+            Board = FindObjectOfType<BoardController>().GetComponent<BoardController>();
         }
     }
 
