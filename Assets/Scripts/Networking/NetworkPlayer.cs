@@ -86,6 +86,7 @@ public class NetworkPlayer : IPlayer
     
     private void SetDefaultProperties()
     {
+        Properties.Set(Keys.PLAYER_MATCH_ID, 0).Sync();
         Properties.Set(Keys.PLAYER_MATCH_SCORE, 0).Sync();
     }
 

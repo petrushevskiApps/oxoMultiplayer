@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using com.petrushevskiapps.Oxo;
+﻿using com.petrushevskiapps.Oxo;
 using com.petrushevskiapps.Oxo.Utilities;
 using Grid;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -17,6 +14,7 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
     {
         MatchController.RoundCompletedEvent.AddListener(ResetBoard);
         MatchController.RoundEnded.AddListener(OnRoundEnded);
+        
         SetupBoard();
     }
 
@@ -26,8 +24,8 @@ public class BoardController : MonoBehaviourPunCallbacks, IPunObservable
         MatchController.RoundCompletedEvent.RemoveListener(ResetBoard);
         MatchController.RoundEnded.RemoveListener(OnRoundEnded);
     }
-    
-    public void SetupBoard()
+
+    private void SetupBoard()
     {
         int rows = NetworkManager.Instance.RoomController.Properties.GetProperty<int>("r");
         int columns = NetworkManager.Instance.RoomController.Properties.GetProperty<int>("c");
