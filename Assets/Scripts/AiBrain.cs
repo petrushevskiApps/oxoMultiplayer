@@ -27,7 +27,7 @@ public class AiBrain
         {
             return -10;
         }
-        else if (winCondition.IsRoundTie(board))
+        else if (winCondition.IsTableFull(board))
         {
             return 0;
         }
@@ -82,6 +82,7 @@ public class AiBrain
     {
         int rows = board.GetUpperBound(0);
         int cols = board.GetUpperBound(1);
+        int sign = isMax ? aiSign : playerSign;
         
         int score = Evaluate(board);
  
@@ -90,69 +91,39 @@ public class AiBrain
 
         if (depth > MAX_DEPTH) return score;
         
-        // If this maximizer's move
-        if (isMax)
-        {
-            int best = int.MinValue;
- 
-            // Traverse all cells
-            for (int i = 0; i <= rows; i++)
-            {
-                for (int j = 0; j <= cols; j++)
-                {
-                    // Check if cell is empty
-                    if (board[i, j].Value == 0)
-                    {
-                        // Make the move
-                        board[i, j].Value = aiSign;
-
-                        int value = Minimax(board, depth + 1, !isMax, alpha, beta);
-                        // Call minimax recursively and choose the maximum value
-                        best = Math.Max(best, value);
-                        alpha = Math.Max(alpha, best);
-                        // Undo the move
-                        board[i, j].Value = 0;
-                        
-                        if(beta <= alpha) break;
-                    }
-                }
-            }
-            return best - depth;
-        }
- 
-        // If this minimizer's move
-        else
-        {
-            int best = int.MaxValue;
- 
-            // Traverse all cells
-            for (int i = 0; i <= rows; i++)
-            {
-                for (int j = 0; j <= cols; j++)
-                {
-                    // Check if cell is empty
-                    if (board[i, j].Value == 0)
-                    {
-                        // Make the move
-                        board[i, j].Value = playerSign;
- 
-                        // Call minimax recursively and choose
-                        // the minimum value
-                        int value = Minimax(board, depth + 1, !isMax, alpha, beta);
-                        best = Math.Min(best, value);
-                        beta = Math.Min(beta, best);
- 
-                        // Undo the move
-                        board[i, j].Value = 0;
-                        
-                        if(beta <= alpha) break;
-
-                    }
-                }
-            }
+        int bestScore = isMax ? int.MinValue : int.MaxValue;
             
-            return best + depth;
+        // Traverse all cells
+        for (int i = 0; i <= rows; i++)
+        {
+            for (int j = 0; j <= cols; j++)
+            {
+                // Check if cell is empty
+                if (board[i, j].Value == 0)
+                {
+                    // Make the move
+                    board[i, j].Value = sign;
+
+                    int value = Minimax(board, depth + 1, !isMax, alpha, beta);
+                    
+                    if (isMax)
+                    {
+                        bestScore = Math.Max(bestScore, value);
+                        alpha = Math.Max(alpha, bestScore);
+                    }
+                    else
+                    {
+                        bestScore = Math.Min(bestScore, value);
+                        beta = Math.Min(bestScore, beta);
+                    }
+                    // Undo the move
+                    board[i, j].Value = 0;
+                        
+                    if(alpha >= beta) break;
+                }
+            }
         }
+        return isMax ? (bestScore - depth) : (bestScore + depth);
     }
 
     
