@@ -3,7 +3,7 @@ using System.Linq;
 
 public class AiBrain
 {
-    private const int MAX_DEPTH = 5;
+    private const int MAX_DEPTH = 3;
 
     private int aiSign = 0;
     private int playerSign = 0;
@@ -17,80 +17,48 @@ public class AiBrain
         this.winCondition = winCondition;
     }
 
-    private int Evaluate(IntegerTile [,]board)
+    public int Evaluate(int[,]tileBoard)
     {
+        IntegerTile[,] board = IntegerTile.Parse(tileBoard);
+        
         if (board.Cast<IntegerTile>().Any(tile => winCondition.IsRoundWon(aiSign, tile.Id, board)))
         {
             return 10;
         }
-        else if (board.Cast<IntegerTile>().Any(tile => winCondition.IsRoundWon(playerSign, tile.Id, board)))
+
+        if (board.Cast<IntegerTile>().Any(tile => winCondition.IsRoundWon(playerSign, tile.Id, board)))
         {
             return -10;
         }
-        else if (winCondition.IsTableFull(board))
+
+        if (winCondition.IsTableFull(board))
         {
             return 0;
         }
-        else
-        {
-            return -1;
-        }
+
+        return -1;
     }
     
     public int FindBestMove(ITile[,] tileBoard)
     {
-        int bestVal = int.MinValue;
-        int bestMoveId = 0;
-        
-        IntegerTile[,] board = IntegerTile.Parse(tileBoard);
-        
-        // Traverse all cells, evaluate minimax function 
-        // for all empty cells. And return the cell 
-        // with optimal value.
-        for (int i = 0; i <= board.GetUpperBound(0); i++)
-        {
-            for (int j = 0; j <= board.GetUpperBound(1); j++)
-            {
-                // Check if cell is empty
-                if (board[i, j].Value == 0)
-                {
-                    // Make the move
-                    board[i, j].Value = aiSign;
- 
-                    // compute evaluation function for this
-                    // move.
-                    int moveVal = Minimax(board, 0, false, int.MinValue, int.MaxValue);
- 
-                    // Undo the move
-                    board[i, j].Value = 0;
- 
-                    // If the value of the current move is
-                    // more than the best value, then update
-                    // best/
-                    if (moveVal > bestVal)
-                    {
-                        bestMoveId = board[i, j].Id;
-                        bestVal = moveVal;
-                    }
-                }
-            }
-        }
- 
-        return bestMoveId;
+        int[] result = Minimax(IntegerTile.Parse(tileBoard), 0, true, int.MinValue, int.MaxValue);
+            
+        return tileBoard[result[1],result[2]].Id;
     }
-    private int Minimax(IntegerTile [,] board, int depth, bool isMax, int alpha, int beta)
+    
+    private int[] Minimax(int [,] board, int depth, bool isMax, int alpha, int beta)
     {
         int rows = board.GetUpperBound(0);
         int cols = board.GetUpperBound(1);
         int sign = isMax ? aiSign : playerSign;
-        
+
+        int row = -1;
+        int col = -1;
         int score = Evaluate(board);
  
         // If Round is completed return score
-        if (score == 10 || score == -10 || score == 0) return score;
+        if (score != -1 || depth > MAX_DEPTH) return new int[]{score, row, col};
 
-        if (depth > MAX_DEPTH) return score;
-        
         int bestScore = isMax ? int.MinValue : int.MaxValue;
             
         // Traverse all cells
@@ -99,31 +67,41 @@ public class AiBrain
             for (int j = 0; j <= cols; j++)
             {
                 // Check if cell is empty
-                if (board[i, j].Value == 0)
+                if (board[i, j] == 0)
                 {
                     // Make the move
-                    board[i, j].Value = sign;
+                    board[i, j] = sign;
 
-                    int value = Minimax(board, depth + 1, !isMax, alpha, beta);
+                    int value = Minimax(board, depth + 1, !isMax, alpha, beta)[0];
                     
                     if (isMax)
                     {
-                        bestScore = Math.Max(bestScore, value);
+                        if (value > bestScore)
+                        {
+                            bestScore = value;
+                            row = i;
+                            col = j;
+                        }
                         alpha = Math.Max(alpha, bestScore);
                     }
                     else
                     {
-                        bestScore = Math.Min(bestScore, value);
+                        if (value < bestScore)
+                        {
+                            bestScore = value;
+                            row = i;
+                            col = j;
+                        }
                         beta = Math.Min(bestScore, beta);
                     }
                     // Undo the move
-                    board[i, j].Value = 0;
+                    board[i, j] = 0;
                         
                     if(alpha >= beta) break;
                 }
             }
         }
-        return isMax ? (bestScore - depth) : (bestScore + depth);
+        return isMax ? new int[]{(bestScore - depth), row, col} : new int[]{(bestScore + depth), row, col};
     }
 
     
