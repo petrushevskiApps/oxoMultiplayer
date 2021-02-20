@@ -33,7 +33,7 @@ public class AudioManager : Singleton<AudioManager>
         if (PlayerDataController.SfxStatus)
         {
             sfxMusicSource.clip = audioClip;
-            sfxMusicSource.Play(); 
+            sfxMusicSource.Play();
         }
     }
     private void OnSfxStatusChange(bool status)

@@ -35,12 +35,16 @@ public class WinCondition<T> where T : ITile
         return false;
     }
     
-    public bool IsRoundTie(T[,] tilesTable)
+    public bool IsTableFull(T[,] tilesTable)
     {
-        int count = tilesTable.Cast<T>().Count(t => t.Value != 0);
-        return count == tilesTable.Length;
+        return EmptyTilesCount(tilesTable) == 0;
     }
 
+    public int EmptyTilesCount(T[,] tiles)
+    {
+        return tiles.Cast<T>().Count(t => t.Value == 0);
+    }
+    
     public List<int> GetWinIds()
     {
         return winIds;

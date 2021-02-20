@@ -23,7 +23,6 @@ public class PlayerDataController : MonoBehaviour
     public static UnityIntegerEvent lostGamesChange = new UnityIntegerEvent();
 
     public static bool IsUsernameSet => !string.IsNullOrEmpty(Username);
-    
     public static string Username
     {
         get => PlayerPrefs.GetString(Keys.USER_NAME, string.Empty);

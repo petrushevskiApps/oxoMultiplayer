@@ -18,16 +18,20 @@ public class NetworkPlayer : IPlayer
     {
         this.player = player;
         Properties = new PlayerProperties(player);
+    }
+
+    public void Init()
+    {
         SetDefaultProperties();
-        
+
         if (player.IsLocal)
         {
             MatchController.MatchEnd.AddListener(OnMatchEnded);
         }
-        
+
         SetId(player.ActorNumber);
     }
-    
+
     ~ NetworkPlayer()
     {
         SetDefaultProperties();

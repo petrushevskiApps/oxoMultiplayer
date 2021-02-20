@@ -3,6 +3,7 @@ using System.Linq;
 using com.petrushevskiapps.Oxo;
 using com.petrushevskiapps.Oxo.Utilities;
 using Data;
+using PetrushevskiApps.UIManager;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
@@ -46,12 +47,16 @@ public class Tile : MonoBehaviour, ITile
         tileView = GetComponent<TileView>();
         
         MatchController.RoundStarting.AddListener(OnRoundStarting);
-        MatchController.RoundStarted.AddListener(OnRoundStarted);
+        MatchController.RoundStarted.AddListener(EnableInteraction);
+        UIPopup.OnPopupOpen.AddListener(DisableInteraction);
+        UIPopup.OnPopupClosed.AddListener(EnableInteraction);
     }
     private void OnDestroy()
     {
         MatchController.RoundStarting.RemoveListener(OnRoundStarting);
-        MatchController.RoundStarted.RemoveListener(OnRoundStarted);
+        MatchController.RoundStarted.RemoveListener(EnableInteraction);
+        UIPopup.OnPopupOpen.RemoveListener(DisableInteraction);
+        UIPopup.OnPopupClosed.RemoveListener(EnableInteraction);
     }
     
     private void Start()
@@ -67,9 +72,14 @@ public class Tile : MonoBehaviour, ITile
     
     private void OnRoundStarting(int arg0)
     {
+        DisableInteraction();
+    }
+
+    private void DisableInteraction()
+    {
         clickCollider.enabled = false;
     }
-    private void OnRoundStarted()
+    private void EnableInteraction()
     {
         clickCollider.enabled = true;
     }

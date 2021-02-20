@@ -29,7 +29,7 @@ public class UIChangeUsernamePopup : UIPopup
         inputField.onValueChanged.RemoveListener(EnableSaveButton);
     }
     
-    private void Start()
+    private void OnEnable()
     {
         SetDefaultUsername();
     }

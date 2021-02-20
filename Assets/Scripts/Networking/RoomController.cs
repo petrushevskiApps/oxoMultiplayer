@@ -95,10 +95,10 @@ public class RoomController : MonoBehaviourPunCallbacks
         Properties.SetPlayerTTL(RoomProperties.PLAYER_TTL_DEFAULT);
         
         PlayersList.ForEach(CreateNetworkPlayer);
-        
+      
         if (NetworkManager.Instance.ConnectionController.PlayOffline)
         {
-            CreateAiPlayer();
+            CreateAiPlayer(2);
         }
     }
 
@@ -152,16 +152,17 @@ public class RoomController : MonoBehaviourPunCallbacks
     private void CreateNetworkPlayer(Player player)
     {
         NetworkPlayer netPlayer = new NetworkPlayer(player);
-        players.Add(player.UserId, netPlayer);
-        
+        players.Add(player.UserId ?? UnityEngine.Random.Range(100, 1000).ToString(), netPlayer);
+        netPlayer.Init();
+
         if (player.IsLocal) LocalPlayer = netPlayer;
         
         PlayerEnteredRoom.Invoke(netPlayer);
     }
 
-    private void CreateAiPlayer()
+    private void CreateAiPlayer(int id)
     {
-        AiPlayer = new AiPlayer(2);
+        AiPlayer = new AiPlayer(id);
         players.Add(AiPlayer.GetId().ToString(), AiPlayer);
         PlayerEnteredRoom.Invoke(AiPlayer);
         SetRoomStatus();

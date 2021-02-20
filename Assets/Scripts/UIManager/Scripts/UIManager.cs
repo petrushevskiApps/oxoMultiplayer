@@ -49,13 +49,13 @@ namespace PetrushevskiApps.UIManager
         public void OpenScreen<T>()
         {
             UIScreen screen = screens.Find(x => x.GetType() == typeof(T));
-            OpenWindow(screen);
+            if(screen != null) OpenWindow(screen);
         }
         
         public T OpenPopup<T>() where T : UIPopup
         {
             UIPopup popup = popups.Find(x => x.GetType() == typeof(T));
-            OpenWindow(popup);
+            if (popup != null) OpenWindow(popup);
             return (T) popup;
         }
         

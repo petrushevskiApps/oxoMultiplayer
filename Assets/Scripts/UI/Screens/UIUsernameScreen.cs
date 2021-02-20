@@ -46,12 +46,12 @@ public class UIUsernameScreen : UIScreen
     
     private void SetDefaultUsername()
     {
-        if (inputField!=null)
+        if (inputField != null)
         {
             inputField.text = PlayerDataController.Username;
         }
     }
-    
+
     private void SaveChanges()
     {
         if (inputField != null)

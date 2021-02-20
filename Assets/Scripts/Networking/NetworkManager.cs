@@ -67,7 +67,7 @@ namespace com.petrushevskiapps.Oxo
 
         public void CreateRoom(string roomName = null)
         {
-            if (PhotonNetwork.IsConnected)
+            if (PhotonNetwork.IsConnected || PhotonNetwork.OfflineMode)
             {
                 Timer.Start(this, "CreateRoom", 1, ()=>
                 {
@@ -85,28 +85,10 @@ namespace com.petrushevskiapps.Oxo
             roomOptions.CustomRoomProperties = configuration.GetConfigHashtable();
             return roomOptions;
         }
-        
-        public void JoinRoom(string roomName)
-        {
-            if (PhotonNetwork.IsConnected)
-            {
-                Timer.Start(this, "JoinRoom", 1, ()=>
-                {
-                    PhotonNetwork.JoinRoom(roomName);
-                });
-            }
-        }
+
         public override void OnCustomAuthenticationFailed(string debugMessage)
         {
             Debug.LogErrorFormat("Error authenticating to Photon using Facebook: {0}", debugMessage);
-        }
-        
-        public void JoinRandomRoomQuick()
-        {
-            Timer.Start(this, "JoinRoomQuick", 1, ()=>
-            {
-                PhotonNetwork.JoinRandomRoom();
-            });
         }
         
         public void JoinRandomRoom()

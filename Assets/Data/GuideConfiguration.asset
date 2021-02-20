@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 473992da9244474cb5ba91352f220f3e, type: 3}
+  m_Name: GuideConfiguration
+  m_EditorClassIdentifier: 
+  guideConfigurations:
+  - image: {fileID: 21300000, guid: df35e6ca726976941a7281738c3259c0, type: 3}
+    text: Player ( X ) wins the round with 3 strike on diagonal.
+  - image: {fileID: 21300000, guid: 3642384c8c20b6848a5f238264adabce, type: 3}
+    text: Player ( X ) wins the round with 3 strike in row.
+  - image: {fileID: 21300000, guid: eb573f2328baff94aabff9f8c488620b, type: 3}
+    text: Player ( X ) wins the round with 3 strike in column.
+  - image: {fileID: 21300000, guid: 98507b49b1fa7aa4fb346b4578542ac8, type: 3}
+    text: No winner, round is Draw.
+  - image: {fileID: 21300000, guid: 9d8b1287c6827614b94a0fd7b35ec2d1, type: 3}
+    text: Player ( X ) loses the round.
+  - image: {fileID: 21300000, guid: 299edecf6f7cc474592a2e286ce32577, type: 3}
+    text: Player ( X ) wins the round with 3 strike.To  win 4x4 Game you need to
+      have 3 in a row, column or diagonal
+  - image: {fileID: 21300000, guid: a4897476715729541b57a67d664589ea, type: 3}
+    text: Player ( X ) loses the round with 3 strike
+  - image: {fileID: 21300000, guid: abe1f16ead66c934f8877dfb3513d0d9, type: 3}
+    text: No winner, round is Draw.
+  - image: {fileID: 21300000, guid: 8b7e6e342250b4045a014728b8cd70f2, type: 3}
+    text: Player ( X ) wins the round with 4 strike. To win 5x5 Game you need to
+      have 4 in a row, column or diagonal.
+  - image: {fileID: 21300000, guid: 7c99dbcfb674d2e4d92ffa3904756838, type: 3}
+    text: Player ( X ) loses the round with 4 strike.
+  - image: {fileID: 21300000, guid: 5fcdf37ef9994254a80765b57e6cd586, type: 3}
+    text: No winner, round is Draw.

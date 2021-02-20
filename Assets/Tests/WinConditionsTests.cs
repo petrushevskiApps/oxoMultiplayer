@@ -89,7 +89,7 @@ namespace Tests
         [TestCaseSource(nameof(TableFullTestData))]
         public bool IsTableFull(Tile[,] table)
         {
-            return win.IsRoundTie(table);
+            return win.IsTableFull(table);
         }
     }
 }

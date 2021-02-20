@@ -24,7 +24,6 @@ namespace com.petrushevskiapps.Oxo
             }
         }
 
-        
         public bool PlayOffline { get; set; }
 
         private bool networkStatus = false;
@@ -40,9 +39,11 @@ namespace com.petrushevskiapps.Oxo
         
         private void Awake()
         {
-//            GameManager.Instance.FacebookService.LoginCompleted.AddListener(OnFacebookLogin);
+            //            GameManager.Instance.FacebookService.LoginCompleted.AddListener(OnFacebookLogin);
+            
             SetAuthAndConnect(new DefaultAuth());
             PhotonNetwork.AutomaticallySyncScene = true;
+
         }
 
 //        private void OnFacebookLogin(string tokenString, string userId)
@@ -65,7 +66,7 @@ namespace com.petrushevskiapps.Oxo
         {
             connectingCoroutine = StartCoroutine(authStrategy.Connect(gameVersion));
         }
-        
+
         private IEnumerator Reconnect()
         {
             while (!PhotonNetwork.IsConnectedAndReady)
@@ -110,13 +111,14 @@ namespace com.petrushevskiapps.Oxo
         {
             base.OnConnected();
             IsOnline = true;
+            PlayOffline = false;
         }
 
-        
         public override void OnDisconnected(DisconnectCause cause)
         {
             base.OnDisconnected(cause);
             IsOnline = false;
+            
             if (PlayOffline)
             {
                 PhotonNetwork.OfflineMode = PlayOffline;

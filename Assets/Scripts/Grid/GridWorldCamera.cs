@@ -20,7 +20,7 @@ namespace Grid
         {
             if (camera != null)
             {
-                camera.orthographicSize = worldSize.GetWorldSize().x + 2f;
+                camera.orthographicSize = worldSize.GetWorldSize().x + 3.5f;
             }
         }
     }

@@ -74,7 +74,7 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
         int rows = NetworkManager.Instance.RoomController.Properties.GetProperty<int>("r");
         
         SetupMode();
-        SetupWinCondition(rows);
+        SetupWinCondition(rows == 3 ? rows : rows - 1);
         CreateBoard();
     }
     
@@ -133,7 +133,7 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
         {
             EndRound(playerId);
         }
-        else if (WinCondition.IsRoundTie(table))
+        else if (WinCondition.IsTableFull(table))
         {
             matchMode.RoundTie();
         }
@@ -150,7 +150,7 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
         
         RoundEnded.Invoke(isRoundWon);
         
-        Timer.Start(this, TimerKeys.ROUND_ENDED, 0.5f, ()=>
+        Timer.Start(this, TimerKeys.ROUND_ENDED, 1.5f, ()=>
         {
             PhotonNetwork.IsMessageQueueRunning = true;
             if(isRoundWon) matchMode.RoundWon();
