@@ -13,9 +13,11 @@ namespace com.petrushevskiapps.Oxo
     {
         public UnityBoolEvent NetworkStatusChange = new UnityBoolEvent();
 
-        public bool IsOnline
+        private Action ExecuteOnDisconnected;
+        private Action ExecuteOnConnected;
+        public bool IsConnected
         {
-            get => networkStatus || PlayOffline;
+            get => networkStatus;
             private set
             {
                 if (networkStatus == value) return;
@@ -24,7 +26,7 @@ namespace com.petrushevskiapps.Oxo
             }
         }
 
-        public bool PlayOffline { get; set; }
+        public bool PlayOffline { get; private set; }
 
         private bool networkStatus = false;
 
@@ -46,10 +48,6 @@ namespace com.petrushevskiapps.Oxo
 
         }
 
-//        private void OnFacebookLogin(string tokenString, string userId)
-//        {
-//            SetAuthAndConnect(new FacebookAuth());
-//        }
 
         private void OnDestroy()
         {
@@ -107,24 +105,67 @@ namespace com.petrushevskiapps.Oxo
             Debug.Log("Lobby Joined!");
         }
         
+        public void SetOfflineMode(bool offlineMode, Action OnModeReady)
+        {
+            if (PlayOffline == offlineMode) return;
+
+            PlayOffline = offlineMode;
+
+            if (!IsConnected && offlineMode)
+            {
+                PhotonNetwork.OfflineMode = PlayOffline;
+                OnModeReady.Invoke();
+            }
+            else if (IsConnected && offlineMode)
+            {
+                ExecuteOnDisconnected = () =>
+                {
+                    PhotonNetwork.OfflineMode = PlayOffline;
+                    OnModeReady.Invoke();
+                    ExecuteOnDisconnected = null;
+                };
+                
+                PhotonNetwork.Disconnect();
+            }
+            else if (!IsConnected && !offlineMode)
+            {
+                PhotonNetwork.OfflineMode = PlayOffline;
+                Connect();
+                ExecuteOnConnected = () =>
+                {
+                    OnModeReady.Invoke();
+                    ExecuteOnConnected = null;
+                };
+            }
+            else if (IsConnected && !offlineMode)
+            {
+                PhotonNetwork.OfflineMode = PlayOffline;
+                OnModeReady.Invoke();
+            }
+        }
+
         public override void OnConnected()
         {
             base.OnConnected();
-            IsOnline = true;
-            PlayOffline = false;
+            IsConnected = true;
+            
+            if(ExecuteOnConnected != null)
+            {
+                ExecuteOnConnected.Invoke();
+            }
         }
 
         public override void OnDisconnected(DisconnectCause cause)
         {
             base.OnDisconnected(cause);
-            IsOnline = false;
-            
-            if (PlayOffline)
+            IsConnected = false;
+
+            if (PlayOffline && ExecuteOnDisconnected != null)
             {
-                PhotonNetwork.OfflineMode = PlayOffline;
+                ExecuteOnDisconnected.Invoke();
                 return;
             }
-            
+
             if (masterConnectionEstablished)
             {
                 if (reconnectCoroutine == null)
@@ -155,6 +196,10 @@ namespace com.petrushevskiapps.Oxo
         }
 
 
-        
+        //        private void OnFacebookLogin(string tokenString, string userId)
+        //        {
+        //            SetAuthAndConnect(new FacebookAuth());
+        //        }
+
     }
 }

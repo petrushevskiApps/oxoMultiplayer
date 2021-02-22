@@ -1,45 +1,25 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using com.petrushevskiapps.Oxo;
 using com.petrushevskiapps.Oxo.Properties;
 using com.petrushevskiapps.Oxo.Utilities;
 using Data;
 using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Events;
-using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-public class RoomController : MonoBehaviourPunCallbacks
+public abstract class RoomController : MonoBehaviourPunCallbacks
 {
     //Events
     public static PlayerRoomEvent PlayerEnteredRoom = new PlayerRoomEvent();
     public static PlayerRoomEvent PlayerExitedRoom = new PlayerRoomEvent();
-    
     public static UnityEvent LocalRpcBufferCountUpdated = new UnityEvent();
 
-    // Players in Room
-    private List<Player> PlayersList => PhotonNetwork.CurrentRoom.Players.Values.ToList();
     public List<IPlayer> PlayersInRoom => players.Values.ToList();
-    public IPlayer LocalPlayer  { get; private set; }
-    public IPlayer AiPlayer     { get; private set; }
+    public IPlayer LocalPlayer  { get; protected set; }
     public IPlayer ActivePlayer => PlayersInRoom.FirstOrDefault(x => x.IsActive());
     public bool IsSynced => LocalRpcBufferCount == RoomRpcBufferedCount;
-
-    private RoomStatus Status
-    {
-        get => Properties.GetProperty<RoomStatus>(Keys.ROOM_STATUS);
-
-        set
-        {
-            if (Status == value) return;
-           
-            Properties.Set(Keys.ROOM_STATUS, value).Sync();
-        }
-    }
-
+    public RoomProperties Properties { get; private set; }
     public int LocalRpcBufferCount
     {
         get => localRpcBufferCount;
@@ -56,6 +36,21 @@ public class RoomController : MonoBehaviourPunCallbacks
         }
     }
     
+    protected RoomStatus Status
+    {
+        get => Properties.GetProperty<RoomStatus>(Keys.ROOM_STATUS);
+
+        set
+        {
+            if (Status == value) return;
+            Properties.Set(Keys.ROOM_STATUS, value).Sync();
+        }
+    }
+
+    protected Dictionary<string, IPlayer> players = new Dictionary<string, IPlayer>();
+
+    
+    
     private int RoomRpcBufferedCount
     {
         get => Properties.GetProperty<int>(Keys.RPC_BUFFERED_COUNT);
@@ -67,59 +62,51 @@ public class RoomController : MonoBehaviourPunCallbacks
         }
     }
     
-    public RoomProperties Properties { get; private set; }
-    
     private int localRpcBufferCount;
-    private Dictionary<string, IPlayer> players;
     
-    private void Awake()
+    
+    protected void Awake()
     {
         NetworkManager.JoinedRoom.AddListener(OnRoomEntered);
         NetworkManager.LeftRoom.AddListener(OnRoomExited);
     }
 
-    private void OnDestroy()
+    protected void OnDestroy()
     {
         NetworkManager.JoinedRoom.RemoveListener(OnRoomEntered);
         NetworkManager.LeftRoom.RemoveListener(OnRoomExited);
     }
 
-    private void OnRoomEntered()
+    protected virtual void OnRoomEntered()
     {
         MatchController.MatchStart.AddListener(OnMatchStarted);
         MatchController.MatchEnd.AddListener(OnMatchEnded);
-        
-        players = new Dictionary<string, IPlayer>();
+
+        players.Clear();
         
         Properties = new RoomProperties();
         Properties.SetPlayerTTL(RoomProperties.PLAYER_TTL_DEFAULT);
         
-        PlayersList.ForEach(CreateNetworkPlayer);
-      
-        if (NetworkManager.Instance.ConnectionController.PlayOffline)
-        {
-            CreateAiPlayer(2);
-        }
     }
 
-    private void OnRoomExited()
+    protected virtual void OnRoomExited()
     {
         MatchController.MatchStart.RemoveListener(OnMatchStarted);
         MatchController.MatchEnd.RemoveListener(OnMatchEnded);
     }
-    
-    private void OnMatchStarted()
+
+    protected virtual void OnMatchStarted()
     {
         Properties.SetPlayerTTL(RoomProperties.PLAYER_TTL_IN_GAME);
     }
-    
-    private void OnMatchEnded(bool arg0)
+
+    protected virtual void OnMatchEnded(bool arg0)
     {
         Properties.SetPlayerTTL(RoomProperties.PLAYER_TTL_DEFAULT);
         Status = RoomStatus.Waiting;
     }
     
-    private void SetRoomStatus()
+    protected void SetRoomStatus()
     {
         if (players.Values.Count < PhotonNetwork.CurrentRoom.MaxPlayers)
         {
@@ -132,51 +119,7 @@ public class RoomController : MonoBehaviourPunCallbacks
             NetworkManager.Instance.ChangeScene(SceneTypes.Game);
         }
     }
-    
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        if (players.ContainsKey(newPlayer.UserId)) return;
-        CreateNetworkPlayer(newPlayer);
-        SetRoomStatus();
-    }
-    
-    public override void OnPlayerLeftRoom(Player otherPlayer)
-    {
-        if (!players.ContainsKey(otherPlayer.UserId)) return;
-        
-        PlayerExitedRoom.Invoke(players[otherPlayer.UserId]);
-        players.Remove(otherPlayer.UserId);
-        SetRoomStatus();
-    }
-    
-    private void CreateNetworkPlayer(Player player)
-    {
-        NetworkPlayer netPlayer = new NetworkPlayer(player);
-        players.Add(player.UserId ?? UnityEngine.Random.Range(100, 1000).ToString(), netPlayer);
-        netPlayer.Init();
 
-        if (player.IsLocal) LocalPlayer = netPlayer;
-        
-        PlayerEnteredRoom.Invoke(netPlayer);
-    }
-
-    private void CreateAiPlayer(int id)
-    {
-        AiPlayer = new AiPlayer(id);
-        players.Add(AiPlayer.GetId().ToString(), AiPlayer);
-        PlayerEnteredRoom.Invoke(AiPlayer);
-        SetRoomStatus();
-    }
-
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
-    {
-        if (players.ContainsKey(targetPlayer.UserId))
-        {
-            ((NetworkPlayer)players[targetPlayer.UserId]).UpdatePlayerStatuses(changedProps);
-        }
-    }
-    
-    
     public void SendRpc(PhotonView pv, string rpcMethodName, bool overrideMaster, params object[] parameters)
     {
         if (!PhotonNetwork.IsMasterClient && !overrideMaster) return;

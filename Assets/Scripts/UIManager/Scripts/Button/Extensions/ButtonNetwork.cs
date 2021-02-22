@@ -17,7 +17,7 @@ namespace PetrushevskiApps.UIManager
         {
             try
             {
-                ToggleInteractivity(NetworkManager.Instance.ConnectionController.IsOnline);
+                ToggleInteractivity(NetworkManager.Instance.ConnectionController.IsConnected);
             }
             catch (NullReferenceException e)
             {
@@ -38,7 +38,7 @@ namespace PetrushevskiApps.UIManager
         }
         private void ShowNoNetworkPopup()
         {
-            if (!NetworkManager.Instance.ConnectionController.IsOnline)
+            if (!NetworkManager.Instance.ConnectionController.IsConnected)
             {
                 UIManager.Instance.OpenPopup<UINetworkPopup>();
             }

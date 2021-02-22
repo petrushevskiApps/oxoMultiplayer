@@ -68,15 +68,9 @@ public class AiPlayer : IPlayer
         return (turn % NetworkManager.Instance.RoomController.PlayersInRoom.Count) == (GetId() - 1);
     }
 
-    public TilePlayerSign GetSign()
-    {
-        return (TilePlayerSign) id;
-    }
+    public TilePlayerSign Sign => (TilePlayerSign)id;
 
-    public string GetNickname()
-    {
-        return nickname;
-    }
+    public string Nickname => nickname;
 
     public int GetId()
     {
@@ -104,7 +98,7 @@ public class AiPlayer : IPlayer
         if(score == newScore) return;
         score = newScore;
         ScoreUpdated.Invoke(newScore);
-        Debug.Log($"AiPlayer:: {GetNickname()}:: New Score:: {newScore}");
+        Debug.Log($"AiPlayer:: {Nickname}:: New Score:: {newScore}");
     }
 
     public void RegisterScoreListener(UnityAction<int> listener)

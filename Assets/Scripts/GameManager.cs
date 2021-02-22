@@ -35,6 +35,7 @@ public class GameManager : Singleton<GameManager>
             if (PlayerDataController.IsUsernameSet)
             {
                 UIManager.Instance.OpenScreen<UIMainScreen>();
+                NetworkManager.Instance.ConnectionController.SetOfflineMode(false, ()=> { });
             }
             else UIManager.Instance.OpenScreen<UIUsernameScreen>();
         }

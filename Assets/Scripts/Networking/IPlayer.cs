@@ -6,8 +6,10 @@ using UnityEngine.Events;
 public interface IPlayer
 {
     bool IsActive();
-    TilePlayerSign GetSign();
-    string GetNickname();
+    TilePlayerSign Sign { get; }
+
+    string Nickname { get; }
+
     int GetId();
     int GetScore();
     void IncrementScore();

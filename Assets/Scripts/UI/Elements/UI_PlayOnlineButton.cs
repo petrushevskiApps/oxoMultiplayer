@@ -8,7 +8,6 @@ public class UI_PlayOnlineButton : UI_PlayButton
     protected override void OnPlayClicked()
     {
         base.OnPlayClicked();
-        NetworkManager.Instance.ConnectionController.PlayOffline = false;
-        NetworkManager.Instance.JoinRandomRoom();
+        NetworkManager.Instance.ConnectionController.SetOfflineMode(false, () => NetworkManager.Instance.JoinRandomRoom());
     }
 }

@@ -146,6 +146,6 @@ public partial class UIGameScreen : UIScreen
     private void OnPlayerExitedRoom(IPlayer player)
     {
         if(!gameObject.activeInHierarchy) return;
-        UIManager.Instance.OpenPopup<UITimerPopup>().InitializePopup(player.GetNickname());
+        UIManager.Instance.OpenPopup<UITimerPopup>().InitializePopup(player.Nickname);
     }
 }

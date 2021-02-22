@@ -25,8 +25,8 @@ public partial class UIGameScreen
             this.activeColor = activeColor;
             this.normalColor = normalColor;
             
-            nicknameText.text = player.GetNickname();
-            symbolImage.sprite = symbols.GetEndTileState(player.GetSign());
+            nicknameText.text = player.Nickname;
+            symbolImage.sprite = symbols.GetEndTileState(player.Sign);
             
             UpdateScoreText(player.GetScore());
             SetupBackgrounds();

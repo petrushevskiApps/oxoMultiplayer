@@ -13,50 +13,57 @@ public class NetworkPlayer : IPlayer
 
     private INetworkProperties Properties { get; }
     private readonly Player player;
-
+    private bool isLocal;
+    public NetworkPlayer(int playerId, string playerNickname)
+    {
+        Properties = new PlayerProperties();
+        SetDefaultProperties();
+        SetId(playerId);
+        Sign = (TilePlayerSign)playerId;
+        Nickname = playerNickname;
+        isLocal = true;
+        
+    }
     public NetworkPlayer(Player player)
     {
         this.player = player;
         Properties = new PlayerProperties(player);
-    }
-
-    public void Init()
-    {
         SetDefaultProperties();
-
-        if (player.IsLocal)
-        {
-            MatchController.MatchEnd.AddListener(OnMatchEnded);
-        }
-
         SetId(player.ActorNumber);
+        Sign = (TilePlayerSign)player.ActorNumber;
+        Nickname = player.NickName;
+        isLocal = player.IsLocal;
     }
-
-    ~ NetworkPlayer()
+    ~NetworkPlayer()
     {
         SetDefaultProperties();
-        
-        if (player.IsLocal)
+
+        if (isLocal)
         {
             MatchController.MatchEnd.RemoveListener(OnMatchEnded);
         }
     }
+
+    public void Init()
+    {
+        if (isLocal)
+        {
+            MatchController.MatchEnd.AddListener(OnMatchEnded);
+        }
+    }
+
+    
 
     public bool IsActive()
     {
         int turn = MatchController.LocalInstance.Turn;
         return (turn % NetworkManager.Instance.RoomController.PlayersInRoom.Count) == (GetId() - 1);
     }
-    
-    public TilePlayerSign GetSign()
-    {
-        return (TilePlayerSign) player.ActorNumber;
-    }
-    
-    public string GetNickname()
-    {
-        return player.NickName;
-    }
+
+    public TilePlayerSign Sign { get; }
+
+    public string Nickname { get; }
+
     public int GetId()
     {
         return Properties.GetProperty<int>(Keys.PLAYER_MATCH_ID);
@@ -82,7 +89,7 @@ public class NetworkPlayer : IPlayer
     {
         Properties.Set(Keys.PLAYER_MATCH_SCORE, score).Sync();
         ScoreUpdated.Invoke(score);
-        Debug.Log($"NetworkPlayer:: {GetNickname()}:: New Score:: {score}");
+        Debug.Log($"NetworkPlayer:: {Nickname}:: New Score:: {score}");
     }
 
     

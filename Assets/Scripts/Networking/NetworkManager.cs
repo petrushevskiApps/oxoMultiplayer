@@ -24,10 +24,10 @@ namespace com.petrushevskiapps.Oxo
 
         [Header("Controllers")]
         [SerializeField] private ConnectionController connectionController;
-        [SerializeField] private RoomController roomController;
+        private RoomController roomController;
         
         public ConnectionController ConnectionController => connectionController;
-        public RoomController RoomController => roomController;
+        [HideInInspector] public RoomController RoomController => roomController;
         
         public static bool IsMasterClient => PhotonNetwork.IsMasterClient;
 
@@ -67,7 +67,9 @@ namespace com.petrushevskiapps.Oxo
 
         public void CreateRoom(string roomName = null)
         {
-            if (PhotonNetwork.IsConnected || PhotonNetwork.OfflineMode)
+            SetupRoomController();
+
+            if (PhotonNetwork.IsConnected)
             {
                 Timer.Start(this, "CreateRoom", 1, ()=>
                 {
@@ -75,7 +77,22 @@ namespace com.petrushevskiapps.Oxo
                 });
             }
         }
+        private void SetupRoomController()
+        {
+            if(roomController != null)
+            {
+                Destroy(GetComponent<RoomController>());
+            }
 
+            if(connectionController.PlayOffline)
+            {
+                roomController = gameObject.AddComponent<RoomControllerOffline>();
+            }
+            else
+            {
+                roomController = gameObject.AddComponent<RoomControllerOnline>();
+            }
+        }
         private RoomOptions GetRoomOptions()
         {
             RoomOptions roomOptions = new RoomOptions();
@@ -95,7 +112,8 @@ namespace com.petrushevskiapps.Oxo
         {
             // #Critical we need at this point to attempt joining a Random Room.
             // If it fails, we'll get notified in OnJoinRandomFailed() and we'll create one.
-            
+            SetupRoomController();
+
             Timer.Start(this, "JoinRandomRoom", 1, ()=>
             {
                 PhotonNetwork.JoinRandomRoom(configuration.GetConfigHashtable(), configuration.maxPlayers);

@@ -8,16 +8,23 @@ namespace com.petrushevskiapps.Oxo.Properties
     public class PlayerProperties : INetworkProperties
     {
         private Player player;
+        private bool isLocal;
         private readonly Hashtable properties = new Hashtable();
+
+        public PlayerProperties()
+        {
+            isLocal = true;
+        }
 
         public PlayerProperties(Player player)
         {
             this.player = player;
+            isLocal = player.IsLocal;
         }
         
         public INetworkProperties Set(string key, object value)
         {
-            if(!player.IsLocal) return this;
+            if (!isLocal) return this;
 
             if (properties.ContainsKey(key))
             {
@@ -30,8 +37,8 @@ namespace com.petrushevskiapps.Oxo.Properties
 
         public void Sync()
         {
-            if (!player.IsLocal) return;
-            player.SetCustomProperties(properties);
+            if (!isLocal) return;
+            player?.SetCustomProperties(properties);
         }
 
         public T GetProperty<T>(string key)
@@ -45,7 +52,7 @@ namespace com.petrushevskiapps.Oxo.Properties
             }
             else
             {
-                player.CustomProperties.TryGetValue(key, out result);
+                player?.CustomProperties.TryGetValue(key, out result);
             }
             
             Debug.Log($"Properties::Player:: {key} = {result}");
