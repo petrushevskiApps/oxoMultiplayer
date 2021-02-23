@@ -15,6 +15,7 @@ public interface IPlayer
     void IncrementScore();
     void SetScore(int score);
 
+    void Clear();
     void RegisterScoreListener(UnityAction<int> listener);
     void UnregisterScoreListener(UnityAction<int> listener);
 }

@@ -1,6 +1,7 @@
 ﻿using com.petrushevskiapps.Oxo;
 using com.petrushevskiapps.Oxo.Utilities;
 using Data;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -18,7 +19,6 @@ public class AiPlayer : IPlayer
         MatchController.MatchStart.AddListener(SetupAiBrain);
         MatchController.RoundStarted.AddListener(OnRoundStarted);
         MatchController.TurnChanged.AddListener(OnTurnChanged);
-        
         SetId(aiSign);
         
         //TODO:: Generate random nicknames for AI player
@@ -27,9 +27,15 @@ public class AiPlayer : IPlayer
 
     ~AiPlayer()
     {
+        Debug.Log("AI Player Destroyed");
+    }
+
+    public void Clear()
+    {
         MatchController.MatchStart.RemoveListener(SetupAiBrain);
         MatchController.RoundStarted.RemoveListener(OnRoundStarted);
         MatchController.TurnChanged.RemoveListener(OnTurnChanged);
+        ScoreUpdated.RemoveAllListeners();
     }
 
     private void SetupAiBrain()
@@ -110,4 +116,6 @@ public class AiPlayer : IPlayer
     {
         ScoreUpdated.RemoveListener(listener);
     }
+
+    
 }

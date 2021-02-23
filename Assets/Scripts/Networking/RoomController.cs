@@ -88,11 +88,17 @@ public abstract class RoomController : MonoBehaviourPunCallbacks
         Properties.SetPlayerTTL(RoomProperties.PLAYER_TTL_DEFAULT);
         
     }
-
+    
     protected virtual void OnRoomExited()
     {
         MatchController.MatchStart.RemoveListener(OnMatchStarted);
         MatchController.MatchEnd.RemoveListener(OnMatchEnded);
+
+        foreach(KeyValuePair<string, IPlayer> player in players)
+        {
+            player.Value.Clear();
+        }
+
     }
 
     protected virtual void OnMatchStarted()

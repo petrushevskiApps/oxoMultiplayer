@@ -12,8 +12,8 @@ public class NetworkPlayer : IPlayer
     private readonly UnityIntegerEvent ScoreUpdated = new UnityIntegerEvent();
 
     private INetworkProperties Properties { get; }
-    private readonly Player player;
     private bool isLocal;
+
     public NetworkPlayer(int playerId, string playerNickname)
     {
         Properties = new PlayerProperties();
@@ -26,22 +26,12 @@ public class NetworkPlayer : IPlayer
     }
     public NetworkPlayer(Player player)
     {
-        this.player = player;
         Properties = new PlayerProperties(player);
         SetDefaultProperties();
         SetId(player.ActorNumber);
         Sign = (TilePlayerSign)player.ActorNumber;
         Nickname = player.NickName;
         isLocal = player.IsLocal;
-    }
-    ~NetworkPlayer()
-    {
-        SetDefaultProperties();
-
-        if (isLocal)
-        {
-            MatchController.MatchEnd.RemoveListener(OnMatchEnded);
-        }
     }
 
     public void Init()
@@ -52,7 +42,17 @@ public class NetworkPlayer : IPlayer
         }
     }
 
-    
+    public void Clear()
+    {
+        SetDefaultProperties();
+
+        if (isLocal)
+        {
+            MatchController.MatchEnd.RemoveListener(OnMatchEnded);
+        }
+
+        ScoreUpdated.RemoveAllListeners();
+    }
 
     public bool IsActive()
     {
@@ -124,5 +124,5 @@ public class NetworkPlayer : IPlayer
         ScoreUpdated.RemoveListener(listener);
     }
 
-
+    
 }

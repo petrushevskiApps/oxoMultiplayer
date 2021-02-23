@@ -107,7 +107,11 @@ namespace com.petrushevskiapps.Oxo
         
         public void SetOfflineMode(bool offlineMode, Action OnModeReady)
         {
-            if (PlayOffline == offlineMode) return;
+            if (PlayOffline == offlineMode)
+            {
+                OnModeReady.Invoke();
+                return;
+            }
 
             PlayOffline = offlineMode;
 
