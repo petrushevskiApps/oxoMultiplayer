@@ -1,5 +1,4 @@
 ﻿using com.petrushevskiapps.Oxo;
-using com.petrushevskiapps.Oxo.Utilities;
 using Data;
 using PetrushevskiApps.UIManager;
 using Photon.Pun;
@@ -8,6 +7,12 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
+    [SerializeField] private AiNicknames nicknames;
+    public AiNicknames Nicknames
+    {
+        get => nicknames;
+    }
+
     public FacebookService FacebookService { get; private set; }
     public bool IsApplicationQuiting { get; private set; }
 

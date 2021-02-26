@@ -21,8 +21,7 @@ public class AiPlayer : IPlayer
         MatchController.TurnChanged.AddListener(OnTurnChanged);
         SetId(aiSign);
         
-        //TODO:: Generate random nicknames for AI player
-        nickname = "AI-Player";
+        nickname = GameManager.Instance.Nicknames.GenerateRandomName();
     }
 
     ~AiPlayer()

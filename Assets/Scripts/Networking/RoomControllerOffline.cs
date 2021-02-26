@@ -15,7 +15,7 @@
 
     private void CreatePlayer()
     {
-        NetworkPlayer netPlayer = new NetworkPlayer(1, "Gjoko");
+        NetworkPlayer netPlayer = new NetworkPlayer(1, PlayerDataController.Username);
         players.Add(netPlayer.GetId().ToString(), netPlayer);
         netPlayer.Init();
 

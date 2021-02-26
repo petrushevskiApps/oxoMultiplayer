@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using com.petrushevskiapps.Oxo;
 using PetrushevskiApps.UIManager;
@@ -8,7 +9,9 @@ using UnityEngine.UI;
 public class UIUsernameScreen : UIScreen
 {
     [SerializeField] private Button saveBtn;
+    [SerializeField] private Button randomName;
     [SerializeField] private InputField inputField;
+
 //    
 //    [SerializeField] private Button defaultConnect;
 //    [SerializeField] private Button facebookConnect;
@@ -18,10 +21,17 @@ public class UIUsernameScreen : UIScreen
         base.Awake();
         saveBtn.interactable = false;
         saveBtn.onClick.AddListener(SaveChanges);
+        randomName.onClick.AddListener(RandomizeName);
 //        defaultConnect.onClick.AddListener(OnDefaultConnectButton);
 //        facebookConnect.onClick.AddListener(OnFacebookConnectButton);
         inputField.onValueChanged.AddListener(EnableSaveButton);
     }
+
+    private void RandomizeName()
+    {
+        inputField.text = GameManager.Instance.Nicknames.GenerateRandomName();
+    }
+
     private void OnDestroy()
     {
         saveBtn.onClick.RemoveListener(SaveChanges);

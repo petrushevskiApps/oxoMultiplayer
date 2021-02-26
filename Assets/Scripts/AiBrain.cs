@@ -33,7 +33,7 @@ public class AiBrain
 
         if (winCondition.IsTableFull(board))
         {
-            return 0;
+            return 5;
         }
 
         return -1;
@@ -80,9 +80,9 @@ public class AiBrain
                     
                     if (isMax)
                     {
-                        if (value > bestResult.score)
+                        if (value - depth > bestResult.score)
                         {
-                            bestResult.score = value;
+                            bestResult.score = value - depth;
                             bestResult.row = i;
                             bestResult.col = j;
                         }
@@ -90,9 +90,9 @@ public class AiBrain
                     }
                     else
                     {
-                        if (value < bestResult.score)
+                        if (value + depth < bestResult.score)
                         {
-                            bestResult.score = value;
+                            bestResult.score = value + depth;
                             bestResult.row = i;
                             bestResult.col = j;
                         }
@@ -100,14 +100,14 @@ public class AiBrain
                     }
                     // Undo the move
                     board[i, j] = 0;
-                        
-                    if(alpha >= beta) break;
+
+                    if (alpha >= beta) break;
                 }
             }
         }
 
-        if (isMax) bestResult.score -= depth;
-        else bestResult.score += depth;
+        //if (isMax) bestResult.score -= depth;
+        //else bestResult.score += depth;
         
         return bestResult;
     }

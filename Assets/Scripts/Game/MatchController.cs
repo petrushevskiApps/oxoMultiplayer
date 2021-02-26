@@ -135,7 +135,14 @@ public class MatchController : MonoBehaviourPunCallbacks, IPunObservable
         }
         else if (WinCondition.IsTableFull(table))
         {
-            matchMode.RoundTie();
+            PhotonNetwork.IsMessageQueueRunning = false;
+
+            Timer.Start(this, TimerKeys.ROUND_ENDED, 0.5f, () =>
+            {
+                matchMode.RoundTie();
+                PhotonNetwork.IsMessageQueueRunning = true;
+            });
+            
         }
         else
         {
