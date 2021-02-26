@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7b9621422ce2864ca9db2e09f244d33, type: 3}
+  m_Name: AiNicknames
+  m_EditorClassIdentifier: 
+  names:
+  - Redman
+  - Goldsmith
+  - Andros
+  - Underwood
+  - Larry
+  - Kojak
+  - Flagg
+  - Randall
+  - Lloyd
+  - Larry
+  - Betty
+  - McGiver
+  - Jack
+  - Molly
+  - Linus
+  - Arthur
+  - Sam
+  - Dean
+  - Ezio
+  - Salvador
+  adjectives:
+  - Acidic
+  - Berserk
+  - Chemical
+  - Demonic
+  - Dynamic
+  - Enchanted
+  - Frantic
+  - Icky
+  - Infamous
+  - Nippy
+  - Taboo
+  - Thundering
+  - Ultra
+  - Vengeful
+  - Volatile
+  - Wacky
+  - Wretched
+  - Zippy
+  colors:
+  - Red
+  - Blue
+  - Purple
+  - Gray
+  - Black
+  - Green
+  - White
+  - Orange
+  - 'Brrown '
+  - Violet
+  - azure
+  nouns:
+  - abracadabra
+  - akimbo
+  - apparatus
+  - bamboozle
+  - ballistic
+  - bedlam
+  - berserk
+  - bippy
+  - blob
+  - bombastic
+  - bonanza
+  - bugaboo
+  - king
+  - chimichanga
+  - cockatoo
+  - colossus
+  - cowabunga
+  - crackerjack
+  - cuckoo
+  - frogman
+  - gargoyle
+  - gazpacho
+  - knight
+  - glitch
+  - goosebump
+  - hullabaloo
+  - incognito
+  - izzard
+  - killjoy
+  - loco
+  - loony
+  - peewee
+  - poppycock
+  - toady
+  - fingers
+  - discount
+  - rogue
