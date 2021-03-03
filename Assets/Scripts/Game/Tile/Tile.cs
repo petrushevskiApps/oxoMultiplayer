@@ -94,11 +94,13 @@ public class Tile : MonoBehaviour, ITile
     {
         if (TilePlayerSign == TilePlayerSign.Empty)
         {
+            Vibration.VibrateWeak();
             ChangeState(NetworkManager.Instance.RoomController.ActivePlayer?.GetId() ?? 0);
             StateChange.Invoke(Id);
         }
         else
         {
+            Vibration.VibrateMild();
             tileView.WrongTileClickedEffect();
         }
     }

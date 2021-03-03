@@ -56,6 +56,7 @@ public class UIEndScreen : UIScreen
     private void MatchEnded(bool isWin)
     {
         particles.SetActive(isWin);
+        Vibration.VibrateStrong();
         ShowText(isWin);
         SetIcon(isWin);
         PlayAudio(isWin);
