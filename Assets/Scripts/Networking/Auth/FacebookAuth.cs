@@ -10,7 +10,7 @@ namespace com.petrushevskiapps.Oxo
     {
         private bool isConnecting;
         
-        public IEnumerator Connect(string gameVersion)
+        public IEnumerator Connect()
         {
             string aToken = AccessToken.CurrentAccessToken.TokenString;
             string facebookId = AccessToken.CurrentAccessToken.UserId;
@@ -19,8 +19,8 @@ namespace com.petrushevskiapps.Oxo
             PhotonNetwork.AuthValues.UserId = facebookId; // alternatively set by server
             PhotonNetwork.AuthValues.AddAuthParameter("username", facebookId);
             PhotonNetwork.AuthValues.AddAuthParameter("token", aToken);
-            PhotonNetwork.GameVersion = gameVersion;
             isConnecting = PhotonNetwork.ConnectUsingSettings();
+            PhotonNetwork.GameVersion = Application.version;
             yield break;
         }
 

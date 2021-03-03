@@ -4,7 +4,7 @@ namespace com.petrushevskiapps.Oxo
 {
     public interface IAuth
     {
-        IEnumerator Connect(string gameVersion);
+        IEnumerator Connect();
         bool IsConnecting();
     }
 }

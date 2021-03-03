@@ -8,14 +8,15 @@ namespace com.petrushevskiapps.Oxo
     {
         private bool isConnecting;
         
-        public IEnumerator Connect(string gameVersion)
+        public IEnumerator Connect()
         {
             // Initiate the connection to the server.
             while (!PhotonNetwork.IsConnected)
             {
                 // #Critical, we must first and foremost connect to Photon Online Server.
+                
                 isConnecting = PhotonNetwork.ConnectUsingSettings();
-                PhotonNetwork.GameVersion = gameVersion;
+                PhotonNetwork.GameVersion = Application.version;
                 yield return new WaitForSeconds(3f);
             }
         }

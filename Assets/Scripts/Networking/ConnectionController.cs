@@ -30,7 +30,6 @@ namespace com.petrushevskiapps.Oxo
 
         private bool networkStatus = false;
 
-        private string gameVersion = "1";
         private bool isConnecting = false;
         private bool masterConnectionEstablished = false;
         
@@ -62,7 +61,7 @@ namespace com.petrushevskiapps.Oxo
         
         private void Connect()
         {
-            connectingCoroutine = StartCoroutine(authStrategy.Connect(gameVersion));
+            connectingCoroutine = StartCoroutine(authStrategy.Connect());
         }
 
         private IEnumerator Reconnect()
