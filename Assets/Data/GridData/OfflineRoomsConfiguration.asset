@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3f4db0c22e5546eb810dec64cadfb948, type: 3}
-  m_Name: DifficultyConfiguration
+  m_Name: OfflineRoomsConfiguration
   m_EditorClassIdentifier: 
   buttonConfigurations:
   - description: 3x3 Grid
-    configuration: {fileID: 11400000, guid: e99f70a039a217a4dbf70ccd7b239c20, type: 2}
+    configuration: {fileID: 11400000, guid: 02644998de6ffde49b387d4491e9ffbe, type: 2}
   - description: 4x4 Grid
-    configuration: {fileID: 11400000, guid: 9701cebd153d60a44a9a2d8f2868ecb8, type: 2}
+    configuration: {fileID: 11400000, guid: e7db969877016e54c997d81f36577f8c, type: 2}
   - description: 5x5 Grid
-    configuration: {fileID: 11400000, guid: 2bc295e9186016a47bb5113ec2ed025b, type: 2}
+    configuration: {fileID: 11400000, guid: 111b8feb829c7874c821fb6da2d9ce3f, type: 2}

@@ -6074,7 +6074,7 @@ MonoBehaviour:
   rightArrow: {fileID: 1409293358}
   play: {fileID: 121495798}
   description: {fileID: 347295822}
-  config: {fileID: 11400000, guid: ae68c4f612c5bf64795526bef69f2a0c, type: 2}
+  config: {fileID: 11400000, guid: e403cdefe2098f94a903026c123d29cb, type: 2}
 --- !u!1 &167986269
 GameObject:
   m_ObjectHideFlags: 0
@@ -9629,7 +9629,7 @@ PrefabInstance:
     - target: {fileID: 720397938051647527, guid: f9356d99a7dd78a42b78119c3ba196b8,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -24.99997
+      value: -25
       objectReference: {fileID: 0}
     - target: {fileID: 720397938901109732, guid: f9356d99a7dd78a42b78119c3ba196b8,
         type: 3}
