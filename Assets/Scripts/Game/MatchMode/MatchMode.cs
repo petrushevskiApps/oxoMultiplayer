@@ -17,19 +17,19 @@ public abstract class MatchMode
     public void RoundWon()
     {
         NetworkManager.Instance.RoomController.LocalPlayer.IncrementScore();
-        SendRoundCompletedRpc();
+        SendRoundCompletedRpc(true);
     }
     
     public void RoundTie()
     {
-        SendRoundCompletedRpc();
+        SendRoundCompletedRpc(false);
     }
     
-    protected void SendRoundCompletedRpc()
+    protected void SendRoundCompletedRpc(bool overrideMaster)
     {
         if (NetworkManager.Instance.RoomController.IsSynced)
         {
-            NetworkManager.Instance.RoomController.SendRpc(PhotonView, RPCs.RPC_ROUND_COMPLETED, true);
+            NetworkManager.Instance.RoomController.SendRpc(PhotonView, RPCs.RPC_ROUND_COMPLETED, overrideMaster);
         }
     }
 }

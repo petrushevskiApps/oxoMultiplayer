@@ -19,6 +19,6 @@ public class OfflineMatch : MatchMode
     public override void RoundLost()
     {
         NetworkManager.Instance.RoomController.PlayersInRoom[1].IncrementScore();
-        SendRoundCompletedRpc();
+        SendRoundCompletedRpc(true);
     }
 }
