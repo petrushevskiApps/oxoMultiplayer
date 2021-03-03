@@ -4,23 +4,17 @@ public class StatisticsManager : MonoBehaviour
 {
     private void Awake()
     {
-        MatchController.MatchStart.AddListener(OnMatchStarted);
         MatchController.MatchEnd.AddListener(OnMatchEnded);
     }
 
     private void OnDestroy()
     {
-        MatchController.MatchStart.RemoveListener(OnMatchStarted);
         MatchController.MatchEnd.RemoveListener(OnMatchEnded);
     }
-
-    private void OnMatchStarted()
-    {
-        PlayerDataController.IncreasePlayedGames();
-    }
-    
     private void OnMatchEnded(bool isWin)
     {
+        PlayerDataController.IncreasePlayedGames();
+
         if (isWin)
         {
             PlayerDataController.IncreaseWonGames();
@@ -30,6 +24,4 @@ public class StatisticsManager : MonoBehaviour
             PlayerDataController.IncreaseLostGames();
         }
     }
-
-    
 }
