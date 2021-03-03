@@ -11,7 +11,11 @@ public class UILoadingScreen : UIScreen
     
     public override void Initialize(Action onBackButtonAction)
     {
-        base.Initialize(onBackButtonAction);
+        base.Initialize(() => 
+        {
+            NetworkManager.Instance.LeaveRoom();
+            onBackButtonAction?.Invoke();
+        });
         NetworkManager.JoinedRoom.AddListener(OnJoinedRoom);
         NetworkManager.JoinRandomFailed.AddListener(OnJoinRandomFailed);
         
