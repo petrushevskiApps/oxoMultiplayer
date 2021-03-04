@@ -16,7 +16,7 @@ public class UIUsernameScreen : UIScreen
 //    [SerializeField] private Button defaultConnect;
 //    [SerializeField] private Button facebookConnect;
     
-    private void Awake()
+    new private void Awake()
     {
         base.Awake();
         saveBtn.interactable = false;

@@ -36,7 +36,7 @@ public partial class UIGameScreen : UIScreen
     private List<IPlayer> players;
     private bool isListenerSet = false;
     
-    private void Awake()
+    new private void Awake()
     {
         base.Awake();
         

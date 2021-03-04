@@ -17,7 +17,7 @@ namespace com.petrushevskiapps.Oxo
         [SerializeField] private TextMeshProUGUI gamesLostStat;
         
         private Rect rect = new Rect(0, 0, 600, 600);
-        private void Awake()
+        new private void Awake()
         {
             base.Awake();
             usernameBtn.onClick.AddListener(OnUsernameBtnClicked);

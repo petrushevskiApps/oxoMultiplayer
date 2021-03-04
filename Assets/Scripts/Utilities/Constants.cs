@@ -63,6 +63,7 @@
 
     public static class TimerKeys
     {
+        public const string AIPLAYERSTART_TIMER = "AiPlayerStart";
         public const string ROUND_START_DELAY = "roundStartDelay";
         public const string ROUND_ENDED = "RoundEndDelay";
     }

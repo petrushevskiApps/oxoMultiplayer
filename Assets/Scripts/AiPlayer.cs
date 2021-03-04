@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 public class AiPlayer : IPlayer
 {
-    private const string AIPLAYERSTART_TIMER = "AiPlayerStart";
+    
     private readonly UnityIntegerEvent ScoreUpdated = new UnityIntegerEvent();
     
     private AiBrain aiBrain;
@@ -32,7 +32,7 @@ public class AiPlayer : IPlayer
 
     public void Clear()
     {
-        Timer.Stop(GameManager.Instance, AIPLAYERSTART_TIMER);
+        Timer.Stop(GameManager.Instance, TimerKeys.AIPLAYERSTART_TIMER);
         MatchController.MatchStart.RemoveListener(SetupAiBrain);
         MatchController.RoundStarted.RemoveListener(OnRoundStarted);
         MatchController.TurnChanged.RemoveListener(OnTurnChanged);
@@ -58,7 +58,7 @@ public class AiPlayer : IPlayer
 
     private void MakeMove(Tile[,] table)
     {
-        Timer.Start(GameManager.Instance, AIPLAYERSTART_TIMER, 1f, () =>
+        Timer.Start(GameManager.Instance, TimerKeys.AIPLAYERSTART_TIMER, 1f, () =>
         {
             if (IsActive())
             {

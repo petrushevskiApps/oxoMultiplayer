@@ -19,7 +19,7 @@ namespace PetrushevskiApps.UIManager
             {
                 ToggleInteractivity(NetworkManager.Instance.ConnectionController.IsConnected);
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
                 ToggleInteractivity(false);
             }

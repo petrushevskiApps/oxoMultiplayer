@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace com.petrushevskiapps.Oxo.Utilities
 {
@@ -13,16 +14,18 @@ namespace com.petrushevskiapps.Oxo.Utilities
         private static IEnumerator LoadPictureRoutine(string url, Action<Texture2D> onComplete)
         {
             Debug.Log($"URL:: {url}");
-            WWW www = new WWW(url);
-            yield return www;
+            UnityWebRequest www = UnityWebRequestTexture.GetTexture(url);
+            yield return www.SendWebRequest();
 
-            if (www.error != null)
+            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
             {
                 Debug.LogError(www.error);
                 yield break;
             }
-            
-            onComplete.Invoke(www.texture);
+
+            Texture2D texture = DownloadHandlerTexture.GetContent(www);
+            onComplete.Invoke(texture);
         }
+
     }
 }
